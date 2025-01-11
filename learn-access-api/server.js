@@ -13,7 +13,7 @@ app.use(morgan("dev"));
 
 //Endpoints
 
-app.get('/', (req, res)=>{
+app.get('/', (req, res) => {
     res.status(200);
     res.send("Welcome to root URL of Server");
 });
@@ -38,11 +38,11 @@ server.listen(HTTPS_PORT, () => {
 
 });
 
-app.listen(HTTP_PORT, (error) =>{
-    if(!error)
-        console.log("HTTP server is now running on port " + HTTP_PORT)
-    else
-        console.log("Error occurred, server can't start", error);
+app.listen(HTTP_PORT, (error) => {
+        if (!error)
+            console.log("HTTP server is now running on port " + HTTP_PORT)
+        else
+            console.log("Error occurred, server can't start", error);
     }
 );
 
