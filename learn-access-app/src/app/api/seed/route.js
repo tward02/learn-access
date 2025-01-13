@@ -1,6 +1,6 @@
 import { db } from '@vercel/postgres';
 
-//TODO set up for local db too
+//TODO set up for local db too + setup token auth for this endpoint
 
 const client = await db.connect();
 
