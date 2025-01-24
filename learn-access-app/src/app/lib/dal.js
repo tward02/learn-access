@@ -1,8 +1,9 @@
 import 'server-only'
-import { cookies } from 'next/headers'
-import { decrypt } from '@/app/lib/session'
+import {cookies} from 'next/headers'
+import {decrypt} from '@/app/lib/session'
 import {cache} from "react";
 import {redirect} from "next/navigation";
+import {getUserById} from "@/app/lib/database/userDAO";
 
 export const verifySession = cache(async () => {
     const cookie = (await cookies()).get('session')?.value
@@ -12,7 +13,14 @@ export const verifySession = cache(async () => {
         redirect('/login')
     }
 
-    return { isAuth: true, userId: session.userId }
+    return {isAuth: true, userId: session.userId}
+})
+
+export const hasSession = cache(async () => {
+    const cookie = (await cookies()).get('session')?.value
+    const session = await decrypt(cookie)
+
+    return !!session?.userId;
 })
 
 export const getUser = cache(async () => {
@@ -20,7 +28,7 @@ export const getUser = cache(async () => {
     if (!session) return null
 
     try {
-        //TODO implement function that grabs user from the db
+        return await getUserById(session.userId);
     } catch (error) {
         console.log('Failed to fetch user')
         return null

@@ -15,7 +15,27 @@ async function seedUsers() {
   `;
 }
 
-export async function GET() {
+export async function GET(request) {
+
+    // Extract the 'Authorization' header
+    const authHeader = request.headers.get('authorization');
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return Response.json({ error: 'Authorization header missing or invalid' }, { status: 401 });
+    }
+
+    // Extract the token
+    const token = authHeader.split(' ')[1];
+
+    // Validate the token (if needed)
+    if (!token) {
+        return Response.json({ error: 'Token is missing' }, { status: 401 });
+    }
+
+    if (process.env.ADMIN_SECRET !== token) {
+        return Response.json({ error: "You do not have permission to do this" }, {status: 403});
+    }
+
     try {
       await client.sql`BEGIN`;
       await seedUsers();
