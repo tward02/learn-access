@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {hasSession} from "@/app/lib/dal";
 
-export default async function Home() {
+const Home = async () => {
     const session = await hasSession();
 
     console.log(session);
@@ -104,3 +104,5 @@ export default async function Home() {
         </div>
     );
 }
+
+export default Home;

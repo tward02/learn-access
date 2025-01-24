@@ -4,7 +4,7 @@ import {cookies} from 'next/headers'
 
 const publicRoutes = ['/login', '/register', '/']
 
-export default async function middleware(req) {
+const middleware = async (req) => {
     const path = req.nextUrl.pathname
     const isProtectedRoute = !publicRoutes.includes(path)
 
@@ -21,3 +21,5 @@ export default async function middleware(req) {
 export const config = {
     matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
 }
+
+export default middleware;

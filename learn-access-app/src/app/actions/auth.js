@@ -1,5 +1,4 @@
-'use server'
-
+import 'use server';
 import {SignupFormSchema} from "@/app/lib/utility/definitions";
 import bcrypt from "bcrypt";
 import {createUser, getUser} from "@/app/lib/database/userDAO";
@@ -7,7 +6,7 @@ import {redirect} from "next/navigation";
 import {createSession, deleteSession} from "@/app/lib/session";
 
 
-export async function signup(state, formData) {
+export const signup = async (state, formData) => {
     const validatedFields = SignupFormSchema.safeParse({
         name: formData.get('name'),
         password: formData.get('password'),
@@ -36,17 +35,21 @@ export async function signup(state, formData) {
     }
 }
 
+export const login = () => {
 
-export async function logout() {
+}
+
+
+export const logout = async () => {
     await deleteSession()
     redirect('/login')
 }
 
-export async function hashPassword(password) {
+export const hashPassword = async (password) => {
     const saltRounds = 10;
     return await bcrypt.hash(password, saltRounds);
 }
 
-export async function verifyPassword(password, hashedPassword) {
+export const verifyPassword = async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
 }

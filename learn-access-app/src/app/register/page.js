@@ -1,10 +1,9 @@
-'use client'
+import 'use client';
+import {signup} from '@/app/actions/auth';
+import {useActionState} from 'react';
 
-import {signup} from '@/app/actions/auth'
-import {useActionState} from 'react'
-
-export default function Register() {
-    const [state, action, pending] = useActionState(signup, undefined)
+const Register = () => {
+    const [state, action, pending] = useActionState(signup, undefined);
 
     return (
         <form action={action}>
@@ -34,3 +33,5 @@ export default function Register() {
         </form>
     )
 }
+
+export default Register;
