@@ -1,0 +1,104 @@
+.link {
+    display: flex;
+    justify-content: center;
+}
+
+.link:hover {
+    cursor: pointer;
+}
+
+.back {
+    align-items: flex-start;
+    width: 10%;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.card {
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.iconWrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.icon {
+    color: #666666;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #333333;
+}
+
+.input {
+    padding: 0.5rem;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.error {
+    color: #d32f2f;
+    font-size: 0.875rem;
+}
+
+.errorList {
+    font-size: 0.875rem;
+    color: #d32f2f;
+}
+
+.errorItems {
+    padding-left: 1rem;
+}
+
+.button {
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.buttonDisabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}

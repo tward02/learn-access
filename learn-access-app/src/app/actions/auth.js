@@ -28,18 +28,37 @@ export async function signup(state, formData) {
             username: formData.get('name'),
             password: await hashPassword(formData.get('password'))
         });
-        console.log(newUser);
         await createSession(newUser.id);
-        redirect('/');
     } catch (error) {
+        console.log(error);
         return {errors: {name: ['Failed to create account. Please try again later']}};
     }
+    redirect('/');
+}
+
+export async function login(state, formData) {
+    const users = await getUser(formData.get('name'));
+
+    if (users.length < 1) {
+        return {errors: {name: ['Username or password is incorrect']}};
+    }
+
+    if (users.length !== 1) {
+        return {errors: {name: ['Multiple user error, you shouldn\'t get this|']}};
+    }
+
+    if (await verifyPassword(formData.get('password'), users[0].password)) {
+        await createSession(users[0].id);
+    } else {
+        return {errors: {password: ['Username or password is incorrect']}};
+    }
+    redirect('/');
 }
 
 
 export async function logout() {
-    await deleteSession()
-    redirect('/login')
+    await deleteSession();
+    redirect('/login');
 }
 
 export async function hashPassword(password) {

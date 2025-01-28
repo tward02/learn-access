@@ -1,36 +1,82 @@
 'use client'
 
 import {signup} from '@/app/actions/auth'
-import {useActionState} from 'react'
+import {useActionState, useState} from 'react'
+import {Button, Card, Link, Stack} from "@mui/material";
+import modules from "./register.module.css"
+import Person2Icon from '@mui/icons-material/Person2';
+import {ArrowBack} from "@mui/icons-material";
+import {useRouter} from 'next/navigation'
 
 export default function Register() {
-    const [state, action, pending] = useActionState(signup, undefined)
+
+    const router = useRouter();
+
+    const [state, action, pending] = useActionState(signup, undefined);
+
+    const [usernameValue, setUsernameValue] = useState("");
+    const [passwordValue, setPasswordValue] = useState("");
+    const [rePasswordValue, setRePasswordValue] = useState("");
+
+    const completed = usernameValue.length > 0 && passwordValue.length > 0 && rePasswordValue.length > 0;
 
     return (
-        <form action={action}>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input id="name" name="name" placeholder="Name"/>
-            </div>
-            {state?.errors?.name && <p>{state.errors.name}</p>}
+        <div className={modules.container}>
+            <Card className={modules.card}>
+                <form action={action} className={modules.form}>
+                    <Button className={modules.back} variant={"text"} startIcon={<ArrowBack/>}
+                            onClick={() => router.push('/')}>
+                        Back
+                    </Button>
+                    <div className={modules.iconWrapper}>
+                        <Person2Icon fontSize={"large"} className={modules.icon}/>
+                    </div>
+                    <Stack spacing={3}>
+                        <div className={modules.inputGroup}>
+                            <label htmlFor="name" className={modules.label}>Username</label>
+                            <input value={usernameValue} onChange={e => setUsernameValue(e.target.value)} id="name"
+                                   name="name" className={modules.input}/>
+                        </div>
+                        {state?.errors?.name && <p className={modules.error}>{state.errors.name}</p>}
 
-            <div>
-                <label htmlFor="password">Password</label>
-                <input id="password" name="password" type="password"/>
-            </div>
-            {state?.errors?.password && (
-                <div>
-                    <p>Password must:</p>
-                    <ul>
-                        {state.errors.password.map((error) => (
-                            <li key={error}>- {error}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            <button disabled={pending} type="submit">
-                Sign Up
-            </button>
-        </form>
+                        <div className={modules.inputGroup}>
+                            <label htmlFor="password" className={modules.label}>Password</label>
+                            <input value={passwordValue} onChange={e => setPasswordValue(e.target.value)} id="password"
+                                   name="password" type="password" className={modules.input}/>
+                        </div>
+                        {state?.errors?.password && (
+                            <div className={modules.errorList}>
+                                <p>Password must:</p>
+                                <ul className={modules.errorItems}>
+                                    {state.errors.password.map((error) => (
+                                        <li key={error} className={modules.error}>- {error}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                        <div className={modules.inputGroup}>
+                            <label htmlFor="repassword" className={modules.label}>Re-Enter Password</label>
+                            <input value={rePasswordValue} onChange={e => setRePasswordValue(e.target.value)}
+                                   id="repassword" name="repassword" type="password" className={modules.input}/>
+                        </div>
+                        {passwordValue !== rePasswordValue && (
+                            <p className={modules.error}>
+                                Password does not match
+                            </p>
+                        )}
+                        <Link className={modules.link} onClick={() => router.push('/login')}>Already have an account?
+                            Click here to login</Link>
+                        <button disabled={pending || passwordValue !== rePasswordValue || !completed} type="submit"
+                                className={`${modules.button} ${
+                                    pending || passwordValue !== rePasswordValue || !completed
+                                        ? modules.buttonDisabled
+                                        : ''
+                                }`}>
+                            Sign Up
+                        </button>
+                    </Stack>
+                </form>
+            </Card>
+        </div>
     )
 }
