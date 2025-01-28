@@ -30,31 +30,24 @@ export default function Login() {
                     <div className={modules.iconWrapper}>
                         <Person2Icon fontSize={"large"} className={modules.icon}/>
                     </div>
+
                     <Stack spacing={3}>
                         <div className={modules.inputGroup}>
                             <label htmlFor="name" className={modules.label}>Username</label>
                             <input value={usernameValue} onChange={e => setUsernameValue(e.target.value)} id="name"
                                    name="name" className={modules.input}/>
                         </div>
-                        {state?.errors?.name && <p className={modules.error}>{state.errors.name}</p>}
 
                         <div className={modules.inputGroup}>
                             <label htmlFor="password" className={modules.label}>Password</label>
                             <input value={passwordValue} onChange={e => setPasswordValue(e.target.value)} id="password"
                                    name="password" type="password" className={modules.input}/>
                         </div>
-                        {state?.errors?.password && (
-                            <div className={modules.errorList}>
-                                <p>Password must:</p>
-                                <ul className={modules.errorItems}>
-                                    {state.errors.password.map((error) => (
-                                        <li key={error} className={modules.error}>- {error}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
+
+                        {state?.errors?.login && <p className={modules.error}>{state.errors.login}</p>}
                         <Link className={modules.link} onClick={() => router.push('/register')}>
                             Don't have an account? Click here to register</Link>
+
                         <button disabled={pending || !completed} type="submit"
                                 className={`${modules.button} ${
                                     pending || !completed

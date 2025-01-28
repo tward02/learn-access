@@ -40,17 +40,17 @@ export async function login(state, formData) {
     const users = await getUser(formData.get('name'));
 
     if (users.length < 1) {
-        return {errors: {name: ['Username or password is incorrect']}};
+        return {errors: {login: ['Username or password is incorrect']}};
     }
 
     if (users.length !== 1) {
-        return {errors: {name: ['Multiple user error, you shouldn\'t get this|']}};
+        return {errors: {login: ['Multiple user error, you shouldn\'t get this|']}};
     }
 
     if (await verifyPassword(formData.get('password'), users[0].password)) {
         await createSession(users[0].id);
     } else {
-        return {errors: {password: ['Username or password is incorrect']}};
+        return {errors: {login: ['Username or password is incorrect']}};
     }
     redirect('/');
 }
