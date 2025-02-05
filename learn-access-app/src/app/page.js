@@ -1,5 +1,6 @@
 import Image from "next/image";
 import {hasSession} from "@/app/lib/dal";
+import LevelCard from "@/app/ui/component/levelCard/LevelCard";
 
 export default async function Home() {
     const session = await hasSession();
@@ -25,6 +26,8 @@ export default async function Home() {
                     </li>
                     <li>Save and see your changes instantly.</li>
                 </ol>
+
+                <LevelCard locked={true} expires={"2025-02-10T15:16:38.413Z"} title={"Level 1 - Introduction"} description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
 
                 <div className="flex gap-4 items-center flex-col sm:flex-row">
                     <a

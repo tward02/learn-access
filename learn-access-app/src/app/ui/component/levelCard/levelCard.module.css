@@ -1,0 +1,14 @@
+.levelCard {
+    width: 350px;
+    text-align: center;
+}
+
+.levelCardLocked {
+    width: 350px;
+    text-align: center;
+    color: #666666;
+}
+
+.levelCard:hover {
+    background-color: #cccccc;
+}
