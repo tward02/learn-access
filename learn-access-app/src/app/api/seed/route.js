@@ -15,6 +15,31 @@ async function seedUsers() {
   `;
 }
 
+async function seedLevels() {
+
+    await client.sql`
+    CREATE TABLE IF NOT EXISTS levels (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      description TEXT NOT NULL,
+      objectives TEXT NOT NULL,
+      instructions TEXT NOT NULL
+    );
+  `;
+}
+
+async function seedUserLevels() {
+
+    await client.sql`
+    CREATE TABLE IF NOT EXISTS user_levels (
+      id SERIAL PRIMARY KEY,
+      userID INTEGER NOT NULL FOREIGN KEY,
+      levelID INTEGER NOT NULL FOREIGN KEY,
+      timestamp DATETIME NOT NULL
+    );
+  `;
+}
+
 export async function GET(request) {
 
     const authHeader = request.headers.get('authorization');

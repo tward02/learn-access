@@ -1,11 +1,13 @@
 'use client'
-import {Avatar, Card, CardActionArea, CardContent, CardHeader, Typography} from "@mui/material";
+
+import {Card, CardActionArea, CardContent, CardHeader, Typography} from "@mui/material";
 import modules from "./levelCard.module.css"
 import {useRouter} from "next/navigation";
 import Countdown from "@/app/ui/component/countdown/Countdown";
 import LockIcon from '@mui/icons-material/Lock';
+import DoneIcon from '@mui/icons-material/Done';
 
-const LevelCard = ({id, title, description, locked, expires}) => {
+const LevelCard = ({id, title, description, locked, expires, completed}) => {
 
     const router = useRouter();
 
@@ -15,18 +17,20 @@ const LevelCard = ({id, title, description, locked, expires}) => {
         }
     }
 
-    const lockedAvatar = () => {
-        return locked ? (
-            <Avatar>
-                <LockIcon/>
-            </Avatar>
-        ) : null;
+    const getTitle = () => {
+        return (
+            <>
+                {locked && <LockIcon fontSize={"large"}/>}
+                {completed && <DoneIcon className={modules.doneIcon} fontSize={"large"}/>}
+                {title}
+            </>
+        );
     }
 
     const getContent = () => {
         return (
             <>
-                <CardHeader avatar={lockedAvatar()} title={title}/>
+                <CardHeader title={getTitle()}></CardHeader>
                 <CardContent>
                     <Typography variant="body2">{description}</Typography>
                     {expires && (<Countdown targetDate={expires}/>)}
@@ -35,7 +39,7 @@ const LevelCard = ({id, title, description, locked, expires}) => {
         )
     }
 
-    const style = locked && {'background-color': '#666666'};
+    const style = locked ? {backgroundColor: '#666666'} : completed ? {backgroundColor: '#73f596'} : {};
 
     return (
         <Card className={locked ? modules.levelCardLocked : modules.levelCard} key={id} sx={style}>

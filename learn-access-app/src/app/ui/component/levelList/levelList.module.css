@@ -1,0 +1,16 @@
+.list {
+    width: 390px;
+}
+
+.listContainer {
+    background-color: #cdd1cf;
+    overflow-y: auto;
+    height: 70vh;
+    width: 100%;
+}
+
+.listHeader {
+    color: #0b437a;
+    text-align: center;
+    font-size: xx-large;
+}

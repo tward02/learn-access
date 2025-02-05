@@ -27,7 +27,7 @@ export default async function Home() {
                     <li>Save and see your changes instantly.</li>
                 </ol>
 
-                <LevelCard locked={true} expires={"2025-02-10T15:16:38.413Z"} title={"Level 1 - Introduction"} description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
+                <LevelCard completed locked={false} title={"Level 1 - Introduction"} description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
 
                 <div className="flex gap-4 items-center flex-col sm:flex-row">
                     <a

@@ -1,0 +1,22 @@
+.container {
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.content {
+    padding: 30px;
+}
+
+.heading {
+    font-size: 4rem;
+    color: black;
+    text-align: left;
+}
+
+.levelLists {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

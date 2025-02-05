@@ -1,6 +1,7 @@
 .levelCard {
     width: 350px;
     text-align: center;
+    margin: 10px;
 }
 
 .levelCardLocked {
@@ -11,4 +12,8 @@
 
 .levelCard:hover {
     background-color: #cccccc;
+}
+
+.doneIcon {
+    color: green;
 }
