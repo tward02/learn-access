@@ -6,7 +6,6 @@ import {createUser, getUser} from "@/app/lib/DAO/userDAO";
 import {redirect} from "next/navigation";
 import {createSession, deleteSession} from "@/app/lib/session";
 
-
 export async function signup(state, formData) {
     const validatedFields = SignupFormSchema.safeParse({
         name: formData.get('name'),
