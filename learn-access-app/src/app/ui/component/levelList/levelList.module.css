@@ -15,6 +15,7 @@
     height: 60vh;
     min-height: 60vh;
     max-height: 60vh;
+    min-width: 90%;
     width: 90%;
 }
 
@@ -29,4 +30,20 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30%;
+}
+
+.link:hover {
+    cursor: pointer;
+}
+
+.errorText {
+    color: red;
+    font-size: 2rem;
 }
