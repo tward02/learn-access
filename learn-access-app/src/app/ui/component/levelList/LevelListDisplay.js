@@ -27,7 +27,7 @@ const LevelListDisplay = () => {
 
     return (
         <Stack className={modules.levelLists} direction={"row"} spacing={15}>
-            <div className={modules.list}>
+            <div>
                 <h2 className={modules.listHeader}>{"Limited Time Levels"}</h2>
                 <div className={modules.listContainer}>
                     {limitedLevels.map(level => (

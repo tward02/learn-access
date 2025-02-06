@@ -13,7 +13,7 @@ const LevelCard = ({level}) => {
 
     const startLevel = () => {
         if (!level.locked) {
-            router.push('/level/' + id);
+            router.push('/level/' + level.id);
         }
     }
 
