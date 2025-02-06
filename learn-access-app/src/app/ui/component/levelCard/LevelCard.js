@@ -7,12 +7,12 @@ import Countdown from "@/app/ui/component/countdown/Countdown";
 import LockIcon from '@mui/icons-material/Lock';
 import DoneIcon from '@mui/icons-material/Done';
 
-const LevelCard = ({id, title, description, locked, expires, completed}) => {
+const LevelCard = ({level}) => {
 
     const router = useRouter();
 
     const startLevel = () => {
-        if (!locked) {
+        if (!level.locked) {
             router.push('/level/' + id);
         }
     }
@@ -20,9 +20,9 @@ const LevelCard = ({id, title, description, locked, expires, completed}) => {
     const getTitle = () => {
         return (
             <>
-                {locked && <LockIcon fontSize={"large"}/>}
-                {completed && <DoneIcon className={modules.doneIcon} fontSize={"large"}/>}
-                {title}
+                {level.locked && <LockIcon fontSize={"large"}/>}
+                {level.completed && <DoneIcon className={modules.doneIcon} fontSize={"large"}/>}
+                {level.title}
             </>
         );
     }
@@ -32,18 +32,18 @@ const LevelCard = ({id, title, description, locked, expires, completed}) => {
             <>
                 <CardHeader title={getTitle()}></CardHeader>
                 <CardContent>
-                    <Typography variant="body2">{description}</Typography>
-                    {expires && (<Countdown targetDate={expires}/>)}
+                    <Typography variant="body2">{level.description}</Typography>
+                    {level.expires && (<Countdown targetDate={level.expires}/>)}
                 </CardContent>
             </>
         )
     }
 
-    const style = locked ? {backgroundColor: '#666666'} : completed ? {backgroundColor: '#73f596'} : {};
+    const style = level.locked ? {backgroundColor: '#666666'} : level.completed ? {backgroundColor: '#73f596'} : {};
 
     return (
-        <Card className={locked ? modules.levelCardLocked : modules.levelCard} key={id} sx={style}>
-            {locked ? getContent() :
+        <Card className={level.locked ? modules.levelCardLocked : modules.levelCard} key={level.id} sx={style}>
+            {level.locked ? getContent() :
                 (<CardActionArea onClick={startLevel}>
                     {getContent()}
                 </CardActionArea>)}
