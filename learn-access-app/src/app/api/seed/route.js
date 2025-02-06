@@ -1,7 +1,5 @@
 import { db } from '@vercel/postgres';
 
-//TODO set up for local db too + setup token auth for this endpoint
-
 const client = await db.connect();
 
 async function seedUsers() {
@@ -11,6 +9,32 @@ async function seedUsers() {
       id SERIAL PRIMARY KEY,
       username VARCHAR(255) NOT NULL,
       password TEXT NOT NULL
+    );
+  `;
+}
+
+async function seedLevels() {
+
+    await client.sql`
+    CREATE TABLE IF NOT EXISTS levels (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      description TEXT NOT NULL,
+      objectives TEXT NOT NULL,
+      instructions TEXT NOT NULL,
+      expiration DATETIME
+    );
+  `;
+}
+
+async function seedUserLevels() {
+
+    await client.sql`
+    CREATE TABLE IF NOT EXISTS user_levels (
+      id SERIAL PRIMARY KEY,
+      userID INTEGER NOT NULL FOREIGN KEY,
+      levelID INTEGER NOT NULL FOREIGN KEY,
+      timestamp DATETIME NOT NULL
     );
   `;
 }

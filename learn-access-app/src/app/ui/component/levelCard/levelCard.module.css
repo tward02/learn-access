@@ -1,0 +1,20 @@
+.levelCard {
+    width: 350px;
+    text-align: center;
+    margin: 10px;
+}
+
+.levelCardLocked {
+    width: 350px;
+    text-align: center;
+    color: #666666;
+    margin: 10px;
+}
+
+.levelCard:hover {
+    background-color: #cccccc;
+}
+
+.doneIcon {
+    color: green;
+}

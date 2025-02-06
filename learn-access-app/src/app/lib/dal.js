@@ -3,7 +3,7 @@ import {cookies} from 'next/headers'
 import {decrypt} from '@/app/lib/session'
 import {cache} from "react";
 import {redirect} from "next/navigation";
-import {getUserById} from "@/app/lib/database/userDAO";
+import {getUserById} from "@/app/lib/DAO/userDAO";
 
 export const verifySession = cache(async () => {
     const cookie = (await cookies()).get('session')?.value

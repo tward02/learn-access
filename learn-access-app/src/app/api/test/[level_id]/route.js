@@ -1,7 +1,6 @@
 import {hasSession} from "@/app/lib/dal";
 import {renderPage} from "@/app/lib/testing/testRunner";
 
-//TODO load from db and also add test name and failure message as fields
 const tests = [
     "(function() { return document.getElementById('root').childElementCount > 0; })()",
     "(function() { return document.querySelector('.greeting') !== null; })()",

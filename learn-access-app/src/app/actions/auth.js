@@ -2,10 +2,9 @@
 
 import {SignupFormSchema} from "@/app/lib/utility/definitions";
 import bcrypt from "bcrypt";
-import {createUser, getUser} from "@/app/lib/database/userDAO";
+import {createUser, getUser} from "@/app/lib/DAO/userDAO";
 import {redirect} from "next/navigation";
 import {createSession, deleteSession} from "@/app/lib/session";
-
 
 export async function signup(state, formData) {
     const validatedFields = SignupFormSchema.safeParse({
