@@ -14,9 +14,3 @@
     color: black;
     text-align: left;
 }
-
-.levelLists {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}

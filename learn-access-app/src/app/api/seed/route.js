@@ -1,7 +1,5 @@
 import { db } from '@vercel/postgres';
 
-//TODO set up for local db too + setup token auth for this endpoint
-
 const client = await db.connect();
 
 async function seedUsers() {
@@ -23,7 +21,8 @@ async function seedLevels() {
       name VARCHAR(255) NOT NULL,
       description TEXT NOT NULL,
       objectives TEXT NOT NULL,
-      instructions TEXT NOT NULL
+      instructions TEXT NOT NULL,
+      expiration DATETIME
     );
   `;
 }

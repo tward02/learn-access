@@ -4,7 +4,7 @@ import {AppBar, Box, Button, Toolbar, Typography} from "@mui/material";
 import {useRouter} from "next/navigation";
 import {logout} from "@/app/actions/auth";
 
-const TopBar = ({loggedIn, title}) => {
+const TopBar = ({loggedIn, title, username}) => {
 
     const router = useRouter();
 
@@ -21,7 +21,7 @@ const TopBar = ({loggedIn, title}) => {
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>{title}</Typography>
-                    {loggedIn ? <Button color={"inherit"} onClick={logoutFn}>Logout</Button> :
+                    {loggedIn ? <Button color={"inherit"} onClick={logoutFn}>{username + " Logout"}</Button> :
                         <Button color={"inherit"} onClick={login}>Login</Button>}
                 </Toolbar>
             </AppBar>

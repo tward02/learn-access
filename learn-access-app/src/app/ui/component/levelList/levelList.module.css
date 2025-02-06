@@ -1,16 +1,25 @@
 .list {
-    width: 390px;
+
 }
 
 .listContainer {
     background-color: #cdd1cf;
     overflow-y: auto;
     height: 70vh;
+    min-height: 70vh;
+    max-height: 70vh;
     width: 100%;
+    justify-content: center;
 }
 
 .listHeader {
     color: #0b437a;
     text-align: center;
     font-size: xx-large;
+}
+
+.levelLists {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

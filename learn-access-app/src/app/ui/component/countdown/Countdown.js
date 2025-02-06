@@ -37,7 +37,7 @@ const Countdown = ({targetDate}) => {
     }
 
     const makeDisplayString = () => {
-        return (timeLeft.days || "0") + " : " + (timeLeft.hours ? format0s(timeLeft.hours) : "00") + " : " + (timeLeft.minutes ? format0s(timeLeft.minutes) : "00") + " : " + (timeLeft.seconds ? format0s(timeLeft.seconds) : "00")
+        return "Expires " + (timeLeft.days || "0") + ":" + (timeLeft.hours ? format0s(timeLeft.hours) : "00") + ":" + (timeLeft.minutes ? format0s(timeLeft.minutes) : "00") + ":" + (timeLeft.seconds ? format0s(timeLeft.seconds) : "00")
     }
     return (
         <div className={modules.countdown}>
@@ -45,4 +45,5 @@ const Countdown = ({targetDate}) => {
         </div>
     );
 };
+
 export default Countdown;

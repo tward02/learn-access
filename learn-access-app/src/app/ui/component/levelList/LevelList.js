@@ -3,28 +3,14 @@ import LevelCard from "@/app/ui/component/levelCard/LevelCard";
 
 const LevelList = ({title, levels}) => {
 
-
     return (
         <div className={modules.list}>
-            <h2 className={modules.listHeader}>Limited Time Levels</h2>
+            <h2 className={modules.listHeader}>{title}</h2>
             <div className={modules.listContainer}>
-                <LevelCard completed locked={false} title={"Level 1 - Introduction"}
-                           description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
-                <LevelCard completed locked={false} title={"Level 1 - Introduction"}
-                           description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
-                <LevelCard completed locked={false} title={"Level 1 - Introduction"}
-                           description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
-                <LevelCard completed locked={false} title={"Level 1 - Introduction"}
-                           description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
-                <LevelCard completed locked={false} title={"Level 1 - Introduction"}
-                           description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
-                <LevelCard completed locked={false} title={"Level 1 - Introduction"}
-                           description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
-                <LevelCard completed locked={false} title={"Level 1 - Introduction"}
-                           description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
-                <LevelCard completed locked={false} title={"Level 1 - Introduction"}
-                           description={"this is an introductory level which is provided to give an introduction to WCAg for the user"}></LevelCard>
-
+                {levels.map(level => (
+                    <LevelCard key={level.id} id={level.id} title={level.title} description={level.description}
+                               locked={level.locked}
+                               expires={level.expires} completed={level.completed}/>))}
             </div>
         </div>
     );

@@ -1,0 +1,50 @@
+export const levelsTestData = [
+    {
+        id: 1,
+        title: "Level 1 - Introduction",
+        description: "Level 1 - This is an introduction to the application and the Web Content Accessibility Guidelines, learning the basics",
+        locked: false,
+        expires: null,
+        completed: true,
+    },
+    {
+        id: 2,
+        title: "Level 2 - Next Level",
+        description: "Level 2 - This is an introduction to the application and the Web Content Accessibility Guidelines, learning the basics",
+        locked: false,
+        expires: null,
+        completed: false,
+    },
+    {
+        id: 3,
+        title: "Level 3 - Another Level",
+        description: "Level 3 - This is an introduction to the application and the Web Content Accessibility Guidelines, learning the basics",
+        locked: true,
+        expires: null,
+        completed: false,
+    },
+    {
+        id: 4,
+        title: "Level 4 - Nearly There",
+        description: "Level 4 - This is an introduction to the application and the Web Content Accessibility Guidelines, learning the basics",
+        locked: true,
+        expires: null,
+        completed: false,
+    },
+    {
+        id: 5,
+        title: "Level 5 - Final Level",
+        description: "Level 5 - This is an introduction to the application and the Web Content Accessibility Guidelines, learning the basics",
+        locked: true,
+        expires: null,
+        completed: false,
+    },
+    {
+        id: 6,
+        title: "Daily Level - Challenge",
+        description: "Daily Level - This is an introduction to the application and the Web Content Accessibility Guidelines, learning the basics",
+        locked: false,
+        expires: "2025-02-07T00:00:00.000Z",
+        completed: false,
+    }
+]

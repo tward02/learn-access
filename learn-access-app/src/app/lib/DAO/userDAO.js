@@ -1,12 +1,8 @@
-import {db} from '@vercel/postgres';
-
-//TODO set up for local db too + setup token auth for this endpoint
-
-const client = await db.connect();
+import {sql} from '@vercel/postgres';
 
 export const createUser = async (user) => {
     const {username, password} = user;
-    const result = await client.sql`
+    const result = await sql`
         INSERT INTO users (username, password)
         VALUES (${username}, ${password}) RETURNING id;`;
 
@@ -14,7 +10,7 @@ export const createUser = async (user) => {
 }
 
 export const getUser = async (username) => {
-    const {rows} = (await client.sql`
+    const {rows} = (await sql`
         SELECT *
         FROM users
         WHERE username = ${username};`);
@@ -23,7 +19,7 @@ export const getUser = async (username) => {
 }
 
 export const getUserById = async (id) => {
-    const {rows} = (await client.sql`
+    const {rows} = (await sql`
         SELECT id, username
         FROM users
         WHERE id = ${id};`);
