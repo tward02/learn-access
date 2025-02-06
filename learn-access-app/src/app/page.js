@@ -11,7 +11,7 @@ const HomePage = async () => {
 
     return (
         <div className={modules.container}>
-            <TopBar title={"Learn Access"} loggedIn={session} username={user.username}/>
+            <TopBar title={"Learn Access"} loggedIn={session} username={user?.username}/>
             <main className={modules.content}>
                 <h1 className={modules.heading}>Learn Access</h1>
                 <p className={modules.description}>This application is to teach developers how to create applications
