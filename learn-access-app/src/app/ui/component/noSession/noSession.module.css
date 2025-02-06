@@ -1,0 +1,12 @@
+.session {
+    color: black;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+}
+
+.link:hover {
+    cursor: pointer;
+}
