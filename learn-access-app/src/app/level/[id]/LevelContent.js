@@ -14,6 +14,9 @@ import {testFiles} from "@/app/ui/testData";
 
 const LevelContent = ({session, user, id}) => {
 
+    //TODO dark mode + text sizes
+    //TODO API data retrieval + sending
+
     return (
         <main className={modules.gridContainer}>
             <TopBar title={"Level Name"} loggedIn={session} username={user?.username} back/>
@@ -53,7 +56,7 @@ const LevelContent = ({session, user, id}) => {
                                     <div className={modules.actionButtons}>
                                         {/*action buttons*/}
                                         <Stack spacing={3}>
-                                            <Button variant={"contained"}>Hints</Button>
+                                            <Button variant={"contained"}>{"Hints 0/3"}</Button>
                                             <Button variant={"contained"} color={"error"}>Reset</Button>
                                             <Button variant={"contained"} color={"success"}>Submit</Button>
                                             <Button variant={"contained"} color={"secondary"}>Solution</Button>
