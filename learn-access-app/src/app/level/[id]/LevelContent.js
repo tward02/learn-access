@@ -16,8 +16,7 @@ const LevelContent = ({session, user, id}) => {
 
     return (
         <main className={modules.gridContainer}>
-
-            <TopBar title={"Level Name"} loggedIn={session} username={user?.username}/>
+            <TopBar title={"Level Name"} loggedIn={session} username={user?.username} back/>
             <SandpackProvider template={"react"} className={modules.provider} files={testFiles}>
                 <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
                     <Grid2 item direction="column" size={2.5}>
@@ -37,7 +36,8 @@ const LevelContent = ({session, user, id}) => {
                     <Grid2 item size={4.5}>
                         <div className={modules.codeEditorGrid}>
                             {/*code editor*/}
-                            <SandpackCodeEditor className={modules.codeEditor} showTabs showLineNumbers showInlineErrors wrapContent/>
+                            <SandpackCodeEditor className={modules.codeEditor} showTabs showLineNumbers showInlineErrors
+                                                wrapContent/>
                         </div>
                         <div className={modules.testGrid}>
                             <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
