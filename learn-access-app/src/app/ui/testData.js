@@ -92,7 +92,44 @@ export const levelsTestData = [
         title: "Daily Level - Challenge",
         description: "Daily Level - This is an introduction to the application and the Web Content Accessibility Guidelines, learning the basics",
         locked: false,
-        expires: "2025-02-07T00:00:00.000Z",
+        expires: "2025-02-08T00:00:00.000Z",
         completed: false,
     }
 ]
+
+export const testFiles = {
+    "/App.js": {
+        code: `
+export default function App() {
+    return <h1>Hello world</h1>
+}
+    `,
+        active: true,
+    },
+    "/styles.css": {
+        code: `
+.app-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #4CAF50;
+}
+      
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #005f73;
+}
+    `,
+    },
+};
