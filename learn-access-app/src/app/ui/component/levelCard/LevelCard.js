@@ -1,6 +1,6 @@
 'use client'
 
-import {Card, CardActionArea, CardContent, CardHeader, Typography} from "@mui/material";
+import {Card, CardActionArea, CardContent, CardHeader, Link, Typography} from "@mui/material";
 import modules from "./levelCard.module.css"
 import {useRouter} from "next/navigation";
 import Countdown from "@/app/ui/component/countdown/Countdown";
@@ -17,6 +17,11 @@ const LevelCard = ({level}) => {
         }
     }
 
+    const navigateToForum = (event) => {
+        event.stopPropagation();
+        router.push('/forum/' + level.id);
+    }
+
     const getTitle = () => {
         return (
             <>
@@ -30,7 +35,8 @@ const LevelCard = ({level}) => {
     const getContent = () => {
         return (
             <>
-                <CardHeader title={getTitle()}></CardHeader>
+                <CardHeader title={getTitle()} subheader={level.completed &&
+                    <Link onClick={navigateToForum}>View Forum</Link>}></CardHeader>
                 <CardContent>
                     <Typography variant="body2">{level.description}</Typography>
                     {level.expires && (<Countdown targetDate={level.expires}/>)}

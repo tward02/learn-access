@@ -5,6 +5,7 @@
     min-height: 60vh;
     max-height: 60vh;
     width: 100%;
+    min-width: 350px;;
     justify-content: center;
 }
 
@@ -46,4 +47,12 @@
 .errorText {
     color: red;
     font-size: 2rem;
+}
+
+.noLevelsText {
+    margin-top: 70px;
+    color: black;
+    font-size: 1.8rem;
+    text-align: center;
+    width: 350px;
 }
