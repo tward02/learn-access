@@ -1,4 +1,6 @@
 import {getUser, verifySession} from "@/app/lib/dal";
+import modules from "./forum.module.css"
+import ForumContent from "@/app/forum/[level_id]/ForumContent";
 
 const Forum = async ({params}) => {
 
@@ -7,7 +9,7 @@ const Forum = async ({params}) => {
     const user = session ? await getUser() : null;
 
     return (
-        <div>Forum page</div>
+        <ForumContent session={session} id={id} user={user}/>
     )
 }
 
