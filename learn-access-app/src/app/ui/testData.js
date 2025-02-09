@@ -1,3 +1,43 @@
+export const testLevel = {
+    id: 1,
+    title: "Level 1 - Introduction",
+    description: "Level 1 - Introduction: This is an introductory level covering the most basic parts of WCAG, This is an introductory level covering the most basic parts of WCAG, This is an introductory level covering the most basic parts of WCAG, This is an introductory level covering the most basic parts of WCAG",
+    objectives: "The objectives of this level is to learn the basics of WCAG and how to implement it in react, The objectives of this level is to learn the basics of WCAG and how to implement it in react, The objectives of this level is to learn the basics of WCAG and how to implement it in react, The objectives of this level is to learn the basics of WCAG and how to implement it in react",
+    files: [
+        {
+            name: "App.js",
+            content:
+                `export default function App() {
+                    return <h1>Hello world</h1>
+                }`
+        },
+        {
+            name: "styles.css",
+            content: `.app-container {
+                    text-align: center;
+                    font-family: Arial, sans-serif;
+                }
+                h1 {
+                    color: #4CAF50;
+                }`
+        }
+    ],
+    hints: [
+        {
+            name: "Hint 1",
+            content: "This is a hint for the level"
+        },
+        {
+            name: "Hint 2",
+            content: "This is a hint for the level"
+        },
+        {
+            name: "Hint 3",
+            content: "This is a hint for the level"
+        }
+    ]
+}
+
 export const forumPost = [
     {
         id: 1,
