@@ -104,13 +104,13 @@
 .leftTitle {
     text-align: left;
     color: black;
-    font-size: 1.5em;
+    font-size: 2em !important;
 }
 
 .leftText {
     text-align: left;
     color: black;
-    font-size: 1em;
+    font-size: 1.2em !important;
 }
 
 .testTitle {
