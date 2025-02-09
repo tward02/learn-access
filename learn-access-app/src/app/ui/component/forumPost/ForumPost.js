@@ -16,6 +16,7 @@ import tinycolor from "tinycolor2";
 import {useState} from "react";
 import {SandpackCodeViewer, SandpackProvider} from "@codesandbox/sandpack-react";
 import Comment from "./Comment"
+import {formatFiles} from "@/app/ui/utility";
 
 const ForumPost = ({currentUser, post}) => {
 
@@ -69,13 +70,6 @@ const ForumPost = ({currentUser, post}) => {
             setLikes(likes + 1);
         }
         setIsLiked(!isLiked);
-    }
-
-    const formatFiles = (files) => {
-        return files.reduce((acc, item) => {
-            acc[item.name] = {code: item.content};
-            return acc;
-        }, {});
     }
 
     const addComment = () => {

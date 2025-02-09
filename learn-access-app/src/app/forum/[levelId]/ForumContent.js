@@ -33,7 +33,7 @@ const ForumContent = ({session, user, id}) => {
 
     return (
         <div className={modules.container}>
-            <TopBar ba title={"Level 1 - Forum"} loggedIn={session} username={user?.username}/>
+            <TopBar back title={"Level 1 - Forum"} loggedIn={session} username={user?.username}/>
             <main className={modules.forumContent}>
                 <div className={modules.forumScroller}>
                     {posts.length > 0 ? (posts.map((post) => <ForumPost currentUser={user} post={post}
