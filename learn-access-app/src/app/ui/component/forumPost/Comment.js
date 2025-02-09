@@ -1,5 +1,5 @@
 import modules from "./forumPost.module.css"
-import {Box, Card, IconButton, Typography} from "@mui/material";
+import {Box, Card, CardContent, CardHeader, IconButton, Typography} from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import {useState} from "react";
 
@@ -33,27 +33,25 @@ const Comment = ({comment, handleLike, currentUser}) => {
 
     return (
         <Card sx={cardSx}>
-            <Box>
-                <Typography variant="subtitle2" fontWeight="bold">
-                    {comment.username}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                    {comment.timestamp}
-                </Typography>
-            </Box>
-            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-                <Typography variant="body1" sx={{flexGrow: 1}}>
-                    {comment.content}
-                </Typography>
+            <CardHeader title={<Typography variant="subtitle2" fontWeight="bold">
+                {comment.username}
+            </Typography>} subheader={<Typography variant="caption" color="text.secondary">
+                {comment.timestamp}
+            </Typography>} action={
                 <IconButton color={isLiked ? "primary" : ""} aria-label="like post" onClick={likeComment}>
                     <ThumbUpIcon className={modules.likeIcon}/>
                     {likes}
                 </IconButton>
-            </Box>
+            }/>
+            <CardContent>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+                    <Typography variant="body1" sx={{flexGrow: 1}}>
+                        {comment.content}
+                    </Typography>
+                </Box>
+            </CardContent>
         </Card>
-
     )
 }
-
 
 export default Comment;

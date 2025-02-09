@@ -18,9 +18,10 @@
     overflow-y: auto;
     height: 100%;
     align-items: center;
-    border-left: 1px solid black;
+    background-color: lightgray;
     max-width: 55%;
     width: 55%;
+    padding: 5px;
 }
 
 .loading {
