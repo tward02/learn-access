@@ -36,7 +36,7 @@ const LevelCard = ({level}) => {
         return (
             <>
                 <CardHeader title={getTitle()} subheader={level.completed &&
-                    <Link onClick={navigateToForum}>View Forum</Link>}></CardHeader>
+                    <Link onClick={navigateToForum}>View Forum</Link>}/>
                 <CardContent>
                     <Typography variant="body2">{level.description}</Typography>
                     {level.expires && (<Countdown targetDate={level.expires}/>)}

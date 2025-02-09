@@ -7,12 +7,14 @@ const tests = [
     "(async function() { const el = document.querySelector('.greeting'); return el && el.textContent === 'Hello, JSX & CSS World!'; })()"
 ]
 
-export async function POST(request) {
+export async function POST(request, {params}) {
 
     if (!await hasSession()) {
         return Response.json({error: 'You are not authenticated, please login'}, {status: 401});
     }
     console.log("user authenticated")
+
+    const levelId = (await params).levelId;
 
     const body = await request.json();
     const code = body?.code;

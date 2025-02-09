@@ -1,3 +1,64 @@
+export const forumPost = [
+    {
+        id: 1,
+        title: "This is my solution to level 1",
+        timestamp: new Date().toDateString(),
+        username: "tward02",
+        comments: [
+            {
+                id: 1,
+                content: "I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good",
+                likes: 5,
+                isLiked: false,
+                userId: 2,
+                username: "tward02",
+                timestamp: new Date().toDateString(),
+            },
+            {
+                id: 2,
+                content: "I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good",
+                likes: 5,
+                isLiked: false,
+                userId: 2,
+                username: "tward02",
+                timestamp: new Date().toDateString(),
+            },
+            {
+                id: 3,
+                content: "I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good I think your solution is very good",
+                likes: 5,
+                isLiked: false,
+                userId: 2,
+                username: "tward02",
+                timestamp: new Date().toDateString(),
+            }
+        ],
+        message: "This si a message about the code I made what do you guys thing of itThis si a message about the code I made what do you guys thing of itThis si a message about the code I made what do you guys thing of itThis si a message about the code I made what do you guys thing of it",
+        files: [
+            {
+                name: "App.js",
+                content:
+                    `export default function App() {
+                    return <h1>Hello world</h1>
+                }`
+            },
+            {
+                name: "styles.css",
+                content: `.app-container {
+                    text-align: center;
+                    font-family: Arial, sans-serif;
+                }
+                h1 {
+                    color: #4CAF50;
+                }`
+            }
+        ],
+        likes: 4,
+        isLiked: false,
+        userId: 1,
+    }
+]
+
 export const levelsTestData = [
     {
         id: 1,

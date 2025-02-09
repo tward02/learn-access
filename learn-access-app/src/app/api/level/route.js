@@ -1,7 +1,7 @@
 import {getUser, hasSession} from "@/app/lib/dal";
 import {levelsTestData} from "@/app/ui/testData";
 
-export async function GET() {
+export async function GET(req) {
 
     if (!await hasSession()) {
         return Response.json({error: 'You are not authenticated, please login'}, {status: 401});
