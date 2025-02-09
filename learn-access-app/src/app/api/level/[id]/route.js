@@ -1,5 +1,6 @@
 import {getUser, hasSession} from "@/app/lib/dal";
 import {testLevel} from "@/app/ui/testData";
+import {getLevel, getLevelFiles, getLevelHints} from "@/app/lib/DAO/levelDAO";
 
 export async function GET(request, {params}) {
 
@@ -10,9 +11,28 @@ export async function GET(request, {params}) {
 
     const id = (await params).id;
 
-    const user = getUser();
+    const user = await getUser();
 
-    //TODO implement DAO and levels in database, ensure user is allowed to look at the levels
+    const levelDataList = await getLevel(id);
+
+    if (levelDataList.length === 0) {
+        return Response.json({error: 'Level not found'}, {status: 404});
+    }
+
+    const levelData = levelDataList[0];
+
+    if (levelData.unlocked !== true) {
+        return Response.json({error: 'You don\'t have permission to view this level'}, {status: 403});
+    }
+
+    const levelFiles = await getLevelFiles(id);
+    const levelHints = await getLevelHints(id);
+
+    levelData.files = levelFiles;
+    levelData.hints = levelHints;
+
+    //TODO return level + tests
+
     const level = testLevel;
 
     return Response.json(level);
