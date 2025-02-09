@@ -27,7 +27,7 @@ const ForumContent = ({session, user, id}) => {
         }
     }, [forumData, forumSuccess]);
 
-    const reloadforum = () => {
+    const reloadForum = () => {
         forumRefetch();
     }
 
@@ -41,7 +41,7 @@ const ForumContent = ({session, user, id}) => {
                         <CircularProgress className={modules.loading} size="8rem"/>) : forumError || refetchError ? (
                         <p className={modules.errorMessage}>Failed to load forum posts. Please&nbsp;<Link
                             className={modules.link}
-                            onClick={reloadforum}>try
+                            onClick={reloadForum}>try
                             again</Link></p>) : (
                         <p className={modules.emptyMessage}>No posts right now, please check again later</p>)}
                 </div>
