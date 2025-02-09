@@ -33,6 +33,14 @@ const Comment = ({comment, handleLike, currentUser}) => {
 
     return (
         <Card sx={cardSx}>
+            <Box>
+                <Typography variant="subtitle2" fontWeight="bold">
+                    {comment.username}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                    {comment.timestamp}
+                </Typography>
+            </Box>
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
                 <Typography variant="body1" sx={{flexGrow: 1}}>
                     {comment.content}

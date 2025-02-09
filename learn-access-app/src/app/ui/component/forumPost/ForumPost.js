@@ -7,10 +7,11 @@ import {
     CardHeader,
     Collapse,
     IconButton,
-    styled, Typography,
+    styled, Tooltip, Typography,
 } from "@mui/material";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AddIcon from '@mui/icons-material/Add';
 import tinycolor from "tinycolor2";
 import {useState} from "react";
 import {SandpackCodeViewer, SandpackProvider} from "@codesandbox/sandpack-react";
@@ -48,7 +49,6 @@ const ForumPost = ({currentUser, post}) => {
     const [comments, setComments] = useState(post.comments);
 
     //TODO add comment creation functionality
-    //TODO hook up to API
     //TODO Comment and post sorting functionality
 
     const getAvatarColour = (username) => {
@@ -78,6 +78,10 @@ const ForumPost = ({currentUser, post}) => {
         }, {});
     }
 
+    const addComment = () => {
+
+    }
+
     const cardSx = currentUser.id === post.userId ? {backgroundColor: "#f7ebc8"} : {};
 
     return (
@@ -102,24 +106,31 @@ const ForumPost = ({currentUser, post}) => {
                     {post.message}
                 </div>
             </CardContent>
-            <CardActions disableSpacing>
+            <CardActions>
                 <span>
-                    {comments.length + " Comments "}
                     {comments.length > 0 && <ExpandMore expand={expanded}
-                                                               onClick={() => setExpanded(!expanded)}
-                                                               aria-expanded={expanded}
-                                                               aria-label="View comments">
+                                                        onClick={() => setExpanded(!expanded)}
+                                                        aria-expanded={expanded}
+                                                        aria-label="View comments">
                         <ExpandMoreIcon/>
                     </ExpandMore>}
+                    {comments.length + " Comments "}
                 </span>
+                <Tooltip title={"Add Comment"}>
+                    <IconButton onClick={addComment}>
+                        <AddIcon/>
+                    </IconButton>
+                </Tooltip>
             </CardActions>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     {comments.length > 0 ? (
                         comments.map((comment) =>
-                            <Comment key={comment.id} comment={comment} handleLike={() => {}} currentUser={currentUser}/>
+                            <Comment key={comment.id} comment={comment} handleLike={() => {
+                            }} currentUser={currentUser}/>
                         )
-                    ) : <Typography variant="body2" color="textSecondary" component="div">No comments yet, check back later</Typography>}
+                    ) : <Typography variant="body2" color="textSecondary" component="div">No comments yet, check back
+                        later</Typography>}
                 </CardContent>
             </Collapse>
         </Card>

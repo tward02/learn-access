@@ -22,3 +22,29 @@
     max-width: 55%;
     width: 55%;
 }
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 40%;
+    margin-top: 20%;
+}
+
+.errorMessage {
+    font-size: 2rem;
+    color: red;
+    text-align: center;
+    margin-top: 10%;
+}
+
+.emptyMessage {
+    text-align: center;
+    font-size: 2rem;
+    color: black;
+    margin-top: 10%;
+}
+
+.link:hover {
+    cursor: pointer;
+}
