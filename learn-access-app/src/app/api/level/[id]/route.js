@@ -13,7 +13,7 @@ export async function GET(request, {params}) {
 
     const user = await getUser();
 
-    const levelDataList = await getLevel(id);
+    const levelDataList = await getLevel(user.id, id);
 
     if (levelDataList.length === 0) {
         return Response.json({error: 'Level not found'}, {status: 404});
@@ -32,6 +32,8 @@ export async function GET(request, {params}) {
     levelData.hints = levelHints;
 
     //TODO return level + tests
+
+    console.log(levelData);
 
     const level = testLevel;
 
