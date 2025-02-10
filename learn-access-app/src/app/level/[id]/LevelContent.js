@@ -39,6 +39,24 @@ const LevelContent = ({session, user, id}) => {
         router.push("/");
     }
 
+    const getLoadErrorMessage = () => {
+        if (levelError?.status === 404) {
+            return "The level you are looking for doesn't seem to exist, please return to the homepage and select a level to complete there."
+        }
+
+        if (levelError?.status === 401) {
+            return "You don't seem to be authenticated, please return to the homepage and login or register."
+        }
+
+        if (levelError?.status === 403) {
+            return "You don't have permission to view this level at the moment, please return to the homepage and choose a level you have unlocked."
+        }
+
+        return "There has been an error loading this level, please return to the homepage and try again later."
+    }
+
+    console.log(levelError?.status)
+
     return (
         <main className={modules.gridContainer}>
             <TopBar title={level?.title} loggedIn={session} username={user?.username} back/>
@@ -54,7 +72,7 @@ const LevelContent = ({session, user, id}) => {
                 <DialogTitle id="error-dialog-title">Error Loading Level</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="error-dialog-description">
-                        There has been an error loading this level, please return to the homepage and try again later.
+                        {getLoadErrorMessage()}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
