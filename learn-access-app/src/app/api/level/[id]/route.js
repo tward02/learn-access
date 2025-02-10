@@ -1,6 +1,6 @@
 import {getUser, hasSession} from "@/app/lib/dal";
-import {testLevel} from "@/app/ui/testData";
 import {getLevel, getLevelFiles, getLevelHints} from "@/app/lib/DAO/levelDAO";
+import {testLevel} from "@/app/lib/testData";
 
 export async function GET(request, {params}) {
 

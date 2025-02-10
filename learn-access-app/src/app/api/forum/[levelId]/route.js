@@ -1,5 +1,5 @@
 import {getUser, hasSession} from "@/app/lib/dal";
-import {forumPost} from "@/app/ui/testData";
+import {forumPost} from "@/app/lib/testData";
 
 export async function GET(req, {params}) {
 

@@ -55,8 +55,6 @@ const LevelContent = ({session, user, id}) => {
         return "There has been an error loading this level, please return to the homepage and try again later."
     }
 
-    console.log(levelError?.status)
-
     return (
         <main className={modules.gridContainer}>
             <TopBar title={level?.title} loggedIn={session} username={user?.username} back/>

@@ -1,5 +1,5 @@
 import {getUser, hasSession} from "@/app/lib/dal";
-import {levelsTestData} from "@/app/ui/testData";
+import {levelsTestData} from "@/app/lib/testData";
 import {getLevels} from "@/app/lib/DAO/levelDAO";
 
 export async function GET() {

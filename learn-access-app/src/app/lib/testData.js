@@ -6,20 +6,11 @@ export const testLevel = {
     files: [
         {
             name: "App.js",
-            content:
-                `export default function App() {
-                    return <h1>Hello world</h1>
-                }`
+            content: "export default function App() {\n    console.log(\"Hello World\");\n    return <h1>Hello world</h1>\n}\n"
         },
         {
             name: "styles.css",
-            content: `.app-container {
-                    text-align: center;
-                    font-family: Arial, sans-serif;
-                }
-                h1 {
-                    color: #4CAF50;
-                }`
+            content: ".app-container {\n    text-align: center;\n    font-family: Arial, sans-serif;\n}\n                \nh1 {\n    color: #4CAF50;\n}\n"
         }
     ],
     hints: [
@@ -77,20 +68,11 @@ export const forumPost = [
         files: [
             {
                 name: "App.js",
-                content:
-                    `export default function App() {
-                    return <h1>Hello world</h1>
-                }`
+                content: "export default function App() {\n    console.log(\"Hello World\");\n    return <h1>Hello world</h1>\n}\n"
             },
             {
                 name: "styles.css",
-                content: `.app-container {
-                    text-align: center;
-                    font-family: Arial, sans-serif;
-                }
-                h1 {
-                    color: #4CAF50;
-                }`
+                content: ".app-container {\n    text-align: center;\n    font-family: Arial, sans-serif;\n}\n                \nh1 {\n    color: #4CAF50;\n}\n"
             }
         ],
         likes: 4,
