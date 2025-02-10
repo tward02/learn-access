@@ -11,7 +11,7 @@ export async function GET() {
 
     const user = await getUser();
 
-    //const levelRows = await getLevels(user.id);
+    const levelRows = await getLevels(user.id);
 
     //TODO return this + testing
 
