@@ -13,23 +13,23 @@ export async function GET(request, {params}) {
 
     const user = await getUser();
 
-    const levelDataList = await getLevel(id);
-
-    if (levelDataList.length === 0) {
-        return Response.json({error: 'Level not found'}, {status: 404});
-    }
-
-    const levelData = levelDataList[0];
-
-    if (levelData.unlocked !== true) {
-        return Response.json({error: 'You don\'t have permission to view this level'}, {status: 403});
-    }
-
-    const levelFiles = await getLevelFiles(id);
-    const levelHints = await getLevelHints(id);
-
-    levelData.files = levelFiles;
-    levelData.hints = levelHints;
+    // const levelDataList = await getLevel(id);
+    //
+    // if (levelDataList.length === 0) {
+    //     return Response.json({error: 'Level not found'}, {status: 404});
+    // }
+    //
+    // const levelData = levelDataList[0];
+    //
+    // if (levelData.unlocked !== true) {
+    //     return Response.json({error: 'You don\'t have permission to view this level'}, {status: 403});
+    // }
+    //
+    // const levelFiles = await getLevelFiles(id);
+    // const levelHints = await getLevelHints(id);
+    //
+    // levelData.files = levelFiles;
+    // levelData.hints = levelHints;
 
     //TODO return level + tests
 

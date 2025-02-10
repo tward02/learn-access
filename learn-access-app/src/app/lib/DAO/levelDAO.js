@@ -1,5 +1,7 @@
 import {sql} from "@vercel/postgres";
 
+//TODO fix these broken queries
+
 export const getLevels = async (userId) => {
     const result = await sql`
         SELECT l.id,
@@ -41,10 +43,10 @@ export const getLevel = async (userId, levelId) => {
                    END                       AS unlocked
         FROM levels l
                  LEFT JOIN user_levels ul
-                           ON l.id = ul.levelId AND ul.userId = ${userId} -- Check if User 1 completed the level
+                           ON l.id = ul.levelId AND ul.userId = ${userId}
                  LEFT JOIN user_levels upl
                            ON l.previousLevelId = upl.levelId AND upl.userId = ${userId} AND
-                              upl.completed = TRUE -- Check if User 1 completed the previous level
+                              upl.completed = TRUE
         WHERE l.id = ${levelId}
         ORDER BY l.id;`
 
