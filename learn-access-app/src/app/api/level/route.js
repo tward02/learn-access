@@ -13,9 +13,5 @@ export async function GET() {
 
     const levelRows = await getLevels(user.id);
 
-    //TODO return this + testing
-
-    const levels = levelsTestData;
-
-    return Response.json(levels);
+    return Response.json(levelRows);
 }

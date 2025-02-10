@@ -27,7 +27,7 @@ const LevelCard = ({level}) => {
             <>
                 {level.locked && <LockIcon fontSize={"large"}/>}
                 {level.completed && <DoneIcon className={modules.doneIcon} fontSize={"large"}/>}
-                {level.title}
+                {level.name}
             </>
         );
     }
@@ -39,7 +39,7 @@ const LevelCard = ({level}) => {
                     <Link onClick={navigateToForum}>View Forum</Link>}/>
                 <CardContent>
                     <Typography variant="body2">{level.description}</Typography>
-                    {level.expires && (<Countdown targetDate={level.expires}/>)}
+                    {level.expiration && (<Countdown targetDate={level.expiration}/>)}
                 </CardContent>
             </>
         )

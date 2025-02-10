@@ -7,7 +7,7 @@ export const getLevels = async (userId) => {
         WITH user_completed_levels AS (SELECT levelID
                                        FROM user_levels
                                        WHERE userID = ${userId})
-        SELECT l.id                                                                   AS level_id,
+        SELECT l.id                                                                   AS id,
                l.name,
                l.description,
                l.objectives,
@@ -27,7 +27,7 @@ export const getLevel = async (userId, levelId) => {
         WITH user_completed_levels AS (SELECT levelID
                                        FROM user_levels
                                        WHERE userID = ${userId})
-        SELECT l.id                                                                   AS level_id,
+        SELECT l.id                                                                   AS id,
                l.name,
                l.description,
                l.objectives,
