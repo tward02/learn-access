@@ -22,7 +22,8 @@ async function seedLevels() {
       description TEXT NOT NULL,
       objectives TEXT NOT NULL,
       expiration TIMESTAMP NULL,
-      previousLevelId INTEGER NULL
+      previousLevelId INTEGER NULL,
+      enhancedDescription TEXT NOT NULL
     );
   `;
 }

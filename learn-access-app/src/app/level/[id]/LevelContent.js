@@ -26,12 +26,19 @@ const LevelContent = ({session, user, id}) => {
     const router = useRouter();
 
     const [level, setLevel] = useState(null);
+    const [expired, setExpired] = useState(false);
 
     const {levelLoading, levelError, levelData, levelSuccess} = useFetchLevel(id);
 
     useEffect(() => {
         if (levelData && levelSuccess) {
-            setLevel(levelData);
+            if ((Date.parse(levelData?.expiration) - new Date()) > 0) {
+                setExpired(true);
+            } else {
+                setLevel(levelData);
+            }
+
+
         }
     }, [levelSuccess, levelData]);
 
@@ -40,7 +47,7 @@ const LevelContent = ({session, user, id}) => {
     }
 
     const getLoadErrorMessage = () => {
-        if (levelError?.status === 404) {
+        if (expired || levelError?.status === 404) {
             return "The level you are looking for doesn't seem to exist, please return to the homepage and select a level to complete there."
         }
 
@@ -57,7 +64,7 @@ const LevelContent = ({session, user, id}) => {
 
     return (
         <main className={modules.gridContainer}>
-            <TopBar title={level?.title} loggedIn={session} username={user?.username} back/>
+            <TopBar title={level?.name} loggedIn={session} username={user?.username} back/>
             {!levelLoading && !levelError &&
                 <SandpackProvider template={"react"} className={modules.provider} files={formatFiles(level?.files)}>
                     <Sandbox user={user} id={id} level={level}/>
@@ -65,7 +72,8 @@ const LevelContent = ({session, user, id}) => {
             <Backdrop open={levelLoading}>
                 <CircularProgress/>
             </Backdrop>
-            <Dialog aria-labelledby="error-dialog-title" aria-describedby="error-dialog-description" open={levelError}
+            <Dialog aria-labelledby="error-dialog-title" aria-describedby="error-dialog-description"
+                    open={levelError || expired}
                     onClose={closeErrorPopup}>
                 <DialogTitle id="error-dialog-title">Error Loading Level</DialogTitle>
                 <DialogContent>

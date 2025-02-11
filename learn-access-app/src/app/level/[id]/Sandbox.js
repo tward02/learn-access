@@ -23,7 +23,7 @@ const Sandbox = ({level, user, id}) => {
                 <div className={modules.descriptionGrid}>
                     {/*description*/}
                     <h2 className={modules.leftTitle}>Description:</h2>
-                    <p className={modules.leftText}>{level?.description}</p>
+                    <p className={modules.leftText}>{level?.enhanceddescription}</p>
                 </div>
                 <div className={modules.objectivesGrid}>
                     {/*objectives*/}

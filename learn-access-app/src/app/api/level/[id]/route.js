@@ -31,11 +31,5 @@ export async function GET(request, {params}) {
     levelData.files = levelFiles;
     levelData.hints = levelHints;
 
-    //TODO return level + tests
-
-    console.log(levelData);
-
-    const level = testLevel;
-
-    return Response.json(level);
+    return Response.json(levelData);
 }

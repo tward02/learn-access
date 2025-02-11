@@ -26,8 +26,10 @@ const LevelListDisplay = () => {
             const nonLimited = [];
             const limited = [];
             levelsData.forEach((level) => {
-                if (level.expiration && (Date.parse(level.expiration) - new Date()) > 0) {
-                    limited.push(level);
+                if (level.expiration) {
+                    if ((Date.parse(level.expiration) - new Date()) > 0) {
+                        limited.push(level);
+                    }
                 } else {
                     nonLimited.push(level);
                 }

@@ -1,7 +1,5 @@
 import {sql} from "@vercel/postgres";
 
-//TODO fix these broken queries
-
 export const getLevels = async (userId) => {
     const result = await sql`
         WITH user_completed_levels AS (SELECT levelID
@@ -12,6 +10,7 @@ export const getLevels = async (userId) => {
                l.description,
                l.objectives,
                l.expiration,
+               l.enhancedDescription,
                COALESCE(ul.levelID IS NOT NULL, FALSE)                                AS completed,
                COALESCE(l.previousLevelId IS NOT NULL AND upl.levelID IS NULL, FALSE) AS locked
         FROM levels l
@@ -32,6 +31,7 @@ export const getLevel = async (userId, levelId) => {
                l.description,
                l.objectives,
                l.expiration,
+               l.enhancedDescription,
                COALESCE(ul.levelID IS NOT NULL, FALSE)                                AS completed,
                COALESCE(l.previousLevelId IS NOT NULL AND upl.levelID IS NULL, FALSE) AS locked
         FROM levels l
@@ -49,6 +49,9 @@ export const getLevelFiles = async (levelId) => {
         WHERE levelId = ${levelId};
     `
 
+    result.rows.map((file) => {
+        file.content = file.content.replace(/\\n/g, '\n');
+    })
     return result.rows;
 }
 
