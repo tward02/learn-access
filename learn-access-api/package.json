@@ -10,9 +10,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@jest/globals": "^29.7.0",
+    "@vercel/postgres": "^0.10.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
+    "jest": "^29.7.0",
     "morgan": "^1.10.0",
-    "openssl-nodejs": "^1.0.5"
+    "openssl-nodejs": "^1.0.5",
+    "puppeteer": "^24.2.0"
   }
 }
