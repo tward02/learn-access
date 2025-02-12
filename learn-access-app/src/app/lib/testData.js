@@ -10,7 +10,7 @@ export const testLevel = {
         },
         {
             name: "styles.css",
-            content: ".app-container {\n    text-align: center;\n    font-family: Arial, sans-serif;\n}\n                \nh1 {\n    color: #4CAF50;\n}\n"
+            content: ".app-container {\n    text-align: center;\n    font-family: Arial, sans-serif;\n}\n\nh1 {\n    color: #4CAF50;\n}\n"
         }
     ],
     hints: [

@@ -7,6 +7,53 @@ const tests = [
     "(async function() { const el = document.querySelector('.greeting'); return el && el.textContent === 'Hello, JSX & CSS World!'; })()"
 ]
 
+const exampleRequest = {
+    files: [
+        {
+            name: "styles.css",
+            type: "css",
+            content: ".app-container {\n    text-align: center;\n    font-family: Arial, sans-serif;\n}\n\nh1 {\n    color: #4CAF50;\n}\n"
+        },
+        {
+            name: "App.js",
+            type: "js",
+            content: "export default function App() {\n    console.log(\"Hello World\");\n    return <h1>Hello world</h1>\n}\n"
+        }
+    ],
+
+}
+
+const exampleResponse = { //200 OK
+    passed: true,
+    tests: [
+        {
+            name: "test 1 - tests whether the code renders",
+            passed: true,
+            message: ""
+        },
+        {
+            name: "test 2 - tests whether the code is accessible",
+            passed: true,
+            message: ""
+        },
+        {
+            name: "test 2 - tests whether the code is accessible + a really long bit of text to test overflow",
+            passed: true,
+            message: ""
+        },
+        {
+            name: "test 2 - tests whether the code is accessible + a really long bit of text to test overflow",
+            passed: true,
+            message: ""
+        },
+        {
+            name: "test 2 - tests whether the code is accessible + a really long bit of text to test overflow",
+            passed: true,
+            message: ""
+        }
+    ]
+}
+
 export async function POST(request, {params}) {
 
     if (!await hasSession()) {

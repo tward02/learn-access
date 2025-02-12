@@ -67,3 +67,19 @@ export const getLevelHints = async (levelId) => {
 export const getLevelTests = async (levelId) => {
 
 }
+
+export const passLevel = async (userId, levelId) => {
+
+}
+
+export const saveFile = async (userId, levelId, name, type, content) => {
+
+}
+
+export const getFiles = async (userId, levelId) => {
+
+}
+
+export const getSolution = async (levelId) => {
+
+}

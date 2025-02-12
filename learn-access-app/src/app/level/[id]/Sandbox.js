@@ -9,6 +9,37 @@ import {useEffect} from "react";
 import {Button, Grid2, Stack} from "@mui/material";
 import modules from "@/app/level/[id]/levels.module.css";
 
+const exampleResponse = { //200 OK
+    passed: false,
+    tests: [
+        {
+            name: "test 1 - tests whether the code renders",
+            passed: true,
+            message: ""
+        },
+        {
+            name: "test 2 - tests whether the code is accessible",
+            passed: true,
+            message: ""
+        },
+        {
+            name: "test 2 - tests whether the code is accessible + a really long bit of text to test overflow",
+            passed: false,
+            message: "Failed to find aria labels on text field"
+        },
+        {
+            name: "test 2 - tests whether the code is accessible + a really long bit of text to test overflow",
+            passed: false,
+            message: "Title is missing an accessible name"
+        },
+        {
+            name: "test 2 - tests whether the code is accessible + a really long bit of text to test overflow",
+            passed: true,
+            message: ""
+        }
+    ]
+}
+
 const Sandbox = ({level, user, id}) => {
 
     const {sandpack} = useSandpack();
@@ -16,6 +47,26 @@ const Sandbox = ({level, user, id}) => {
     useEffect(() => {
         console.log(sandpack.files);
     }, [sandpack.files]);
+
+    const formatTestResults = (results) => {
+        const passed = results.passed;
+        let numPassed = 0;
+        results.tests.forEach((test) => {
+            if (test.passed) {
+                numPassed++;
+            }
+        })
+
+        return (
+            <div className={modules.testResultsField}>
+                <div
+                    className={passed ? modules.testPassed : modules.testFailed}>{"RESULTS: " + (numPassed) + " PASSED, " + (results.tests.length - numPassed) + " FAILED, " + (results.tests.length) + " TOTAL"}</div>
+                {results.tests.map(testResult => (<div
+                    className={testResult.passed ? modules.testPassed : modules.testFailed}>{testResult.name + ": " + (testResult.passed ? "PASSED" : "FAILED - " + testResult.message)}</div>))}
+            </div>
+
+        );
+    }
 
     return (
         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
@@ -45,6 +96,7 @@ const Sandbox = ({level, user, id}) => {
                                 <h2 className={modules.testTitle}>Test Output:</h2>
                                 <div className={modules.testingDisplay}>
                                     {/*test console*/}
+                                    {formatTestResults(exampleResponse)}
                                 </div>
                             </div>
                         </Grid2>

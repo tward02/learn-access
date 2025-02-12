@@ -123,9 +123,27 @@
 .testingDisplay {
     border-top: 1px solid black;
     overflow-y: auto;
+    max-height: calc(((100vh - 64px) * 3/10) - 38px);
 }
 
 .provider {
     width: 100% !important;
     height: calc(100vh - 64px) !important;
+}
+
+.testPassed {
+    color: green;
+    margin-top: 5px;
+}
+
+.testFailed {
+    color: red;
+    margin-top: 5px;
+}
+
+.testResultsField {
+    padding: 5px 15px 15px;
+    font-size: 1.2em !important;
+    max-height: 100%;
+    overflow-y: auto;
 }
