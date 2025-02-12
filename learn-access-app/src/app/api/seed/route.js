@@ -69,6 +69,21 @@ async function seedLevelHints() {
     `;
 }
 
+async function seedLevelTests() {
+
+    await client.sql`
+    CREATE TABLE IF NOT EXISTS level_tests (
+        id SERIAL PRIMARY KEY,
+        levelId INTEGER NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        type TEXT NOT NULL,
+        failMessage TEXT NOT NULL,
+        testCode TEXT NOT NULL,
+        FOREIGN KEY (levelId) REFERENCES levels(id) ON DELETE CASCADE
+        );
+    `;
+}
+
 export async function GET(request) {
 
     const authHeader = request.headers.get('authorization');

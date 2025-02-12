@@ -59,10 +59,10 @@ const Sandbox = ({level, user, id}) => {
 
         return (
             <div className={modules.testResultsField}>
-                <div
-                    className={passed ? modules.testPassed : modules.testFailed}>{"RESULTS: " + (numPassed) + " PASSED, " + (results.tests.length - numPassed) + " FAILED, " + (results.tests.length) + " TOTAL"}</div>
-                {results.tests.map(testResult => (<div
-                    className={testResult.passed ? modules.testPassed : modules.testFailed}>{testResult.name + ": " + (testResult.passed ? "PASSED" : "FAILED - " + testResult.message)}</div>))}
+                <div key={0}
+                     className={passed ? modules.testPassed : modules.testFailed}>{"RESULTS: " + (numPassed) + " PASSED, " + (results.tests.length - numPassed) + " FAILED, " + (results.tests.length) + " TOTAL"}</div>
+                {results.tests.map((testResult, index) => (<div key={index + 1}
+                                                                className={testResult.passed ? modules.testPassed : modules.testFailed}>{testResult.name + ": " + (testResult.passed ? "PASSED" : "FAILED - " + testResult.message)}</div>))}
             </div>
 
         );
