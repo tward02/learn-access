@@ -20,7 +20,7 @@ export const getUser = async (username) => {
 
 export const getUserById = async (id) => {
     const {rows} = (await sql`
-        SELECT id, username
+        SELECT id, username, password
         FROM users
         WHERE id = ${id};`);
 
