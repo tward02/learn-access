@@ -4,11 +4,36 @@ import fs from 'fs';
 import path from 'path';
 import {v4 as uuidv4} from 'uuid';
 import morgan from "morgan";
+import {sql} from "@vercel/postgres";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 
 app.use(morgan("dev"));
+
+const getUserById = async (id) => {
+    const {rows} = (await sql`
+        SELECT id, username, password
+        FROM users
+        WHERE id = ${id};`);
+
+    return rows[0];
+}
+
+async function authenticate(user) {
+    const dbUser = await getUserById(user.id);
+
+    console.log(dbUser);
+
+    if (!dbUser) {
+        return false;
+    }
+
+    return user.password === dbUser.password;
+}
 
 const getTestsFromDatabase = async () => {
 
@@ -115,7 +140,19 @@ app.post('/test-code', async (req, res) => {
 
 app.post('/test-code/pw', async (req, res) => {
     try {
-        const {code, css, testType} = req.body;
+        const {code, css, testType, user} = req.body;
+
+        if (!user) {
+            return res.status(401).json({success: false, error: 'Not Authenticated'});
+        }
+
+        if (!await authenticate(user)) {
+            return res.status(403).json({success: false, error: 'You don\'t have permission to do this'});
+        }
+
+        if (!code || !css || !testType) {
+            return res.status(400).json({success: false, error: 'Missing required attribute'});
+        }
 
         if (!['jest', 'playwright'].includes(testType)) {
             return res.status(400).json({success: false, error: 'Invalid test type'});
