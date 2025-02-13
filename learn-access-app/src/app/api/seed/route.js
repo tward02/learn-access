@@ -78,7 +78,7 @@ async function seedLevelTests() {
         name VARCHAR(255) NOT NULL,
         type TEXT NOT NULL,
         failMessage TEXT NOT NULL,
-        testCode TEXT NOT NULL,
+        code TEXT NOT NULL,
         FOREIGN KEY (levelId) REFERENCES levels(id) ON DELETE CASCADE
         );
     `;

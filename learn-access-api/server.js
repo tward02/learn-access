@@ -42,12 +42,16 @@ const getUserById = async (id) => {
 }
 
 const getTests = async (levelId) => {
-
+    const {rows} = (await sql`
+        SELECT *
+        from level_tests
+        WHERE levelId = ${levelId};
+    `)
+    return rows;
 }
 
 async function authenticate(user) {
     const dbUser = await getUserById(user.id);
-
 
     if (!dbUser) {
         return false;
@@ -145,7 +149,7 @@ app.post('/test-code', async (req, res) => {
         fs.writeFileSync(testPath, await getTestsFromDatabase());
 
         exec(`npx jest --config jest.config.js --findRelatedTests ${path.normalize(testPath)} --json`, (error, stdout) => {
-          fs.rmSync(tempDir, {recursive: true, force: true});
+            fs.rmSync(tempDir, {recursive: true, force: true});
 
             if (error) {
                 return res.status(500).json({success: false, error: error.message});
@@ -225,11 +229,11 @@ const runJestTest = async (testDir, test) => {
     exec(`npx jest --config jest.config.js --findRelatedTests ${path.normalize(testPath)} --json`, (error, stdout) => {
 
         if (error) {
-            return {passed: false, error: error.message, message: JSON.parse(stdout)};
+            return {passed: false, name: test.name, error: error.message, message: JSON.parse(stdout)};
         }
 
         const results = JSON.parse(stdout);
-        return {passed: true, message: results.testResults};
+        return {passed: true, name: test.name, message: results.testResults};
     });
 
 }
@@ -239,13 +243,13 @@ const runPlaywrightTest = async (testDir, test, code, css) => {
     const testCode = makePlaywrightTest(test.code, code, css)
     fs.writeFileSync(testPath, testCode);
 
-    exec(`npx playwright test ${testPath.replace(/\\/g, "/")} --reporter=json`,  (error, stdout) => {
+    exec(`npx playwright test ${testPath.replace(/\\/g, "/")} --reporter=json`, (error, stdout) => {
 
         if (error) {
-            return {passed: false, error: error.message, message: stdout};
+            return {passed: false, name: test.name, error: error.message, message: stdout};
         }
 
-        return {passed: true, message: stdout};
+        return {passed: true, name: test.name, message: stdout};
     });
 
 }
@@ -284,13 +288,15 @@ app.post('/test/:levelId', async (req, res) => {
 
     const results = [];
 
+    //TODO run all these in parallel
     tests.forEach((test) => {
-       if (test.type === "jest") {
-           results.push(runJestTest(tempDir, test));
-       } else if (test.type === "playwright") {
+        if (test.type === "jest") {
+            results.push(runJestTest(tempDir, test));
+        } else if (test.type === "playwright") {
             results.push(runPlaywrightTest(tempDir, test, code, css));
-       }
+        }
     });
+    //TODO wait for promises to resolve
 
     fs.rmSync(tempDir, {recursive: true, force: true});
     res.status(200).json(results);
@@ -299,4 +305,3 @@ app.post('/test/:levelId', async (req, res) => {
 if (process.env.NODE_ENV !== 'test') {
     app.listen(4000, () => console.log('Server running on port 4000'));
 }
-
