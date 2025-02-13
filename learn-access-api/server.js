@@ -14,6 +14,24 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 
+const getPlaywrightRender = (reactCode, css) => `
+<html>
+        <head>
+            <style>${css}</style>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+        </head>
+        <body>
+            <div id="root"></div>
+            <script type="text/babel">
+                ${reactCode}
+                ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+            </script>
+        </body>
+</html>
+`
+
 const getUserById = async (id) => {
     const {rows} = (await sql`
         SELECT id, username, password
@@ -23,10 +41,13 @@ const getUserById = async (id) => {
     return rows[0];
 }
 
+const getTests = async (levelId) => {
+
+}
+
 async function authenticate(user) {
     const dbUser = await getUserById(user.id);
 
-    console.log(dbUser);
 
     if (!dbUser) {
         return false;
@@ -124,7 +145,7 @@ app.post('/test-code', async (req, res) => {
         fs.writeFileSync(testPath, await getTestsFromDatabase());
 
         exec(`npx jest --config jest.config.js --findRelatedTests ${path.normalize(testPath)} --json`, (error, stdout) => {
-            fs.rmSync(tempDir, {recursive: true, force: true});
+          fs.rmSync(tempDir, {recursive: true, force: true});
 
             if (error) {
                 return res.status(500).json({success: false, error: error.message});
@@ -137,6 +158,7 @@ app.post('/test-code', async (req, res) => {
         res.status(500).json({success: false, error: error.message});
     }
 });
+
 
 app.post('/test-code/pw', async (req, res) => {
     try {
@@ -187,6 +209,91 @@ app.post('/test-code/pw', async (req, res) => {
     } catch (error) {
         res.status(500).json({success: false, error: error.message});
     }
+});
+
+const makePlaywrightTest = async (testCode, code, css) => {
+    const render = getPlaywrightRender(code, css);
+    code.replaceAll("export", "");
+    testCode.replace("///Render///", render);
+    return testCode;
+}
+
+const runJestTest = async (testDir, test) => {
+    const testPath = path.join(testDir, 'App.test.js');
+    fs.writeFileSync(testPath, test.code);
+
+    exec(`npx jest --config jest.config.js --findRelatedTests ${path.normalize(testPath)} --json`, (error, stdout) => {
+
+        if (error) {
+            return {passed: false, error: error.message, message: JSON.parse(stdout)};
+        }
+
+        const results = JSON.parse(stdout);
+        return {passed: true, message: results.testResults};
+    });
+
+}
+
+const runPlaywrightTest = async (testDir, test, code, css) => {
+    const testPath = path.join(testDir, 'playwrightTest.spec.js');
+    const testCode = makePlaywrightTest(test.code, code, css)
+    fs.writeFileSync(testPath, testCode);
+
+    exec(`npx playwright test ${testPath.replace(/\\/g, "/")} --reporter=json`,  (error, stdout) => {
+
+        if (error) {
+            return {passed: false, error: error.message, message: stdout};
+        }
+
+        return {passed: true, message: stdout};
+    });
+
+}
+
+//TODO test this
+
+app.post('/test/:levelId', async (req, res) => {
+
+    const {code, css, user} = req.body;
+    const levelId = req.params.levelId;
+
+    if (!user) {
+        return res.status(401).json({success: false, error: 'Not Authenticated'});
+    }
+
+    if (!await authenticate(user)) {
+        return res.status(403).json({success: false, error: 'You don\'t have permission to do this'});
+    }
+
+    if (!code || !css) {
+        return res.status(400).json({success: false, error: 'Missing required attribute'});
+    }
+
+    const tempDir = path.join("testing", 'temp', uuidv4());
+    fs.mkdirSync(tempDir, {recursive: true});
+
+    const appPath = path.join(tempDir, 'App.js');
+    const cssPath = path.join(tempDir, 'styles.css');
+
+    const jestCode = "import React from \'react\';\nimport \'./styles.css\'\n" + code;
+
+    fs.writeFileSync(appPath, jestCode);
+    fs.writeFileSync(cssPath, css);
+
+    const tests = getTests(levelId);
+
+    const results = [];
+
+    tests.forEach((test) => {
+       if (test.type === "jest") {
+           results.push(runJestTest(tempDir, test));
+       } else if (test.type === "playwright") {
+            results.push(runPlaywrightTest(tempDir, test, code, css));
+       }
+    });
+
+    fs.rmSync(tempDir, {recursive: true, force: true});
+    res.status(200).json(results);
 });
 
 if (process.env.NODE_ENV !== 'test') {
