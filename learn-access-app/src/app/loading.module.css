@@ -1,0 +1,13 @@
+.container {
+    height: 100vh;
+    max-height: 100vh;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30vh;
+}
