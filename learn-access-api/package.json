@@ -25,6 +25,7 @@
     "jsdom": "^26.0.0",
     "morgan": "^1.10.0",
     "openssl-nodejs": "^1.0.5",
+    "playwright": "^1.50.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "uuid": "^11.0.5"
