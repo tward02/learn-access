@@ -14,6 +14,10 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 
+app.get("/hello", (req, res) => {
+    res.status(200).json({message: "Hello, World!"});
+});
+
 const getPlaywrightRender = (reactCode, css) => `
 <html>
         <head>
@@ -305,3 +309,5 @@ app.post('/test/:levelId', async (req, res) => {
 if (process.env.NODE_ENV !== 'test') {
     app.listen(4000, () => console.log('Server running on port 4000'));
 }
+
+module.exports = app;
