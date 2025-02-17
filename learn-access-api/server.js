@@ -126,17 +126,17 @@ const getTests = async (levelId) => {
             name: "Playwright Test Suite 1",
             code: playwrightTestExample
         },
-        // {
-        //     type: "playwright",
-        //     name: "Playwright Test Suite 1",
-        //     code: playwrightTestExample
-        //
-        // },
-        // {
-        //     type: "jest",
-        //     code: jestTestExample,
-        //     name: "Jest Test Suite 1"
-        // }
+        {
+            type: "playwright",
+            name: "Playwright Test Suite 2",
+            code: playwrightTestExample
+
+        },
+        {
+            type: "jest",
+            code: jestTestExample,
+            name: "Jest Test Suite 2"
+        }
     ];
 }
 
@@ -161,7 +161,12 @@ const runJestTest = async (testDir, test, index) => {
         const results = JSON.parse(stdout);
         results.testResults.forEach((tests) => {
             tests.assertionResults.forEach(testResult => {
-                resultList.push({passed: (testResult.status === "passed"), suite: test.name, name: testResult.fullName, type: test.type});
+                resultList.push({
+                    passed: (testResult.status === "passed"),
+                    suite: test.name,
+                    name: testResult.fullName,
+                    type: test.type
+                });
             })
         })
     } catch (error) {
@@ -200,7 +205,12 @@ const runPlaywrightTest = async (testDir, test, code, css, index) => {
         results.suites.forEach((suite) => {
             suite.specs.forEach(spec => {
                 spec.tests.forEach((testResult) => {
-                    resultList.push({passed: testResult.results[0].status === "passed", suite: test.name, name: spec.title, type: test.type});
+                    resultList.push({
+                        passed: testResult.results[0].status === "passed",
+                        suite: test.name,
+                        name: spec.title,
+                        type: test.type
+                    });
                 })
             })
         })
