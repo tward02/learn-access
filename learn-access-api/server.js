@@ -316,6 +316,8 @@ app.post('/test/:levelId', async (req, res) => {
     res.status(200).json({passed: passed, tests: testResultsList});
 });
 
-app.listen(4000, () => console.log('Server running on port 4000'));
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(4000, () => console.log('Server running on port 4000'));
+}
 
 export default app;
