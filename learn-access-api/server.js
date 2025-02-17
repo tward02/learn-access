@@ -48,6 +48,20 @@ import App from './App';
 it('renders root element', () => {
     render(<App />);
     expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
+    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
+    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
+    const rootElement = screen.getByText('Hello, JSX & CSS World!');
+});
+
+it('renders root element 2', () => {
+    render(<App />);
+    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
+    const rootElement = screen.getByText('Hello, JSX & CSS World!');
+});
+
+it('renders root element 3', () => {
+    render(<App />);
+    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
     const rootElement = screen.getByText('Hello, JSX & CSS World!');
 });
 `
@@ -56,6 +70,20 @@ const playwrightTestExample = `
 import { test, expect } from '@playwright/test';
 
 test('checks CSS styling', async ({ page }) => {
+        
+    
+    await page.setContent(\`
+        ///Render///
+    \`);
+
+    await page.waitForSelector('h1');
+
+    const element = await page.locator('h1');
+    await expect(element).toHaveCSS('color', 'rgb(0, 0, 255)');
+    await expect(element).toHaveCSS('text-align', 'center');     // Expect centered text
+});
+
+test('checks CSS styling 2', async ({ page }) => {
         
     
     await page.setContent(\`
@@ -98,16 +126,17 @@ const getTests = async (levelId) => {
             name: "Playwright Test Suite 1",
             code: playwrightTestExample
         },
-        {
-            type: "playwright",
-            name: "Playwright Test Suite 1",
-            code: playwrightTestExample
-        },
-        {
-            type: "jest",
-            code: jestTestExample,
-            name: "Jest Test Suite 1"
-        }
+        // {
+        //     type: "playwright",
+        //     name: "Playwright Test Suite 1",
+        //     code: playwrightTestExample
+        //
+        // },
+        // {
+        //     type: "jest",
+        //     code: jestTestExample,
+        //     name: "Jest Test Suite 1"
+        // }
     ];
 }
 
@@ -121,46 +150,80 @@ async function authenticate(user) {
     return user.password === dbUser.password;
 }
 
-const runJestTest = async (testDir, test) => {
-    const testPath = path.join(testDir, 'App.test.js');
+const runJestTest = async (testDir, test, index) => {
+    const testPath = path.join(testDir, 'App' + index + '.test.js');
     fs.writeFileSync(testPath, test.code);
+
+    const resultList = [];
 
     try {
         const {stdout} = await execPromise(`npx jest --config jest.config.js --findRelatedTests ${path.normalize(testPath)} --json`);
         const results = JSON.parse(stdout);
-        return {passed: true, name: test.name, message: results.testResults, type: test.type};
+        results.testResults.forEach((tests) => {
+            tests.assertionResults.forEach(testResult => {
+                resultList.push({passed: (testResult.status === "passed"), suite: test.name, name: testResult.fullName, type: test.type});
+            })
+        })
     } catch (error) {
-        return {
-            passed: false,
-            name: test.name,
-            error: error.message,
-            message: error.stdout ? JSON.parse(error.stdout) : "Error running Jest",
-            type: test.type
-        };
+        if (error.stdout) {
+            const results = JSON.parse(error.stdout);
+            results.testResults.forEach((tests) => {
+                tests.assertionResults.forEach(testResult => {
+                    const passed = testResult.status === "passed";
+                    const resultObject = {passed: passed, suite: test.name, name: testResult.fullName, type: test.type};
+                    if (!passed) {
+                        resultObject.message = testResult.failureMessages;
+                    }
+                    resultList.push(resultObject);
+                })
+            })
+        } else {
+            resultList.push({passed: false, suite: test.name, message: "Error running Jest", type: test.type});
+        }
     }
+    return resultList;
 }
 
-const runPlaywrightTest = async (testDir, test, code, css) => {
-    const testPath = path.join(testDir, 'playwrightTest.spec.js');
+const runPlaywrightTest = async (testDir, test, code, css, index) => {
+    const testPath = path.join(testDir, 'playwrightTest' + index + '.spec.js');
     let formattedCode = code.replaceAll("export", "");
     formattedCode = formattedCode.replace("default", "");
     const render = getPlaywrightRender(formattedCode, css);
-    const testCode = test.code.replace("///Render///", render);
+    const testCode = test.code.replaceAll("///Render///", render);
     fs.writeFileSync(testPath, testCode);
+
+    const resultList = [];
 
     try {
         const {stdout} = await execPromise(`npx playwright test ${testPath.replace(/\\/g, "/")} --reporter=json`);
         const results = JSON.parse(stdout);
-        return {passed: true, name: test.name, message: results, type: test.type};
+        results.suites.forEach((suite) => {
+            suite.specs.forEach(spec => {
+                spec.tests.forEach((testResult) => {
+                    resultList.push({passed: testResult.results[0].status === "passed", suite: test.name, name: spec.title, type: test.type});
+                })
+            })
+        })
     } catch (error) {
-        return {
-            passed: false,
-            name: test.name,
-            error: error.message,
-            message: error.stdout || "Error running Playwright test",
-            type: test.type
-        };
+        if (error.stdout) {
+            const results = JSON.parse(error.stdout);
+            results.suites.forEach((suite) => {
+                suite.specs.forEach(spec => {
+                    spec.tests.forEach((testResult) => {
+                        const passed = testResult.results[0].status === "passed";
+                        const resultObj = {passed: passed, suite: test.name, name: spec.title, type: test.type};
+                        if (!passed) {
+                            resultObj.message = testResult.results[0].error.message;
+                        }
+                        resultList.push(resultObj);
+                    })
+                })
+            })
+        } else {
+            resultList.push({passed: false, suite: test.name, message: "Error running Jest", type: test.type});
+        }
     }
+    return resultList;
 }
 
 //TODO when deploying run npx playwright install
@@ -196,27 +259,26 @@ app.post('/test/:levelId', async (req, res) => {
     const tests = await getTests(levelId);
 
     const results = await Promise.all(
-        tests.map(test => {
+        tests.map((test, index) => {
             if (test.type === "jest") {
-                return runJestTest(tempDir, test);
+                return runJestTest(tempDir, test, index);
             } else if (test.type === "playwright") {
-                return runPlaywrightTest(tempDir, test, code, css);
+                return runPlaywrightTest(tempDir, test, code, css, index);
             }
         })
     );
 
-    fs.rmSync(tempDir, {recursive: true, force: true});
+    const testResultsList = results.flatMap(subArray => subArray);
 
+    fs.rmSync(tempDir, {recursive: true, force: true});
     let passed = true;
-    results.forEach(test => {
+    testResultsList.forEach(test => {
         passed = test.passed && passed;
     })
 
-    res.status(200).json({passed: passed, tests: results});
+    res.status(200).json({passed: passed, tests: testResultsList});
 });
 
-if (process.env.NODE_ENV !== 'test') {
-    app.listen(4000, () => console.log('Server running on port 4000'));
-}
+app.listen(4000, () => console.log('Server running on port 4000'));
 
 export default app;
