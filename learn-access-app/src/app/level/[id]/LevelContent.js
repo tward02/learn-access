@@ -21,7 +21,6 @@ import Sandbox from "@/app/level/[id]/Sandbox";
 const LevelContent = ({session, user, id}) => {
 
     //TODO dark mode + text sizes
-    //TODO API testing integration
 
     const router = useRouter();
 
@@ -37,8 +36,6 @@ const LevelContent = ({session, user, id}) => {
             } else {
                 setLevel(levelData);
             }
-
-
         }
     }, [levelSuccess, levelData]);
 

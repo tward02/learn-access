@@ -64,18 +64,6 @@ export const getLevelHints = async (levelId) => {
     return result.rows;
 }
 
-export const getLevelTests = async (levelId) => {
-    const result = await sql`
-        SELECT *
-        FROM level_tests
-        WHERE levelId = ${levelId};`
-    return result.rows;
-}
-
-export const passLevel = async (userId, levelId) => {
-
-}
-
 export const saveFile = async (userId, levelId, name, type, content) => {
 
 }

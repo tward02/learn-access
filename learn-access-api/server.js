@@ -7,6 +7,7 @@ import morgan from "morgan";
 import {sql} from "@vercel/postgres";
 import dotenv from "dotenv";
 import util from 'util';
+import cors from "cors";
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const execPromise = util.promisify(exec);
 
 const app = express();
 app.use(express.json());
-
+app.use(cors({origin: process.env.FRONTEND_DOMAIN}));
 app.use(morgan("dev"));
 
 app.get("/hello", (req, res) => {
@@ -140,7 +141,28 @@ const getTests = async (levelId) => {
     ];
 }
 
-async function authenticate(user) {
+export const getLevel = async (userId, levelId) => {
+    const result = await sql`
+        WITH user_completed_levels AS (SELECT levelID
+                                       FROM user_levels
+                                       WHERE userID = ${userId})
+        SELECT l.id                                                                   AS id,
+               l.name,
+               l.description,
+               l.objectives,
+               l.expiration,
+               l.enhancedDescription,
+               COALESCE(ul.levelID IS NOT NULL, FALSE)                                AS completed,
+               COALESCE(l.previousLevelId IS NOT NULL AND upl.levelID IS NULL, FALSE) AS locked
+        FROM levels l
+                 LEFT JOIN user_completed_levels ul ON l.id = ul.levelID
+                 LEFT JOIN user_completed_levels upl ON l.previousLevelId = upl.levelID
+        WHERE l.id = ${levelId};`
+
+    return result.rows;
+}
+
+const authenticate = async (user) => {
     const dbUser = await getUserById(user.id);
 
     if (!dbUser) {
@@ -240,19 +262,24 @@ const runPlaywrightTest = async (testDir, test, code, css, index) => {
 
 app.post('/test/:levelId', async (req, res) => {
 
-    const {code, css, user} = req.body;
-    const levelId = req.params.levelId;
+    const {code, css, user} = req?.body?.data;
+    const levelId = req?.params?.levelId;
 
-    if (!user) {
-        return res.status(401).json({success: false, error: 'Not Authenticated'});
+    if (!user || !await authenticate(user)) {
+        return res.status(401).json({message: 'Not Authenticated'});
     }
 
-    if (!await authenticate(user)) {
-        return res.status(403).json({success: false, error: 'You don\'t have permission to do this'});
+    const levelData = await getLevel(user.id, levelId);
+    if (levelData.length === 0) {
+        return res.status(404).json({message: 'Level Not Found'});
+    }
+
+    if (levelData[0].locked === true) {
+        return res.status(403).json({message: 'You don\'t have permission to do this level'});
     }
 
     if (!code || !css) {
-        return res.status(400).json({success: false, error: 'Missing required attribute'});
+        return res.status(400).json({message: 'Missing Required Attribute'});
     }
 
     const tempDir = path.join("testing", 'temp', uuidv4());

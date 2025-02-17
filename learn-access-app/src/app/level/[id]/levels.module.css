@@ -33,7 +33,7 @@
 
 .codeEditorGrid {
     width: 100%;
-    height: calc((100vh - 64px) * 7/10);
+    height: calc((100vh - 64px) * 7 / 10);
     overflow: hidden;
     border-right: 1px solid black;
     border-radius: 8px;
@@ -42,7 +42,7 @@
 .codeEditor {
     height: 100%;
     min-height: 30vh;
-    max-height: calc((100vh - 64px) * 7/10);
+    max-height: calc((100vh - 64px) * 7 / 10);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -56,7 +56,7 @@
 .testGrid {
     border-right: 1px solid black;
     border-top: 1px solid black;
-    height: calc((100vh - 64px) * 3/10);
+    height: calc((100vh - 64px) * 3 / 10);
     width: 100%;
 }
 
@@ -83,9 +83,9 @@
 }
 
 .previewContainer {
-    min-height: calc((100vh - 64px) * 8/10);
-    max-height: calc((100vh - 64px) * 8/10);
-    height: calc((100vh - 64px) * 8/10);
+    min-height: calc((100vh - 64px) * 7.5 / 10);
+    max-height: calc((100vh - 64px) * 7.5 / 10);
+    height: calc((100vh - 64px) * 8 / 10);
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
@@ -97,8 +97,14 @@
 
 .previewConsole {
     border-top: 1px solid black;
-    min-height: calc((100vh - 64px) * 2/10);
-    max-height: calc((100vh - 64px) * 2/10);
+    min-height: calc(((100vh - 64px) * 2.5 / 10) - 26px);
+    max-height: calc(((100vh - 64px) * 2.5 / 10) - 26px);
+}
+
+.consoleTitle {
+    padding: 2px;
+    font-size: 1rem;
+    border-top: 1px solid black;
 }
 
 .leftTitle {
@@ -123,7 +129,7 @@
 .testingDisplay {
     border-top: 1px solid black;
     overflow-y: auto;
-    max-height: calc(((100vh - 64px) * 3/10) - 38px);
+    max-height: calc(((100vh - 64px) * 3 / 10) - 38px);
 }
 
 .provider {
@@ -146,4 +152,13 @@
     font-size: 1.2em !important;
     max-height: 100%;
     overflow-y: auto;
+}
+
+.testsLoading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgray;
+    min-height: 100%;
+    height: calc(((100vh - 64px) * 3 / 10) - 39px);
 }

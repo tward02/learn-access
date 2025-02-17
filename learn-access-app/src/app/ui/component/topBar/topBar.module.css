@@ -1,3 +1,7 @@
-.backButton {
+.backButtonContainer {
     margin-right: 20px;
+}
+
+.backButton {
+    color: white !important;
 }
