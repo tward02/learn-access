@@ -162,6 +162,13 @@ export const getLevel = async (userId, levelId) => {
     return result.rows;
 }
 
+export const passLevel = async (userId, levelId) => {
+    await sql`
+        INSERT INTO user_levels (userID, levelID, datetime)
+        VALUES (${userId}, ${levelId}, NOW())
+    `;
+}
+
 const authenticate = async (user) => {
     const dbUser = await getUserById(user.id);
 
@@ -258,30 +265,7 @@ const runPlaywrightTest = async (testDir, test, code, css, index) => {
     return resultList;
 }
 
-//TODO when deploying run npx playwright install
-
-app.post('/test/:levelId', async (req, res) => {
-
-    const {code, css, user} = req?.body?.data;
-    const levelId = req?.params?.levelId;
-
-    if (!user || !await authenticate(user)) {
-        return res.status(401).json({message: 'Not Authenticated'});
-    }
-
-    const levelData = await getLevel(user.id, levelId);
-    if (levelData.length === 0) {
-        return res.status(404).json({message: 'Level Not Found'});
-    }
-
-    if (levelData[0].locked === true) {
-        return res.status(403).json({message: 'You don\'t have permission to do this level'});
-    }
-
-    if (!code || !css) {
-        return res.status(400).json({message: 'Missing Required Attribute'});
-    }
-
+const runTests = async (levelId, code, css) => {
     const tempDir = path.join("testing", 'temp', uuidv4());
     fs.mkdirSync(tempDir, {recursive: true});
 
@@ -305,9 +289,74 @@ app.post('/test/:levelId', async (req, res) => {
         })
     );
 
-    const testResultsList = results.flatMap(subArray => subArray);
-
     fs.rmSync(tempDir, {recursive: true, force: true});
+    return results.flatMap(subArray => subArray);
+}
+
+//TODO when deploying run npx playwright install
+
+app.post('/submit/:levelId', async (req, res) => {
+
+    const {code, css, user} = req?.body?.data;
+    const levelId = req?.params?.levelId;
+
+    if (!user || !await authenticate(user)) {
+        return res.status(401).json({message: 'Not Authenticated'});
+    }
+
+    const levelData = await getLevel(user.id, levelId);
+    if (levelData.length === 0) {
+        return res.status(404).json({message: 'Level Not Found'});
+    }
+
+    if (levelData[0].locked === true) {
+        return res.status(403).json({message: 'You don\'t have permission to do this level'});
+    }
+
+    if (!code || !css) {
+        return res.status(400).json({message: 'Missing Required Attribute'});
+    }
+
+    const testResultsList = await runTests(levelId, code, css);
+
+    let passed = true;
+    testResultsList.forEach(test => {
+        passed = test.passed && passed;
+    })
+
+    if (passed) {
+        await passLevel(user.id, levelId);
+    }
+
+    res.status(200).json({success: passed});
+});
+
+//TODO extract more appropriate error message
+
+app.post('/test/:levelId', async (req, res) => {
+
+    const {code, css, user} = req?.body?.data;
+    const levelId = req?.params?.levelId;
+
+    if (!user || !await authenticate(user)) {
+        return res.status(401).json({message: 'Not Authenticated'});
+    }
+
+    const levelData = await getLevel(user.id, levelId);
+    if (levelData.length === 0) {
+        return res.status(404).json({message: 'Level Not Found'});
+    }
+
+    if (levelData[0].locked === true) {
+        return res.status(403).json({message: 'You don\'t have permission to do this level'});
+    }
+
+    if (!code || !css) {
+        return res.status(400).json({message: 'Missing Required Attribute'});
+    }
+
+    const testResultsList = await runTests(levelId, code, css);
+
     let passed = true;
     testResultsList.forEach(test => {
         passed = test.passed && passed;

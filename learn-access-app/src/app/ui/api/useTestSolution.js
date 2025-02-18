@@ -3,14 +3,14 @@ import {useMutation} from "@tanstack/react-query";
 
 const baseUrl = process.env.NEXT_PUBLIC_TEST_URL;
 
-const postSolution = async (id, payload) => {
+const postTestSolution = async (id, payload) => {
     const response = await axios.post(baseUrl + "test/" + id, {
         data: payload
     });
     return response.data;
 }
 
-export const usePostSolution = (id) => {
+export const useTestSolution = (id) => {
     const {
         isLoading: testSolutionLoading,
         error: testSolutionError,
@@ -18,8 +18,8 @@ export const usePostSolution = (id) => {
         mutate: testSolution,
         isSuccess: testSolutionSuccess
     } = useMutation({
-        mutationFn: async (payload) => {
-            return await postSolution(id, payload);
+        mutationFn: (payload) => {
+            return postTestSolution(id, payload);
         }
     });
 

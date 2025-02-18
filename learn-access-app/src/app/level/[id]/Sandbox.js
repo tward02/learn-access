@@ -10,7 +10,7 @@ import {
 import {useEffect, useState} from "react";
 import {
     Button, CircularProgress,
-    Dialog,
+    Dialog, DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
@@ -18,8 +18,9 @@ import {
     Stack
 } from "@mui/material";
 import modules from "@/app/level/[id]/levels.module.css";
-import {usePostSolution} from "@/app/ui/api/useTestSolution";
+import {useTestSolution} from "@/app/ui/api/useTestSolution";
 import {useRouter} from "next/navigation";
+import {useSubmitSolution} from "@/app/ui/api/useSubmitSolution";
 
 const Sandbox = ({level, user, id}) => {
 
@@ -30,11 +31,24 @@ const Sandbox = ({level, user, id}) => {
         testSolutionData,
         testSolution,
         testSolutionSuccess
-    } = usePostSolution(id);
+    } = useTestSolution(id);
+    const {
+        submitSolutionLoading,
+        submitSolutionError,
+        submitSolutionData,
+        submitSolutionFn,
+        submitSolutionSuccess
+    } = useSubmitSolution(id);
+
     const {sandpack} = useSandpack();
+
     const [testError, setTestError] = useState(false);
     const [testResults, setTestResults] = useState(null);
     const [testsLoading, setTestsLoading] = useState(false);
+    const [submissionLoading, setSubmissionLoading] = useState(false);
+    const [valid, setValid] = useState(false);
+    const [resetOpen, setResetOpen] = useState(false);
+    const [submissionFailedOpen, setSubmissionFailedOpen] = useState(false);
 
     useEffect(() => {
         if (testSolutionData && testSolutionSuccess) {
@@ -44,15 +58,37 @@ const Sandbox = ({level, user, id}) => {
     }, [testSolutionData, testSolutionSuccess]);
 
     useEffect(() => {
+        if (submitSolutionSuccess && submitSolutionData) {
+            if (submitSolutionData.success) {
+                setValid(true);
+            } else {
+                setSubmissionFailedOpen(true);
+            }
+            setSubmissionLoading(false);
+        }
+    }, [submitSolutionData, submitSolutionSuccess]);
+
+    useEffect(() => {
         if (testSolutionError?.status === 401) {
             router.push("/login");
-        } else if (testSolutionError?.status === 403) {
+        } else if (testSolutionError?.status === 403 || testSolutionError?.status === 404) {
             router.push("/");
         } else if (testSolutionError) {
-            setTestsLoading(false)
+            setTestsLoading(false);
             setTestError(true);
         }
-    }, [testSolutionError])
+    }, [testSolutionError]);
+
+    useEffect(() => {
+        if (submitSolutionError?.status === 401) {
+            router.push("/login");
+        } else if (submitSolutionError?.status === 403 || submitSolutionError?.status === 404) {
+            router.push("/");
+        } else if (submitSolutionError) {
+            setSubmissionLoading(false);
+            setTestError(true);
+        }
+    }, [submitSolutionError]);
 
     const handleTestSolution = () => {
         const payload = {
@@ -65,6 +101,24 @@ const Sandbox = ({level, user, id}) => {
         }
         testSolution(payload);
         setTestsLoading(true);
+    }
+
+    const handleTestSubmission = () => {
+        const payload = {
+            code: sandpack?.files["/App.js"]?.code,
+            css: sandpack?.files["/styles.css"]?.code,
+            user: {
+                id: user.id,
+                password: user.password
+            }
+        }
+        submitSolutionFn(payload);
+        setSubmissionLoading(true);
+    }
+
+    const handleReset = () => {
+        sandpack.resetAllFiles();
+        setResetOpen(false);
     }
 
     const formatTestResults = (results) => {
@@ -89,6 +143,8 @@ const Sandbox = ({level, user, id}) => {
             return <div className={modules.testResultsField}>Please run the tests to view the results</div>
         }
     }
+
+    //TODO hint functionality
 
     return (
         <>
@@ -132,11 +188,11 @@ const Sandbox = ({level, user, id}) => {
                                         <Button disabled={testSolutionLoading || testsLoading}
                                                 variant={"contained"}>{"Hints 0/3"}</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
-                                                color={"error"}>Reset</Button>
+                                                color={"error"} onClick={() => setResetOpen(true)}>Reset</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
-                                                color={"success"} onClick={handleTestSolution}>Submit</Button>
+                                                color={"secondary"} onClick={handleTestSolution}>Test</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
-                                                color={"secondary"}>Solution</Button>
+                                                color={"success"} onClick={handleTestSubmission}>Submit</Button>
                                     </Stack>
                                 </div>
                             </Grid2>
@@ -165,6 +221,57 @@ const Sandbox = ({level, user, id}) => {
                         later.
                     </DialogContentText>
                 </DialogContent>
+            </Dialog>
+            <Dialog aria-labelledby="success-dialog-title" aria-describedby="success-dialog-description" open={valid}>
+                <DialogTitle id="success-dialog-title">Submission Successful</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="success-dialog-description">
+                        Congratulations! You have passed the level, do you wish to post your solution or proceed to the
+                        forum?
+                    </DialogContentText>
+                    <DialogActions>
+                        <Button onClick={() => {
+                        }}>Go To Forum</Button>
+                        <Button onClick={() => {
+                        }} autoFocus>Post Solution</Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
+            <Dialog aria-labelledby="loading-dialog-title" aria-describedby="loading-dialog-description"
+                    open={submitSolutionLoading || submissionLoading}>
+                <DialogTitle id="loading-dialog-title">Testing Submission, Please Wait...</DialogTitle>
+                <DialogContent>
+                    <DialogContentText className={modules.submissionLoading} id="loading-dialog-description">
+                        <CircularProgress/>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
+            <Dialog aria-labelledby="reset-dialog-title" aria-describedby="reset-dialog-description"
+                    open={resetOpen} onClose={() => setResetOpen(false)}>
+                <DialogTitle id="reset-dialog-title">Warning, Resetting Could Result in Lost Progress</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="reset-dialog-description">
+                        Are you sure you want to reset your code? This operation is permanent and cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setResetOpen(false)} autoFocus>Cancel</Button>
+                    <Button onClick={handleReset}>Reset Code</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog aria-labelledby="submission-failed-dialog-title"
+                    aria-describedby="submission-failed-dialog-description"
+                    open={submissionFailedOpen} onClose={() => setSubmissionFailedOpen(false)}>
+                <DialogTitle id="submission-failed-dialog-title">Submission Failed</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="submission-failed-dialog-description">
+                        Your submission didn't pass all of the tests. Please use the "TEST" button to see which ones it
+                        failed.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSubmissionFailedOpen(false)} autoFocus>Close</Button>
+                </DialogActions>
             </Dialog>
         </>
     );
