@@ -117,6 +117,7 @@
     text-align: left;
     color: black;
     font-size: 1.2em !important;
+    margin-top: 5px;
 }
 
 .testTitle {
@@ -140,11 +141,27 @@
 .testPassed {
     color: green;
     margin-top: 5px;
+    font-weight: bold;
 }
 
 .testFailed {
     color: red;
     margin-top: 5px;
+    font-weight: bold;
+}
+
+.testPassedDisplay {
+    color: green;
+    margin-top: 5px;
+}
+
+.testFailedDisplay {
+    color: red;
+    margin-top: 5px;
+}
+
+.testNameResult {
+    font-weight: bold;
 }
 
 .testResultsField {

@@ -77,7 +77,7 @@ const Sandbox = ({level, user, id}) => {
             setTestsLoading(false);
             setTestError(true);
         }
-    }, [testSolutionError]);
+    }, [testSolutionError, router]);
 
     useEffect(() => {
         if (submitSolutionError?.status === 401) {
@@ -88,7 +88,7 @@ const Sandbox = ({level, user, id}) => {
             setSubmissionLoading(false);
             setTestError(true);
         }
-    }, [submitSolutionError]);
+    }, [submitSolutionError, router]);
 
     const handleTestSolution = () => {
         const payload = {
@@ -121,6 +121,10 @@ const Sandbox = ({level, user, id}) => {
         setResetOpen(false);
     }
 
+    const filterMessage = (message) => {
+        return message.replaceAll(/\x1B\[\d+m/g, "");
+    }
+
     const formatTestResults = (results) => {
         if (results) {
             const passed = results.passed;
@@ -136,7 +140,10 @@ const Sandbox = ({level, user, id}) => {
                     <div key={0}
                          className={passed ? modules.testPassed : modules.testFailed}>{"RESULTS: " + (numPassed) + " PASSED, " + (results?.tests?.length - numPassed) + " FAILED, " + (results?.tests?.length) + " TOTAL"}</div>
                     {results?.tests?.map((testResult, index) => (<div key={index + 1}
-                                                                      className={testResult?.passed ? modules?.testPassed : modules.testFailed}>{testResult?.name + ": " + (testResult?.passed ? "PASSED" : "FAILED - " + testResult?.message)}</div>))}
+                                                                      className={testResult?.passed ? modules?.testPassedDisplay : modules.testFailedDisplay}>
+                        <span
+                            className={modules.testNameResult}>{testResult?.name + ": " + (testResult?.passed ? "PASSED" : "FAILED")}</span><span>{(testResult?.message ? (" - " + (testResult.type === "jest" ? testResult.message.toString().split(/\r?\n/)[0] : filterMessage(testResult.message.toString()))) : "")}</span>
+                    </div>))}
                 </div>
             );
         } else {
@@ -153,12 +160,14 @@ const Sandbox = ({level, user, id}) => {
                     <div className={modules.descriptionGrid}>
                         {/*description*/}
                         <h2 className={modules.leftTitle}>Description:</h2>
-                        <p className={modules.leftText}>{level?.enhanceddescription}</p>
+                        {level?.enhanceddescription.toString().split(/\r?\n\r?\n/).map((description, index) => (
+                            <p key={index} className={modules.leftText}>{description}</p>))}
                     </div>
                     <div className={modules.objectivesGrid}>
                         {/*objectives*/}
                         <h2 className={modules.leftTitle}>Objectives:</h2>
-                        <p className={modules.leftText}>{level?.objectives}</p>
+                        {level?.objectives.toString().split(/\r?\n\r?\n/).map((objective, index) => (
+                            <p key={index} className={modules.leftText}>{objective}</p>))}
                     </div>
                 </Grid2>
                 <Grid2 item size={4.5}>
@@ -265,8 +274,7 @@ const Sandbox = ({level, user, id}) => {
                 <DialogTitle id="submission-failed-dialog-title">Submission Failed</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="submission-failed-dialog-description">
-                        Your submission didn't pass all of the tests. Please use the "TEST" button to see which ones it
-                        failed.
+                        {"Your submission didn\'t pass all of the tests. Please use the \"TEST\" button to see which ones it failed."}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

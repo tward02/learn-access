@@ -23,8 +23,9 @@ app.get("/hello", (req, res) => {
 });
 
 const getPlaywrightRender = (reactCode, css) => `
-<html>
+<html lang="en">
         <head>
+            <title>test</title>
             <style>${css}</style>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
@@ -110,35 +111,35 @@ const getUserById = async (id) => {
 }
 
 const getTests = async (levelId) => {
-    // const {rows} = (await sql`
-    //     SELECT *
-    //     from level_tests
-    //     WHERE levelId = ${levelId};
-    // `)
-    // return rows;
-    return [
-        {
-            type: "jest",
-            code: jestTestExample,
-            name: "Jest Test Suite 1"
-        },
-        {
-            type: "playwright",
-            name: "Playwright Test Suite 1",
-            code: playwrightTestExample
-        },
-        {
-            type: "playwright",
-            name: "Playwright Test Suite 2",
-            code: playwrightTestExample
-
-        },
-        {
-            type: "jest",
-            code: jestTestExample,
-            name: "Jest Test Suite 2"
-        }
-    ];
+    const {rows} = (await sql`
+        SELECT *
+        from level_tests
+        WHERE levelId = ${levelId};
+    `)
+    return rows;
+    // return [
+    //     {
+    //         type: "jest",
+    //         code: jestTestExample,
+    //         name: "Jest Test Suite 1"
+    //     },
+    //     {
+    //         type: "playwright",
+    //         name: "Playwright Test Suite 1",
+    //         code: playwrightTestExample
+    //     },
+    //     {
+    //         type: "playwright",
+    //         name: "Playwright Test Suite 2",
+    //         code: playwrightTestExample
+    //
+    //     },
+    //     {
+    //         type: "jest",
+    //         code: jestTestExample,
+    //         name: "Jest Test Suite 2"
+    //     }
+    // ];
 }
 
 export const getLevel = async (userId, levelId) => {
