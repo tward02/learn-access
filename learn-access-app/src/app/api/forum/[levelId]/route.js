@@ -10,7 +10,7 @@ export async function GET(req, {params}) {
 
     const levelId = (await params).levelId;
 
-    const user = getUser();
+    const user = await getUser();
     //TODO implement DAO and levels in database, ensure user is allowed to look at the levels
 
     const forum = forumPost;
