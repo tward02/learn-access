@@ -26,8 +26,10 @@ const LevelListDisplay = () => {
             const nonLimited = [];
             const limited = [];
             levelsData.forEach((level) => {
-                if (level.expires && (Date.parse(level.expires) - new Date()) > 0) {
-                    limited.push(level);
+                if (level.expiration) {
+                    if ((Date.parse(level.expiration) - new Date()) > 0) {
+                        limited.push(level);
+                    }
                 } else {
                     nonLimited.push(level);
                 }
@@ -56,7 +58,7 @@ const LevelListDisplay = () => {
                     <div>
                         <h2 className={modules.listHeader}>{"Limited Time Levels"}</h2>
                         <div className={modules.listContainer}>
-                            {limitedLevels > 0 ? limitedLevels.map(level => (
+                            {limitedLevels.length > 0 ? limitedLevels.map(level => (
                                 <LevelCard key={level.id} level={level}/>)) : (
                                 <p className={modules.noLevelsText}>None available right now, check back again
                                     later</p>)}

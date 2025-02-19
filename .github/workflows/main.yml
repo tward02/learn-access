@@ -1,12 +1,40 @@
 # Name of this action
 name: Jest Automatic Testing
 
-on: pull_request
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
 
-  run-jest-tests:
-    name: Jest Tests
+  run-api-jest-tests:
+    name: API Jest Tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: ./learn-access-api
+        run: npm install
+
+      - name: Run Jests test
+        working-directory: ./learn-access-api
+        run: npm test
+
+  run-app-jest-tests:
+    name: App Jest Tests
 
     runs-on: ubuntu-latest
 

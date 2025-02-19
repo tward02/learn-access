@@ -8,37 +8,34 @@ import {
     Dialog, DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
-    Grid2,
-    Stack
+    DialogTitle
 } from "@mui/material";
 import modules from "./levels.module.css"
-import {
-    SandpackCodeEditor,
-    SandpackConsole,
-    SandpackLayout,
-    SandpackPreview,
-    SandpackProvider
-} from "@codesandbox/sandpack-react";
+import {SandpackProvider} from "@codesandbox/sandpack-react";
 import {formatFiles} from "@/app/ui/utility";
 import {useFetchLevel} from "@/app/ui/api/useFetchLevel";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
+import Sandbox from "@/app/level/[id]/Sandbox";
 
 const LevelContent = ({session, user, id}) => {
 
     //TODO dark mode + text sizes
-    //TODO API testing integration
 
     const router = useRouter();
 
     const [level, setLevel] = useState(null);
+    const [expired, setExpired] = useState(false);
 
     const {levelLoading, levelError, levelData, levelSuccess} = useFetchLevel(id);
 
     useEffect(() => {
         if (levelData && levelSuccess) {
-            setLevel(levelData);
+            if ((Date.parse(levelData?.expiration) - new Date()) > 0) {
+                setExpired(true);
+            } else {
+                setLevel(levelData);
+            }
         }
     }, [levelSuccess, levelData]);
 
@@ -46,75 +43,39 @@ const LevelContent = ({session, user, id}) => {
         router.push("/");
     }
 
+    const getLoadErrorMessage = () => {
+        if (expired || levelError?.status === 404) {
+            return "The level you are looking for doesn't seem to exist, please return to the homepage and select a level to complete there."
+        }
+
+        if (levelError?.status === 401) {
+            return "You don't seem to be authenticated, please return to the homepage and login or register."
+        }
+
+        if (levelError?.status === 403) {
+            return "You don't have permission to view this level at the moment, please return to the homepage and choose a level you have unlocked."
+        }
+
+        return "There has been an error loading this level, please return to the homepage and try again later."
+    }
+
     return (
         <main className={modules.gridContainer}>
-            <TopBar title={level?.title} loggedIn={session} username={user?.username} back/>
+            <TopBar title={level?.name} loggedIn={session} username={user?.username} back/>
             {!levelLoading && !levelError &&
                 <SandpackProvider template={"react"} className={modules.provider} files={formatFiles(level?.files)}>
-                    <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
-                        <Grid2 item direction="column" size={2.5}>
-                            <div className={modules.descriptionGrid}>
-                                {/*description*/}
-                                <h2 className={modules.leftTitle}>Description:</h2>
-                                <p className={modules.leftText}>{level?.description}</p>
-                            </div>
-                            <div className={modules.objectivesGrid}>
-                                {/*objectives*/}
-                                <h2 className={modules.leftTitle}>Objectives:</h2>
-                                <p className={modules.leftText}>{level?.objectives}</p>
-                            </div>
-                        </Grid2>
-                        <Grid2 item size={4.5}>
-                            <div className={modules.codeEditorGrid}>
-                                {/*code editor*/}
-                                <SandpackCodeEditor className={modules.codeEditor} showTabs showLineNumbers
-                                                    showInlineErrors
-                                                    wrapContent/>
-                            </div>
-                            <div className={modules.testGrid}>
-                                <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
-                                    <Grid2 item size={9}>
-                                        <div className={modules.testConsole}>
-                                            <h2 className={modules.testTitle}>Test Output:</h2>
-                                            <div className={modules.testingDisplay}>
-                                                {/*test console*/}
-                                            </div>
-                                        </div>
-                                    </Grid2>
-                                    <Grid2 item size={3}>
-                                        <div className={modules.actionButtons}>
-                                            {/*action buttons*/}
-                                            <Stack spacing={3}>
-                                                <Button variant={"contained"}>{"Hints 0/3"}</Button>
-                                                <Button variant={"contained"} color={"error"}>Reset</Button>
-                                                <Button variant={"contained"} color={"success"}>Submit</Button>
-                                                <Button variant={"contained"} color={"secondary"}>Solution</Button>
-                                            </Stack>
-                                        </div>
-                                    </Grid2>
-                                </Grid2>
-                            </div>
-                        </Grid2>
-                        <Grid2 item size={5}>
-                            <div className={modules.previewGrid}>
-                                {/*code preview*/}
-                                <SandpackLayout className={modules.previewContainer}>
-                                    <SandpackPreview className={modules.preview}/>
-                                </SandpackLayout>
-                                <SandpackConsole className={modules.previewConsole}/>
-                            </div>
-                        </Grid2>
-                    </Grid2>
+                    <Sandbox user={user} id={id} level={level}/>
                 </SandpackProvider>}
             <Backdrop open={levelLoading}>
                 <CircularProgress/>
             </Backdrop>
-            <Dialog aria-labelledby="error-dialog-title" aria-describedby="error-dialog-description" open={levelError}
+            <Dialog aria-labelledby="error-dialog-title" aria-describedby="error-dialog-description"
+                    open={levelError || expired}
                     onClose={closeErrorPopup}>
                 <DialogTitle id="error-dialog-title">Error Loading Level</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="error-dialog-description">
-                        There has been an error loading this level, please return to the homepage and try again later.
+                        {getLoadErrorMessage()}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

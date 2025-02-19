@@ -27,9 +27,9 @@ const TopBar = ({loggedIn, title, username, back}) => {
             <AppBar position="static">
                 <Toolbar>
                     {back && (
-                        <div className={modules.backButton}>
+                        <div className={modules.backButtonContainer}>
                             <Tooltip title={"Back to homepage"}>
-                                <IconButton>
+                                <IconButton className={modules.backButton}>
                                     <ArrowBackIcon onClick={backToHomepage}/>
                                 </IconButton>
                             </Tooltip>
