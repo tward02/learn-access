@@ -77,7 +77,6 @@ async function seedLevelTests() {
         levelId INTEGER NOT NULL,
         name VARCHAR(255) NOT NULL,
         type TEXT NOT NULL,
-        failMessage TEXT NOT NULL,
         code TEXT NOT NULL,
         FOREIGN KEY (levelId) REFERENCES levels(id) ON DELETE CASCADE
         );
@@ -109,6 +108,7 @@ export async function GET(request) {
       await seedUserLevels();
       await seedLevelFiles();
       await seedLevelHints();
+      await seedLevelTests();
       await client.sql`COMMIT`;
 
       return Response.json({ message: 'Database seeded successfully' });

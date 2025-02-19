@@ -116,6 +116,9 @@ const getTests = async (levelId) => {
         from level_tests
         WHERE levelId = ${levelId};
     `)
+    rows.map((test) => {
+        test.code = test.code.replace(/\\n/g, '\n');
+    })
     return rows;
     // return [
     //     {
@@ -332,12 +335,10 @@ app.post('/submit/:levelId', async (req, res) => {
     res.status(200).json({success: passed});
 });
 
-//TODO extract more appropriate error message
-
 app.post('/test/:levelId', async (req, res) => {
 
     const {code, css, user} = req?.body?.data;
-    const levelId = req?.params?.levelId;
+    const levelId = await req?.params?.levelId;
 
     if (!user || !await authenticate(user)) {
         return res.status(401).json({message: 'Not Authenticated'});
