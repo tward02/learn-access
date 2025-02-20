@@ -14,13 +14,30 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Grid2,
+    Grid2, IconButton,
     Stack
 } from "@mui/material";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import modules from "@/app/level/[id]/levels.module.css";
 import {useTestSolution} from "@/app/ui/api/useTestSolution";
 import {useRouter} from "next/navigation";
 import {useSubmitSolution} from "@/app/ui/api/useSubmitSolution";
+
+const testHints = [
+    {
+        name: "Hint 1",
+        content: "This is a hint for the current level that is really useful to the users"
+    },
+    {
+        name: "Hint 2",
+        content: "This is a hint for the current level that is really useful to the users, This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users"
+    },
+    {
+        name: "Hint 3",
+        content: "This is a hint for the current level that is really useful to the users, This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users"
+    }
+]
 
 const Sandbox = ({level, user, id}) => {
 
@@ -49,6 +66,9 @@ const Sandbox = ({level, user, id}) => {
     const [valid, setValid] = useState(false);
     const [resetOpen, setResetOpen] = useState(false);
     const [submissionFailedOpen, setSubmissionFailedOpen] = useState(false);
+    const [hintsOpen, setHintsOpen] = useState(false);
+    const [hintsViewed, setHintsViewed] = useState(0);
+    const [selectedHint, setSelectedHint] = useState(0);
 
     useEffect(() => {
         if (testSolutionData && testSolutionSuccess) {
@@ -121,6 +141,32 @@ const Sandbox = ({level, user, id}) => {
         setResetOpen(false);
     }
 
+    const handleHint = () => {
+        setHintsOpen(true);
+        if (hintsViewed < testHints.length) {
+            setHintsViewed(hintsViewed + 1);
+        }
+    }
+
+    const handleHintClose = () => {
+        setHintsOpen(false);
+        if (hintsViewed < testHints.length) {
+            setSelectedHint(selectedHint + 1);
+        }
+    }
+
+    const handleHintMoveRight = () => {
+        if (selectedHint < testHints.length - 1 && selectedHint + 1 < hintsViewed) {
+            setSelectedHint(selectedHint + 1);
+        }
+    }
+
+    const handleHintMoveLeft = () => {
+        if (selectedHint > 0) {
+            setSelectedHint(selectedHint - 1);
+        }
+    }
+
     const filterMessage = (message) => {
         return message.replaceAll(/\x1B\[\d+m/g, "");
     }
@@ -151,7 +197,7 @@ const Sandbox = ({level, user, id}) => {
         }
     }
 
-    //TODO hint functionality
+    //TODO add below description that sets out general info like screen reader, don't delete IDs, change component signature etc...
 
     return (
         <>
@@ -195,7 +241,8 @@ const Sandbox = ({level, user, id}) => {
                                     {/*action buttons*/}
                                     <Stack spacing={3}>
                                         <Button disabled={testSolutionLoading || testsLoading}
-                                                variant={"contained"}>{"Hints 0/3"}</Button>
+                                                variant={"contained"}
+                                                onClick={handleHint}>{"Hints " + hintsViewed + "/" + testHints.length}</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
                                                 color={"error"} onClick={() => setResetOpen(true)}>Reset</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
@@ -280,6 +327,30 @@ const Sandbox = ({level, user, id}) => {
                 <DialogActions>
                     <Button onClick={() => setSubmissionFailedOpen(false)} autoFocus>Close</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog aria-labelledby="hint-dialog-title" aria-describedby="hint-dialog-description"
+                    open={hintsOpen} onClose={handleHintClose}>
+                <DialogTitle id="hint-dialog-title">{testHints[selectedHint].name}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="hint-dialog-description">
+                        <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
+                            <Grid2 item direction="column" size={1}>
+                                <IconButton size="medium" onClick={handleHintMoveLeft} disabled={selectedHint === 0}>
+                                    <ArrowBackIosNewIcon fontSize="inherit"/>
+                                </IconButton>
+                            </Grid2>
+                            <Grid2 item direction="column" size={10}>
+                                {testHints[selectedHint].content}
+                            </Grid2>
+                            <Grid2 item direction="column" size={1}>
+                                <IconButton size="medium" onClick={handleHintMoveRight}
+                                            disabled={selectedHint === testHints.length - 1 || selectedHint + 1 >= hintsViewed}>
+                                    <ArrowForwardIosIcon fontSize="inherit"/>
+                                </IconButton>
+                            </Grid2>
+                        </Grid2>
+                    </DialogContentText>
+                </DialogContent>
             </Dialog>
         </>
     );
