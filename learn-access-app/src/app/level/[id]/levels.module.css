@@ -190,6 +190,7 @@
 .descriptionLink {
     color: #0000EE;
     font-size: 1.2em !important;
+    word-wrap:break-word;
 }
 
 .linkBox {
