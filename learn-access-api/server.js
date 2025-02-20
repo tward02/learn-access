@@ -41,66 +41,6 @@ const getPlaywrightRender = (reactCode, css) => `
 </html>
 `
 
-const jestTestExample = `
-import React from 'react';
-import { screen, render } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import App from './App';
-
-it('renders root element', () => {
-    render(<App />);
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    const rootElement = screen.getByText('Hello, JSX & CSS World!');
-});
-
-it('renders root element 2', () => {
-    render(<App />);
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    const rootElement = screen.getByText('Hello, JSX & CSS World!');
-});
-
-it('renders root element 3', () => {
-    render(<App />);
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    const rootElement = screen.getByText('Hello, JSX & CSS World!');
-});
-`
-
-const playwrightTestExample = `
-import { test, expect } from '@playwright/test';
-
-test('checks CSS styling', async ({ page }) => {
-        
-    
-    await page.setContent(\`
-        ///Render///
-    \`);
-
-    await page.waitForSelector('h1');
-
-    const element = await page.locator('h1');
-    await expect(element).toHaveCSS('color', 'rgb(0, 0, 255)');
-    await expect(element).toHaveCSS('text-align', 'center');     // Expect centered text
-});
-
-test('checks CSS styling 2', async ({ page }) => {
-        
-    
-    await page.setContent(\`
-        ///Render///
-    \`);
-
-    await page.waitForSelector('h1');
-
-    const element = await page.locator('h1');
-    await expect(element).toHaveCSS('color', 'rgb(0, 0, 255)');
-    await expect(element).toHaveCSS('text-align', 'center');     // Expect centered text
-});
-
-`
-
 const getUserById = async (id) => {
     const {rows} = (await sql`
         SELECT id, username, password
@@ -120,29 +60,6 @@ const getTests = async (levelId) => {
         test.code = test.code.replace(/\\n/g, '\n');
     })
     return rows;
-    // return [
-    //     {
-    //         type: "jest",
-    //         code: jestTestExample,
-    //         name: "Jest Test Suite 1"
-    //     },
-    //     {
-    //         type: "playwright",
-    //         name: "Playwright Test Suite 1",
-    //         code: playwrightTestExample
-    //     },
-    //     {
-    //         type: "playwright",
-    //         name: "Playwright Test Suite 2",
-    //         code: playwrightTestExample
-    //
-    //     },
-    //     {
-    //         type: "jest",
-    //         code: jestTestExample,
-    //         name: "Jest Test Suite 2"
-    //     }
-    // ];
 }
 
 export const getLevel = async (userId, levelId) => {
@@ -222,9 +139,21 @@ const runJestTest = async (testDir, test, index) => {
     return resultList;
 }
 
+const transformReactImports = (source) => {
+
+    const importRegex = /^import\s+(?:React,\s+)?\{\s*([^}]+?)\s*\}\s+from\s+["']react["'];?$/gm;
+
+    return source.replace(importRegex, (match, hooksGroup) => {
+        const hooksList = hooksGroup.split(",").map(hook => hook.trim());
+        return `const { ${hooksList.join(", ")} } = React;`;
+    });
+}
+
 const runPlaywrightTest = async (testDir, test, code, css, index) => {
     const testPath = path.join(testDir, 'playwrightTest' + index + '.spec.js');
-    let formattedCode = code.replaceAll("export", "");
+    let formattedCode = transformReactImports(code);
+    formattedCode = formattedCode.replace("export default App", "")
+    formattedCode = formattedCode.replaceAll("export", "");
     formattedCode = formattedCode.replace("default", "");
     const render = getPlaywrightRender(formattedCode, css);
     const testCode = test.code.replaceAll("///Render///", render);
@@ -363,6 +292,10 @@ app.post('/test/:levelId', async (req, res) => {
     testResultsList.forEach(test => {
         passed = test.passed && passed;
     })
+
+    if (testResultsList.length === 0) {
+        passed = false;
+    }
 
     res.status(200).json({passed: passed, tests: testResultsList});
 });

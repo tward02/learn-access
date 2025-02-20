@@ -51,6 +51,7 @@ async function seedLevelFiles() {
         name VARCHAR(50) NOT NULL,
         fileType TEXT NOT NULL CHECK (fileType IN ('js', 'css')),
         content TEXT NOT NULL,
+        readOnly boolean NOT NULL,
         FOREIGN KEY (levelId) REFERENCES levels(id) ON DELETE CASCADE
         );
     `;

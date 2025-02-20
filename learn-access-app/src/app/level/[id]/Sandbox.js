@@ -9,12 +9,15 @@ import {
 } from "@codesandbox/sandpack-react";
 import {useEffect, useState} from "react";
 import {
-    Button, CircularProgress,
-    Dialog, DialogActions,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Grid2, IconButton,
+    Grid2,
+    IconButton,
     Stack
 } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -197,6 +200,26 @@ const Sandbox = ({level, user, id}) => {
         }
     }
 
+    const makeDescription = () => {
+        const parts = level?.enhanceddescription.toString().split("\\links\\");
+        if (parts) {
+            return parts[0].split(/\r?\n\r?\n/).map((description, index) => (
+                <p key={index} className={modules.leftText}>{description}</p>));
+        }
+        return <></>
+    }
+
+
+    const makeLinks = () => {
+        const parts = level?.enhanceddescription.toString().split("\\links\\");
+        if (parts && parts.length > 1) {
+            console.log("here")
+            return parts[1].split(",").map((link, index) => {
+                return (<div key={index}><a rel={"WCAG Reference"} href={link} className={modules.descriptionLink}>{link}</a></div>);
+            })
+        }
+    }
+
     //TODO add below description that sets out general info like screen reader, don't delete IDs, change component signature etc...
 
     return (
@@ -206,8 +229,8 @@ const Sandbox = ({level, user, id}) => {
                     <div className={modules.descriptionGrid}>
                         {/*description*/}
                         <h2 className={modules.leftTitle}>Description:</h2>
-                        {level?.enhanceddescription.toString().split(/\r?\n\r?\n/).map((description, index) => (
-                            <p key={index} className={modules.leftText}>{description}</p>))}
+                        {makeDescription()}
+                        <div className={modules.linkBox}>{makeLinks()}</div>
                     </div>
                     <div className={modules.objectivesGrid}>
                         {/*objectives*/}

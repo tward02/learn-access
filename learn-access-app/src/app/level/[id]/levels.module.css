@@ -186,3 +186,12 @@
     align-items: center;
     min-height: 100%;
 }
+
+.descriptionLink {
+    color: #0000EE;
+    font-size: 1.2em !important;
+}
+
+.linkBox {
+    margin-top: 10px;
+}
