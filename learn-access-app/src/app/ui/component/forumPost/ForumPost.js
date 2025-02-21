@@ -12,11 +12,10 @@ import {
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
-import tinycolor from "tinycolor2";
 import {Fragment, useState} from "react";
 import {SandpackCodeViewer, SandpackProvider} from "@codesandbox/sandpack-react";
 import Comment from "./Comment"
-import {formatFiles} from "@/app/ui/utility";
+import {formatFiles, getAvatarColour} from "@/app/ui/utility";
 
 const ForumPost = ({currentUser, post}) => {
 
@@ -54,16 +53,7 @@ const ForumPost = ({currentUser, post}) => {
     //TODO add comment creation functionality
     //TODO Comment and post sorting functionality
 
-    const getAvatarColour = (username) => {
-        const hash = [...username].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-        const colour = tinycolor({h: hash % 360, s: 70, l: 55});
 
-        if (tinycolor.isReadable(colour, "#000", {level: "AA", size: "small"})) {
-            return colour.toHexString();
-        } else {
-            return colour.lighten(10).toHexString();
-        }
-    }
 
     const likePost = () => {
         if (isLiked) {
@@ -105,7 +95,7 @@ const ForumPost = ({currentUser, post}) => {
                 } action={
                     <IconButton color={isLiked ? "primary" : ""} aria-label="like post" onClick={likePost}>
                         <ThumbUpIcon className={modules.likeIcon}/>
-                        {likes}
+                        {post.likes}
                     </IconButton>
                 }/>
                 <CardContent>

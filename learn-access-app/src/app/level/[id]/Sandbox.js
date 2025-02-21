@@ -26,6 +26,7 @@ import modules from "@/app/level/[id]/levels.module.css";
 import {useTestSolution} from "@/app/ui/api/useTestSolution";
 import {useRouter} from "next/navigation";
 import {useSubmitSolution} from "@/app/ui/api/useSubmitSolution";
+import CreatePost from "@/app/ui/component/createPost/CreatePost";
 
 const testHints = [
     {
@@ -73,6 +74,7 @@ const Sandbox = ({level, user, id}) => {
     const [hintsViewed, setHintsViewed] = useState(0);
     const [selectedHint, setSelectedHint] = useState(0);
     const [canSubmit, setCanSubmit] = useState(false);
+    const [postSolutionOpen, setPostSolutionOpen] = useState(false);
 
     useEffect(() => {
         if (testSolutionData && testSolutionSuccess) {
@@ -122,7 +124,7 @@ const Sandbox = ({level, user, id}) => {
 
     useEffect(() => {
         setCanSubmit(false);
-    }, [sandpack?.files["/App.js"]?.code, sandpack?.files["/styles.css"]?.code])
+    }, [sandpack?.files["/App.js"]?.code, sandpack?.files["/styles.css"]?.code]);
 
     const handleTestSolution = () => {
         const payload = {
@@ -179,6 +181,20 @@ const Sandbox = ({level, user, id}) => {
         if (selectedHint > 0) {
             setSelectedHint(selectedHint - 1);
         }
+    }
+
+    const handleCancelPost = () => {
+        setPostSolutionOpen(false);
+        setValid(true);
+    }
+
+    const handleOpenPost = () => {
+        setValid(false);
+        setPostSolutionOpen(true);
+    }
+
+    const handleGoToForum = () => {
+        router.push("/forum/" + id);
     }
 
     const filterMessage = (message) => {
@@ -324,10 +340,8 @@ const Sandbox = ({level, user, id}) => {
                         forum?
                     </DialogContentText>
                     <DialogActions>
-                        <Button onClick={() => {
-                        }}>Go To Forum</Button>
-                        <Button onClick={() => {
-                        }} autoFocus>Post Solution</Button>
+                        <Button onClick={handleGoToForum}>Go To Forum</Button>
+                        <Button onClick={handleOpenPost} autoFocus>Post Solution</Button>
                     </DialogActions>
                 </DialogContent>
             </Dialog>
@@ -390,6 +404,7 @@ const Sandbox = ({level, user, id}) => {
                     </DialogContentText>
                 </DialogContent>
             </Dialog>
+            <CreatePost open={postSolutionOpen} files={sandpack?.files} handleCancel={handleCancelPost}/>
         </>
     );
 }
