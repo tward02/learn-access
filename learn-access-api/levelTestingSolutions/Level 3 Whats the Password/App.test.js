@@ -3,50 +3,59 @@ import {fireEvent, render, screen} from "@testing-library/react";
 import '@testing-library/jest-dom';
 import App from "./App";
 
-describe("Accessible Login Form", () => {
-    test("renders the login form with labels correctly associated with inputs", () => {
-        render(<App />);
-        const emailLabel = screen.getByText("Email:");
-        const passwordLabel = screen.getByText("Password:");
+it("Form renders correctly with all required components", () => {
+    const result = render(<App/>);
+    expect(screen.getByText("Accessible Login Form")).toBeInTheDocument();
+    expect(screen.getByText("Email:")).toBeInTheDocument();
+    expect(screen.getByText("Password:")).toBeInTheDocument();
+    expect(screen.getByText("Login")).toBeInTheDocument();
+    expect(screen.getByRole("textbox", {name: /email/i})).toBeInTheDocument();
+    expect(result.container.querySelector('#email')).toBeInTheDocument();
+    expect(result.container.querySelector('#password')).toBeInTheDocument();
+})
 
-        // Verify that the label's htmlFor matches the corresponding input's id.
-        expect(emailLabel).toHaveAttribute("for", "email");
-        expect(passwordLabel).toHaveAttribute("for", "password");
+it("renders the login form with labels correctly associated with inputs", () => {
+    render(<App/>);
+    const emailLabel = screen.getByText("Email:");
+    const passwordLabel = screen.getByText("Password:");
 
-        // Also verify that the inputs exist with the expected IDs.
-        const emailInput = screen.getByRole("textbox", { name: /email/i });
-        const passwordInput = screen.getByLabelText("Password:");
-        expect(emailInput).toBeInTheDocument();
-        expect(passwordInput).toBeInTheDocument();
-    });
+    // Verify that the label's htmlFor matches the corresponding input's id.
+    expect(emailLabel).toHaveAttribute("for", "email");
+    expect(passwordLabel).toHaveAttribute("for", "password");
 
-    test("shows error when email is invalid", async () => {
-        render(<App />);
-        const emailInput = screen.getByLabelText("Email:");
-        const passwordInput = screen.getByLabelText("Password:");
-        const submitButton = screen.getByRole("button", { name: /login/i });
+    // Also verify that the inputs exist with the expected IDs.
+    const emailInput = screen.getByRole("textbox", {name: /email/i});
+    const passwordInput = screen.getByLabelText("Password:");
+    expect(emailInput).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
+});
 
-        emailInput.value = "";
-        emailInput.focus();
+it("shows error when email is invalid", async () => {
+    render(<App/>);
+    const emailInput = screen.getByLabelText("Email:");
+    const passwordInput = screen.getByLabelText("Password:");
+    const submitButton = screen.getByRole("button", {name: /login/i});
 
-        fireEvent.change(emailInput, { target: { value: "invalidEmail" } })
-        emailInput.value = "invalidEmail";
-        passwordInput.value = "mypassword";
-        submitButton.click();
+    emailInput.value = "";
+    emailInput.focus();
 
-        const error = await screen.findByRole("alert");
-        expect(error).toHaveTextContent("Please enter a valid email address.");
-    });
+    fireEvent.change(emailInput, {target: {value: "invalidEmail"}})
+    emailInput.value = "invalidEmail";
+    passwordInput.value = "mypassword";
+    submitButton.click();
 
-    test("shows error when password is empty", () => {
-        render(<App />);
-        const emailInput = screen.getByLabelText("Email:");
-        const submitButton = screen.getByRole("button", { name: /login/i });
+    const error = await screen.findByRole("alert");
+    expect(error).toHaveTextContent("Please enter a valid email address.");
+});
 
-        fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-        fireEvent.click(submitButton);
+it("shows error when password is empty", () => {
+    render(<App/>);
+    const emailInput = screen.getByLabelText("Email:");
+    const submitButton = screen.getByRole("button", {name: /login/i});
 
-        const error = screen.getByRole("alert");
-        expect(error).toHaveTextContent("Password cannot be empty.");
-    });
+    fireEvent.change(emailInput, {target: {value: "test@example.com"}});
+    fireEvent.click(submitButton);
+
+    const error = screen.getByRole("alert");
+    expect(error).toHaveTextContent("Password cannot be empty.");
 });

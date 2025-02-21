@@ -230,7 +230,7 @@ const runTests = async (levelId, code, css) => {
 
 app.post('/submit/:levelId', async (req, res) => {
 
-    const {code, css, user} = req?.body?.data;
+    let {code, css, user} = req?.body?.data;
     const levelId = req?.params?.levelId;
 
     if (!user || !await authenticate(user)) {
@@ -246,8 +246,12 @@ app.post('/submit/:levelId', async (req, res) => {
         return res.status(403).json({message: 'You don\'t have permission to do this level'});
     }
 
-    if (!code || !css) {
+    if (!code) {
         return res.status(400).json({message: 'Missing Required Attribute'});
+    }
+
+    if (!css) {
+        css = "";
     }
 
     const testResultsList = await runTests(levelId, code, css);
@@ -266,7 +270,7 @@ app.post('/submit/:levelId', async (req, res) => {
 
 app.post('/test/:levelId', async (req, res) => {
 
-    const {code, css, user} = req?.body?.data;
+    let {code, css, user} = req?.body?.data;
     const levelId = await req?.params?.levelId;
 
     if (!user || !await authenticate(user)) {
@@ -282,8 +286,12 @@ app.post('/test/:levelId', async (req, res) => {
         return res.status(403).json({message: 'You don\'t have permission to do this level'});
     }
 
-    if (!code || !css) {
+    if (!code) {
         return res.status(400).json({message: 'Missing Required Attribute'});
+    }
+
+    if (!css) {
+        css = "";
     }
 
     const testResultsList = await runTests(levelId, code, css);

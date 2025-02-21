@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import "./styles.css";
+import { useState } from "react";
 
-function LoginForm() {
+export default function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -9,7 +8,6 @@ function LoginForm() {
     function handleSubmit(event) {
         event.preventDefault();
         // TODO: Validate the form fields. If invalid, set an error message.
-        // For example, check if email is in a valid format and password is not empty.
     }
 
     return (
@@ -54,4 +52,3 @@ function App() {
     );
 }
 
-export default App;
