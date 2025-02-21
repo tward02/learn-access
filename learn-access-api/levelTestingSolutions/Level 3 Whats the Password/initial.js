@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function LoginForm() {
+function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -33,17 +33,13 @@ export default function LoginForm() {
                     onChange={(e) => setPassword(e.target.value)}
                 />
             </div>
-            {error && (
-                <div role="alert" className="error">
-                    {error}
-                </div>
-            )}
+            {/*//TODO display error to user using appropriate role*/}
             <button type="submit">Login</button>
         </form>
     );
 }
 
-function App() {
+export default function App() {
     return (
         <div className="app">
             <h1>Accessible Login Form</h1>

@@ -17,11 +17,11 @@ function LoginForm() {
 
         // Simple form validation logic.
         if (!validateEmail(email)) {
-            setError("Please enter a valid email address.");
+            setError("Invalid Email");
             return;
         }
         if (password.trim() === "") {
-            setError("Password cannot be empty.");
+            setError("Invalid Password");
             return;
         }
 
@@ -58,7 +58,7 @@ function LoginForm() {
             </div>
             {error && (
                 <div role="alert" className="error">
-                    {error}
+                        {error}
                 </div>
             )}
             <button type="submit">Login</button>

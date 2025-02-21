@@ -152,6 +152,11 @@ const transformReactImports = (source) => {
 const runPlaywrightTest = async (testDir, test, code, css, index) => {
     const testPath = path.join(testDir, 'playwrightTest' + index + '.spec.js');
     let formattedCode = transformReactImports(code);
+    formattedCode = formattedCode.replaceAll("import React from \'react\'", "")
+    formattedCode = formattedCode.replaceAll("import React from \"react\"", "")
+    formattedCode = formattedCode.replaceAll("import React from \"react\"", "")
+    formattedCode = formattedCode.replaceAll("import \'./styles.css\'", "")
+    formattedCode = formattedCode.replaceAll("import \"./styles.css\"", "")
     formattedCode = formattedCode.replace("export default App", "")
     formattedCode = formattedCode.replaceAll("export", "");
     formattedCode = formattedCode.replace("default", "");
@@ -205,7 +210,15 @@ const runTests = async (levelId, code, css) => {
     const appPath = path.join(tempDir, 'App.js');
     const cssPath = path.join(tempDir, 'styles.css');
 
-    const jestCode = "import React from \'react\';\nimport \'./styles.css\'\n" + code;
+    let jestCode = code;
+
+    if (!code.includes("import React from \'react\'") && !code.includes("import React from \"react\"")) {
+        jestCode = "import React from \'react\';\n" + jestCode;
+    }
+
+    if (!code.includes("import \'./styles.css\'\n") && !code.includes("import \"./styles.css\"\n")) {
+        jestCode = "import \'./styles.css\'\n" + jestCode;
+    }
 
     fs.writeFileSync(appPath, jestCode);
     fs.writeFileSync(cssPath, css);
