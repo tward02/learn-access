@@ -14,7 +14,7 @@ function LoginForm() {
         <form onSubmit={handleSubmit} noValidate>
             {/* TODO: Associate each input with a label */}
             <div className="form-group">
-                <label htmlFor="email">Email:</label>
+                <label>Email:</label>
                 <input
                     id="email"
                     name="email"
@@ -24,7 +24,7 @@ function LoginForm() {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="password">Password:</label>
+                <label>Password:</label>
                 <input
                     id="password"
                     name="password"
@@ -47,4 +47,3 @@ export default function App() {
         </div>
     );
 }
-

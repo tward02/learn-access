@@ -72,6 +72,7 @@ const Sandbox = ({level, user, id}) => {
     const [hintsOpen, setHintsOpen] = useState(false);
     const [hintsViewed, setHintsViewed] = useState(0);
     const [selectedHint, setSelectedHint] = useState(0);
+    const [canSubmit, setCanSubmit] = useState(false);
 
     useEffect(() => {
         if (testSolutionData && testSolutionSuccess) {
@@ -112,6 +113,16 @@ const Sandbox = ({level, user, id}) => {
             setTestError(true);
         }
     }, [submitSolutionError, router]);
+
+    useEffect(() => {
+        if (testResults) {
+            setCanSubmit(testResults.passed)
+        }
+    }, [testResults]);
+
+    useEffect(() => {
+        setCanSubmit(false);
+    }, [sandpack?.files["/App.js"]?.code, sandpack?.files["/styles.css"]?.code])
 
     const handleTestSolution = () => {
         const payload = {
@@ -183,6 +194,10 @@ const Sandbox = ({level, user, id}) => {
                     numPassed++;
                 }
             })
+
+            if (results.length === 0) {
+                return <div className={modules.testFailed}>{"Error running tests, possible that yor code contains syntax errors preventing it form rendering"}</div>
+            }
 
             return (
                 <div className={modules.testResultsField}>
@@ -270,7 +285,7 @@ const Sandbox = ({level, user, id}) => {
                                                 color={"error"} onClick={() => setResetOpen(true)}>Reset</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
                                                 color={"secondary"} onClick={handleTestSolution}>Test</Button>
-                                        <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
+                                        <Button disabled={testSolutionLoading || testsLoading || !canSubmit} variant={"contained"}
                                                 color={"success"} onClick={handleTestSubmission}>Submit</Button>
                                     </Stack>
                                 </div>

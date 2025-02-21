@@ -9,7 +9,6 @@ it("Form renders correctly with all required components", () => {
     expect(screen.getByText("Email:")).toBeInTheDocument();
     expect(screen.getByText("Password:")).toBeInTheDocument();
     expect(screen.getByText("Login")).toBeInTheDocument();
-    expect(screen.getByRole("textbox", {name: /email/i})).toBeInTheDocument();
     expect(result.container.querySelector('#email')).toBeInTheDocument();
     expect(result.container.querySelector('#password')).toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
@@ -38,12 +37,8 @@ it("Form validates email correctly with expected error message", async () => {
     const passwordInput = result.container.querySelector('#password')
     const submitButton = screen.getByRole("button", {name: /login/i});
 
-    emailInput.value = "";
-    emailInput.focus();
-
     fireEvent.change(emailInput, {target: {value: "invalidEmail"}})
-    emailInput.value = "invalidEmail";
-    passwordInput.value = "mypassword";
+    fireEvent.change(passwordInput, {target: {value: "password"}});
     submitButton.click();
 
     const error = await screen.findByRole("alert");
