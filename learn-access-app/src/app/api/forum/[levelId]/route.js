@@ -1,7 +1,7 @@
 import {getUser, hasSession} from "@/app/lib/dal";
-import {forumPost} from "@/app/lib/testData";
 import {hasCompletedLevel} from "@/app/lib/DAO/levelDAO";
-import {createPost} from "@/app/lib/DAO/forumDAO";
+import {createPost, getPostFiles, getPostsByLevelId} from "@/app/lib/DAO/forumDAO";
+import {getUserById} from "@/app/lib/DAO/userDAO";
 
 export async function GET(req, {params}) {
 
@@ -17,11 +17,17 @@ export async function GET(req, {params}) {
         return Response.json({error: 'You have not unlocked this forum yet'}, {status: 403});
     }
 
-    //TODO implement DAO and levels in database, ensure user is allowed to look at the levels
+    const posts = await getPostsByLevelId(levelId);
 
-    const forum = forumPost;
+    const response = await Promise.all(posts.map(async (post) => {
+        const user = await getUserById(post.userid);
+        post.username = user.username;
+        post.comments = [];
+        post.files = await getPostFiles(post.id);
+        return post;
+    }))
 
-    return Response.json(forum);
+    return Response.json(response);
 }
 
 export async function POST(req, {params}) {

@@ -1,9 +1,26 @@
 import {sql} from "@vercel/postgres";
 
-export const getPostByLevelId = async (levelId) => {
+export const getPostsByLevelId = async (levelId, userId) => {
     const result = await sql`
-
+        SELECT p.*,
+               COUNT(l.id)                                                AS likes,
+               CASE WHEN COUNT(user_like.id) > 0 THEN true ELSE false END AS isLiked
+        FROM posts p
+                 LEFT JOIN likes l ON l.postId = p.id
+                 LEFT JOIN likes user_like
+                           ON user_like.postId = p.id
+                               AND user_like.userId = ${userId}
+        WHERE p.levelId = ${levelId}
+        GROUP BY p.id;
     `
+    return result.rows;
+}
+
+export const getPostFiles = async (postId) => {
+    const result = await sql`
+        SELECT * FROM post_files WHERE postId = ${postId}
+    `
+    return result.rows;
 }
 
 export const createPost = async (userId, levelId, files, title, message) => {
