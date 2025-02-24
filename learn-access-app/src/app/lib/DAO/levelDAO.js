@@ -72,6 +72,13 @@ export const getLevelHints = async (levelId) => {
     return result.rows;
 }
 
+export const hasCompletedLevel = async (userId, levelId) => {
+    const result = await sql`
+        SELECT * FROM user_levels WHERE levelID = ${levelId} AND userID = ${userId};
+    `
+    return result?.rows?.length > 0;
+}
+
 export const saveFile = async (userId, levelId, name, type, content) => {
 
 }

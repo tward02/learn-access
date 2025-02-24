@@ -16,7 +16,7 @@ export const createPost = async (userId, levelId, files, title, message) => {
             RETURNING id;
         `;
         const postId = postResult.rows[0].id;
-
+        console.log(postResult)
         if (files.length > 0) {
             await Promise.all(
                 files.map(file =>

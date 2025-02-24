@@ -212,7 +212,8 @@ const Sandbox = ({level, user, id}) => {
             })
 
             if (results.length === 0) {
-                return <div className={modules.testFailed}>{"Error running tests, possible that yor code contains syntax errors preventing it form rendering"}</div>
+                return <div
+                    className={modules.testFailed}>{"Error running tests, possible that yor code contains syntax errors preventing it form rendering"}</div>
             }
 
             return (
@@ -246,7 +247,8 @@ const Sandbox = ({level, user, id}) => {
         if (parts && parts.length > 1) {
             console.log("here")
             return parts[1].split(",").map((link, index) => {
-                return (<div key={index}><a rel={"WCAG Reference"} href={link} className={modules.descriptionLink}>{link}</a></div>);
+                return (<div key={index}><a rel={"WCAG Reference"} href={link}
+                                            className={modules.descriptionLink}>{link}</a></div>);
             })
         }
     }
@@ -301,7 +303,8 @@ const Sandbox = ({level, user, id}) => {
                                                 color={"error"} onClick={() => setResetOpen(true)}>Reset</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
                                                 color={"secondary"} onClick={handleTestSolution}>Test</Button>
-                                        <Button disabled={testSolutionLoading || testsLoading || !canSubmit} variant={"contained"}
+                                        <Button disabled={testSolutionLoading || testsLoading || !canSubmit}
+                                                variant={"contained"}
                                                 color={"success"} onClick={handleTestSubmission}>Submit</Button>
                                     </Stack>
                                 </div>
@@ -404,7 +407,7 @@ const Sandbox = ({level, user, id}) => {
                     </DialogContentText>
                 </DialogContent>
             </Dialog>
-            <CreatePost open={postSolutionOpen} files={sandpack?.files} handleCancel={handleCancelPost}/>
+            <CreatePost open={postSolutionOpen} files={sandpack?.files} handleCancel={handleCancelPost} levelId={id}/>
         </>
     );
 }
