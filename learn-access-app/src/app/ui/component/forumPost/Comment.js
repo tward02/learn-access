@@ -2,20 +2,26 @@ import modules from "./forumPost.module.css"
 import {Box, Card, CardContent, CardHeader, IconButton, Typography} from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import {useState} from "react";
+import {useLikeComment} from "@/app/ui/api/useLikeComment";
+import {useUnlikeComment} from "@/app/ui/api/useUnlikeComment";
 
-const Comment = ({comment, handleLike, currentUser}) => {
+const Comment = ({comment, currentUser}) => {
 
-    const [likes, setLikes] = useState(comment.likes);
+    const [likes, setLikes] = useState(Number(comment.likes));
     const [isLiked, setIsLiked] = useState(comment.isLiked);
+
+    const {likeLoading, likeError, likeData, likeCommentFn, likeSuccess} = useLikeComment(comment.id);
+    const {unlikeLoading, unlikeError, unlikeData, unlikeCommentFn, unlikeSuccess} = useUnlikeComment(comment.id);
 
     const likeComment = () => {
         if (isLiked) {
             setLikes(likes - 1);
+            unlikeCommentFn();
         } else {
             setLikes(likes + 1);
+            likeCommentFn();
         }
         setIsLiked(!isLiked);
-        handleLike();
     }
 
     const cardSx = {

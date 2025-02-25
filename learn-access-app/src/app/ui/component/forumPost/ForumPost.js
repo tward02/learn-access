@@ -16,6 +16,8 @@ import {Fragment, useState} from "react";
 import {SandpackCodeViewer, SandpackProvider} from "@codesandbox/sandpack-react";
 import Comment from "./Comment"
 import {formatFiles, getAvatarColour} from "@/app/ui/utility";
+import {useLikePost} from "@/app/ui/api/useLikePost";
+import {useUnlikePost} from "@/app/ui/api/useUnlikePost";
 
 const ForumPost = ({currentUser, post}) => {
 
@@ -44,22 +46,26 @@ const ForumPost = ({currentUser, post}) => {
     }));
 
     const [expanded, setExpanded] = useState(false);
-    const [isLiked, setIsLiked] = useState(post.isLiked);
-    const [likes, setLikes] = useState(post.likes);
+    const [isLiked, setIsLiked] = useState(post.isliked);
+    const [likes, setLikes] = useState(Number(post.likes));
     const [comments, setComments] = useState(post.comments);
     const [addCommentOpen, setAddCommentOpen] = useState(false);
     const [commentText, setCommentText] = useState("");
 
-    //TODO add comment creation functionality
-    //TODO Comment and post sorting functionality
+    const {likeLoading, likeError, likeData, likePostFn, likeSuccess} = useLikePost(post.id);
+    const {unlikeLoading, unlikeError, unlikeData, unlikePostFn, unlikeSuccess} = useUnlikePost(post.id);
 
-
+    //TODO add comment creation functionality + liking
+    //TODO comment and post sorting functionality and refresh
+    //TODO refresh functionality
 
     const likePost = () => {
         if (isLiked) {
             setLikes(likes - 1);
+            unlikePostFn();
         } else {
             setLikes(likes + 1);
+            likePostFn();
         }
         setIsLiked(!isLiked);
     }
@@ -83,19 +89,21 @@ const ForumPost = ({currentUser, post}) => {
         }
     }
 
-    const cardSx = currentUser.id === post.userId ? {backgroundColor: "#f7ebc8"} : {};
+    const cardSx = currentUser.id === post.userid ? {backgroundColor: "#f7ebc8"} : {};
 
     return (
         <Fragment>
             <Card className={modules.post} sx={cardSx}>
-                <CardHeader title={post.title} subheader={post.timestamp} avatar={
-                    <Avatar sx={{bgcolor: getAvatarColour(post.username)}} aria-label={"User " + post.username}>
-                        {post.username.charAt(0).toUpperCase()}
-                    </Avatar>
+                <CardHeader title={post.title} subheader={new Date(Date.parse(post.datetime)).toLocaleString()} avatar={
+                    <Tooltip title={post.username}>
+                        <Avatar sx={{bgcolor: getAvatarColour(post.username)}} aria-label={"User " + post.username}>
+                            {post.username.charAt(0).toUpperCase()}
+                        </Avatar>
+                    </Tooltip>
                 } action={
                     <IconButton color={isLiked ? "primary" : ""} aria-label="like post" onClick={likePost}>
                         <ThumbUpIcon className={modules.likeIcon}/>
-                        {post.likes}
+                        {likes}
                     </IconButton>
                 }/>
                 <CardContent>
@@ -128,8 +136,7 @@ const ForumPost = ({currentUser, post}) => {
                     <CardContent>
                         {comments.length > 0 ? (
                             comments.map((comment) =>
-                                <Comment key={comment.id} comment={comment} handleLike={() => {
-                                }} currentUser={currentUser}/>
+                                <Comment key={comment.id} comment={comment} currentUser={currentUser}/>
                             )
                         ) : <Typography variant="body2" color="textSecondary" component="div">No comments yet, check
                             back

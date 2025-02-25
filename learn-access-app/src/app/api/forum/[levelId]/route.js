@@ -27,6 +27,8 @@ export async function GET(req, {params}) {
         return post;
     }))
 
+    console.log(response)
+
     return Response.json(response);
 }
 
@@ -36,7 +38,6 @@ export async function POST(req, {params}) {
         return Response.json({error: 'You are not authenticated, please login'}, {status: 401});
     }
     console.log("user authenticated")
-    console.log("here")
 
     const levelId = (await params).levelId;
     const body = await req.json();
@@ -59,8 +60,7 @@ export async function POST(req, {params}) {
         }
     })
 
-    console.log("here")
     await createPost(user.id, levelId, files, title, message);
-    console.log("here")
+
     return Response.json(null, {status: 201});
 }
