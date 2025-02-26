@@ -252,8 +252,6 @@ const Sandbox = ({level, user, id}) => {
         }
     }
 
-    //TODO add below description that sets out general info like screen reader, don't delete IDs, change component signature etc...
-
     return (
         <>
             <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
@@ -271,9 +269,16 @@ const Sandbox = ({level, user, id}) => {
                             <p key={index} className={modules.leftText}>{objective}</p>))}
                         <ul className={modules.noteBox}>
                             <h3 className={modules.noteTitle}>Please note:</h3>
-                            <li className={modules.note}>Some levels may require the use of a screen reader to verify aria labels and other accessible features.</li>
-                            <li className={modules.note}>It is important that you do not delete pre programmed IDs and other similar attributes on elements.</li>
-                            <li className={modules.note}>Please do not change the signature of the App method or try to export any other functions/components. It is recommended that you also stick to using the "function" key word rather than any alternatives.</li>
+                            <li className={modules.note}>Some levels may require the use of a screen reader to verify
+                                aria labels and other accessible features.
+                            </li>
+                            <li className={modules.note}>It is important that you do not delete pre programmed IDs and
+                                other similar attributes on elements.
+                            </li>
+                            <li className={modules.note}>Please do not change the signature of the App method or try to
+                                export any other functions/components. It is recommended that you also stick to using
+                                the "function" key word rather than any alternatives.
+                            </li>
                         </ul>
                     </div>
                 </Grid2>
