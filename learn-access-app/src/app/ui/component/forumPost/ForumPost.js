@@ -4,7 +4,7 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardHeader,
+    CardHeader, CircularProgress,
     Collapse, Dialog, DialogActions, DialogContent, DialogTitle,
     IconButton,
     styled, TextField, Tooltip, Typography,
@@ -12,12 +12,14 @@ import {
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
-import {Fragment, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import {SandpackCodeViewer, SandpackProvider} from "@codesandbox/sandpack-react";
 import Comment from "./Comment"
 import {formatFiles, getAvatarColour} from "@/app/ui/utility";
 import {useLikePost} from "@/app/ui/api/useLikePost";
 import {useUnlikePost} from "@/app/ui/api/useUnlikePost";
+import {useCreateComment} from "@/app/ui/api/useCreateComment";
+import {useRouter} from "next/navigation";
 
 const ForumPost = ({currentUser, post}) => {
 
@@ -45,19 +47,59 @@ const ForumPost = ({currentUser, post}) => {
         ],
     }));
 
+    const router = useRouter();
+
     const [expanded, setExpanded] = useState(false);
     const [isLiked, setIsLiked] = useState(post.isliked);
     const [likes, setLikes] = useState(Number(post.likes));
     const [comments, setComments] = useState(post.comments);
     const [addCommentOpen, setAddCommentOpen] = useState(false);
     const [commentText, setCommentText] = useState("");
+    const [commentError, setCommentError] = useState(false);
+    const [commentCreateError, setCommentCreateError] = useState(false);
+    const [commentLoading, setCommentLoading] = useState(false);
 
     const {likeLoading, likeError, likeData, likePostFn, likeSuccess} = useLikePost(post.id);
     const {unlikeLoading, unlikeError, unlikeData, unlikePostFn, unlikeSuccess} = useUnlikePost(post.id);
+    const {
+        createCommentLoading,
+        createCommentError,
+        createCommentData,
+        createCommentFn,
+        createCommentIsSuccess
+    } = useCreateComment(post.id);
 
-    //TODO add comment creation functionality + liking
     //TODO comment and post sorting functionality and refresh
     //TODO refresh functionality
+
+    useEffect(() => {
+        if (createCommentIsSuccess && createCommentData) {
+            const comment = {
+                id: createCommentData?.id,
+                userid: currentUser.id,
+                username: currentUser.username,
+                message: commentText,
+                datetime: new Date(),
+                likes: 0,
+                isLiked: false
+            }
+            const newComments = [comment, ...comments];
+            setComments(newComments);
+            setCommentLoading(false);
+            closeAddComment();
+        }
+    }, [createCommentIsSuccess, createCommentData]);
+
+    useEffect(() => {
+        if (createCommentError?.status === 401) {
+            router.push("/login");
+        } else if (createCommentError?.status === 403 || createCommentError?.status === 404) {
+            router.push("/");
+        } else if (createCommentError) {
+            setCommentCreateError(true);
+            setCommentLoading(false);
+        }
+    }, [createCommentError, router]);
 
     const likePost = () => {
         if (isLiked) {
@@ -77,15 +119,18 @@ const ForumPost = ({currentUser, post}) => {
     const closeAddComment = () => {
         setAddCommentOpen(false);
         setCommentText("");
+        setCommentCreateError(false);
+        setCommentError(false);
     }
 
     const handleAddComment = () => {
+        setCommentCreateError(false);
+        setCommentError(false);
         if (!commentText || commentText?.trim() === "") {
-
+            setCommentError(true);
         } else {
-            //Add comment text
-            console.log(commentText);
-            closeAddComment();
+            setCommentLoading(true);
+            createCommentFn({message: commentText})
         }
     }
 
@@ -126,14 +171,14 @@ const ForumPost = ({currentUser, post}) => {
                     </ExpandMore>}
                     {comments.length + " Comments "}
                 </span>
-                    <Tooltip title={"Add Comment"}>
-                        <IconButton onClick={addComment}>
-                            <AddIcon/>
-                        </IconButton>
-                    </Tooltip>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
+                        <Tooltip title={"Add Comment"}>
+                            <IconButton onClick={addComment}>
+                                <AddIcon/>
+                            </IconButton>
+                        </Tooltip>
                         {comments.length > 0 ? (
                             comments.map((comment) =>
                                 <Comment key={comment.id} comment={comment} currentUser={currentUser}/>
@@ -144,11 +189,16 @@ const ForumPost = ({currentUser, post}) => {
                     </CardContent>
                 </Collapse>
             </Card>
-            <Dialog open={addCommentOpen} onClose={closeAddComment} fullWidth>
-                <DialogTitle>Add Comment</DialogTitle>
+            <Dialog open={addCommentOpen} onClose={closeAddComment} fullWidth aria-labelledby="comment-dialog-title">
+                <DialogTitle id={"comment-dialog-title"}>Add Comment</DialogTitle>
                 <DialogContent>
-                    <TextField autoFocus required margin={"dense"} label="Comment" fullWidth variant="standard"
-                               onChange={(e) => setCommentText(e.target.value)}/>
+                    {commentLoading ? <div className={modules.loading}><CircularProgress/></div> : <><TextField
+                        autoFocus required margin={"dense"} label="Comment" fullWidth variant="standard"
+                        onChange={(e) => setCommentText(e.target.value)}/>
+                        {commentCreateError &&
+                            <p className={modules.error}>Failed to create comment, please try again</p>}
+                        {commentError && <p className={modules.error}>Comment can't be empty</p>}
+                    </>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeAddComment}>Cancel</Button>

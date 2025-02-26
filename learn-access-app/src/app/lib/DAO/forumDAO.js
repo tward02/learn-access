@@ -119,14 +119,16 @@ export const unlikeComment = async (commentId, userId) => {
 }
 
 export const createComment = async (postId, userId, message) => {
-    await sql`
+    const result = await sql`
         INSERT INTO comments(postid, userid, datetime, message)
         VALUES (${postId}, ${userId}, NOW(), ${message})
+        RETURNING id
     `
+    return result.rows;
 }
 
 export const getCommentsByPostId = async (postId, userId) => {
-    await sql`
+    const result = await sql`
         SELECT p.*,
                COUNT(l.id)                                                AS likes,
                CASE WHEN COUNT(user_like.id) > 0 THEN true ELSE false END AS isLiked
@@ -138,4 +140,5 @@ export const getCommentsByPostId = async (postId, userId) => {
         WHERE p.postid = ${postId}
         GROUP BY p.id;
     `
+    return result.rows;
 }

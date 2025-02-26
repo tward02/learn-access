@@ -383,8 +383,7 @@ const Sandbox = ({level, user, id}) => {
                     <Button onClick={() => setSubmissionFailedOpen(false)} autoFocus>Close</Button>
                 </DialogActions>
             </Dialog>
-            <Dialog aria-labelledby="hint-dialog-title" aria-describedby="hint-dialog-description"
-                    open={hintsOpen} onClose={handleHintClose}>
+            <Dialog aria-labelledby="hint-dialog-title" open={hintsOpen} onClose={handleHintClose}>
                 <DialogTitle id="hint-dialog-title">{testHints[selectedHint].name}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="hint-dialog-description">

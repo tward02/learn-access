@@ -98,7 +98,6 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
 
     return (
         <Dialog maxWidth={"md"} fullWidth={true} aria-labelledby="create-post-dialog-title"
-                aria-describedby="create-post-dialog-description"
                 open={open}>
             <DialogTitle id="create-post-dialog-title">Post Solution</DialogTitle>
             <DialogContent>

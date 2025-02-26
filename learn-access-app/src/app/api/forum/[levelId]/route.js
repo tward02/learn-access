@@ -1,6 +1,6 @@
 import {getUser, hasSession} from "@/app/lib/dal";
 import {hasCompletedLevel} from "@/app/lib/DAO/levelDAO";
-import {createPost, getPostFiles, getPostsByLevelId} from "@/app/lib/DAO/forumDAO";
+import {createPost, getCommentsByPostId, getPostFiles, getPostsByLevelId} from "@/app/lib/DAO/forumDAO";
 import {getUserById} from "@/app/lib/DAO/userDAO";
 
 export async function GET(req, {params}) {
@@ -11,9 +11,9 @@ export async function GET(req, {params}) {
     console.log("user authenticated")
 
     const levelId = (await params).levelId;
-    const user = await getUser();
+    const rqUser = await getUser();
 
-    if (!await hasCompletedLevel(user.id, levelId)) {
+    if (!await hasCompletedLevel(rqUser.id, levelId)) {
         return Response.json({error: 'You have not unlocked this forum yet'}, {status: 403});
     }
 
@@ -22,7 +22,12 @@ export async function GET(req, {params}) {
     const response = await Promise.all(posts.map(async (post) => {
         const user = await getUserById(post.userid);
         post.username = user.username;
-        post.comments = [];
+        const comments = await getCommentsByPostId(post.id, rqUser.id);
+        post.comments = await Promise.all(comments.map(async (comment) => {
+            const commentUser = await getUserById(comment.userid);
+            comment.username = commentUser.username;
+            return comment;
+        }));
         post.files = await getPostFiles(post.id);
         return post;
     }))
