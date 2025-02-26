@@ -25,9 +25,7 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
     const [loading, setLoading] = useState(false);
 
     const {
-        createPostLoading,
         createPostError,
-        createPostData,
         createPostFn,
         createPostIsSuccess
     } = useCreatePost(levelId);

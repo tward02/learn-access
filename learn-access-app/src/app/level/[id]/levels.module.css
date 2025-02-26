@@ -196,3 +196,19 @@
 .linkBox {
     margin-top: 10px;
 }
+
+.noteBox {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid gray;
+}
+
+.noteTitle {
+    font-size: 1.2em !important;
+    font-weight: bold;
+}
+
+.note {
+    margin-top: 5px;
+    font-size: 1.1em !important;
+}
