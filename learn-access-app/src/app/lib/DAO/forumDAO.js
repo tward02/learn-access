@@ -1,21 +1,5 @@
 import {sql} from "@vercel/postgres";
 
-export const getPostsByLevelId = async (levelId, userId) => {
-    const result = await sql`
-        SELECT p.*,
-               COUNT(l.id)                                                AS likes,
-               CASE WHEN COUNT(user_like.id) > 0 THEN true ELSE false END AS isLiked
-        FROM posts p
-                 LEFT JOIN likes l ON l.postId = p.id
-                 LEFT JOIN likes user_like
-                           ON user_like.postId = p.id
-                               AND user_like.userId = ${userId}
-        WHERE p.levelId = ${levelId}
-        GROUP BY p.id;
-    `
-    return result.rows;
-}
-
 export const getPostFiles = async (postId) => {
     const result = await sql`
         SELECT *
@@ -35,7 +19,7 @@ export const createPost = async (userId, levelId, files, title, message) => {
             RETURNING id;
         `;
         const postId = postResult.rows[0].id;
-        console.log(postResult)
+
         if (files.length > 0) {
             await Promise.all(
                 files.map(file =>
@@ -138,6 +122,22 @@ export const getCommentsByPostId = async (postId, userId) => {
                            ON user_like.commentid = p.id
                                AND user_like.userId = ${userId}
         WHERE p.postid = ${postId}
+        GROUP BY p.id;
+    `
+    return result.rows;
+}
+
+export const getPostsByLevelId = async (levelId, userId) => {
+    const result = await sql`
+        SELECT p.*,
+               COUNT(l.id)                                                AS likes,
+               CASE WHEN COUNT(user_like.id) > 0 THEN true ELSE false END AS isLiked
+        FROM posts p
+                 LEFT JOIN likes l ON l.postId = p.id
+                 LEFT JOIN likes user_like
+                           ON user_like.postId = p.id
+                               AND user_like.userId = ${userId}
+        WHERE p.levelId = ${levelId}
         GROUP BY p.id;
     `
     return result.rows;

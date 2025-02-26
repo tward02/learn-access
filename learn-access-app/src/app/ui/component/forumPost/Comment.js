@@ -6,19 +6,21 @@ import {useLikeComment} from "@/app/ui/api/useLikeComment";
 import {useUnlikeComment} from "@/app/ui/api/useUnlikeComment";
 import {getAvatarColour} from "@/app/ui/utility";
 
-const Comment = ({comment, currentUser}) => {
+const Comment = ({comment, currentUser, updateLike}) => {
 
     const [likes, setLikes] = useState(Number(comment.likes));
-    const [isLiked, setIsLiked] = useState(comment.isLiked);
+    const [isLiked, setIsLiked] = useState(comment.isliked);
 
-    const {likeLoading, likeError, likeData, likeCommentFn, likeSuccess} = useLikeComment(comment.id);
-    const {unlikeLoading, unlikeError, unlikeData, unlikeCommentFn, unlikeSuccess} = useUnlikeComment(comment.id);
+    const {likeCommentFn} = useLikeComment(comment.id);
+    const {unlikeCommentFn} = useUnlikeComment(comment.id);
 
     const likeComment = () => {
         if (isLiked) {
+            updateLike(-1, comment.id);
             setLikes(likes - 1);
             unlikeCommentFn();
         } else {
+            updateLike(1, comment.id);
             setLikes(likes + 1);
             likeCommentFn();
         }
@@ -39,7 +41,7 @@ const Comment = ({comment, currentUser}) => {
 
     return (
         <Card sx={cardSx}>
-            <CardHeader title={<Typography variant="body2" fontWeight="bold">
+            <CardHeader title={<Typography variant="body2">
                 {comment.message}
             </Typography>} subheader={<Typography variant="caption" color="text.secondary">
                 {new Date(Date.parse(comment.datetime)).toLocaleString()}

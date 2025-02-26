@@ -6,9 +6,6 @@
 }
 
 .forumContent {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: calc(100vh - 64px);
     min-height: calc(100vh - 64px);
     max-height: calc(100vh - 64px);
@@ -16,11 +13,12 @@
 
 .forumScroller {
     overflow-y: auto;
-    height: 100%;
+    height: calc(100vh - 64px);
+    min-height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
     align-items: center;
     background-color: lightgray;
-    max-width: 55%;
-    width: 55%;
+    width: 100%;
     padding: 5px;
 }
 
@@ -48,4 +46,12 @@
 
 .link:hover {
     cursor: pointer;
+}
+
+.actions {
+    display: flex;
+    justify-content: left;
+    align-items: flex-start;
+    color: black;
+    font-size: 1.2rem;
 }

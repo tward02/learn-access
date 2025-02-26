@@ -5,7 +5,9 @@ import TopBar from "@/app/ui/component/topBar/TopBar";
 import ForumPost from "@/app/ui/component/forumPost/ForumPost";
 import {useFetchForum} from "@/app/ui/api/useFetchForum";
 import {useEffect, useState} from "react";
-import {CircularProgress, Link} from "@mui/material";
+import {Button, CircularProgress, Grid2, Link, Stack} from "@mui/material";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SortIcon from '@mui/icons-material/Sort';
 
 const ForumContent = ({session, user, id}) => {
 
@@ -31,20 +33,68 @@ const ForumContent = ({session, user, id}) => {
         forumRefetch();
     }
 
+    const handlePostLike = (modifier, id) => {
+        const updatedPosts = [...posts];
+        updatedPosts.map((post) => {
+            if (id === post.id) {
+                post.likes += modifier;
+            }
+            return post;
+        })
+        setPosts(updatedPosts);
+    }
+
+    const handleSortByLikes = () => {
+        const sortedPosts = [...posts];
+        sortedPosts.sort((a, b) => {
+            return Number(b.likes) - Number(a.likes);
+        })
+        setPosts(sortedPosts);
+    }
+
+    const handleSortByDate = () => {
+        const sortedPosts = [...posts];
+        sortedPosts.sort((a, b) => {
+            return (new Date(Date.parse(b.datetime)) - new Date(Date.parse(a.datetime)));
+        })
+        setPosts(sortedPosts);
+    }
+
     return (
         <div className={modules.container}>
             <TopBar back title={"Level 1 - Forum"} loggedIn={session} username={user?.username}/>
             <main className={modules.forumContent}>
-                <div className={modules.forumScroller}>
-                    {posts.length > 0 ? (posts.map((post) => <ForumPost currentUser={user} post={post}
-                                                                        key={post.id}/>)) : forumLoading || forumRefetching ? (
-                        <CircularProgress className={modules.loading} size="8rem"/>) : forumError || refetchError ? (
-                        <p className={modules.errorMessage}>Failed to load forum posts. Please&nbsp;<Link
-                            className={modules.link}
-                            onClick={reloadForum}>try
-                            again</Link></p>) : (
-                        <p className={modules.emptyMessage}>No posts right now, please check again later</p>)}
-                </div>
+                <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
+                    <Grid2 direction="column" size={3}>
+                    </Grid2>
+                    <Grid2 direction="column" size={6}>
+                        <div className={modules.forumScroller}>
+                            {posts.length > 0 && !(forumLoading || forumRefetching) ? (posts.map((post) => <ForumPost
+                                currentUser={user} post={post}
+                                key={post.id}
+                                updateLikes={handlePostLike}/>)) : forumLoading || forumRefetching ? (
+                                <CircularProgress className={modules.loading}
+                                                  size="8rem"/>) : forumError || refetchError ? (
+                                <p className={modules.errorMessage}>Failed to load forum posts. Please&nbsp;<Link
+                                    className={modules.link}
+                                    onClick={reloadForum}>try
+                                    again</Link></p>) : (
+                                <p className={modules.emptyMessage}>No posts right now, please check again later</p>)}
+                        </div>
+                    </Grid2>
+                    <Grid2 direction="column" size={3}>
+                        <div className={modules.actions}>
+                            <Stack>
+                                <Button color="inherit" onClick={reloadForum} startIcon={<RefreshIcon/>}>Refresh
+                                    Feed</Button>
+                                <Button color="inherit" onClick={handleSortByDate} startIcon={<SortIcon/>}>Sort by
+                                    Date</Button>
+                                <Button color="inherit" onClick={handleSortByLikes} startIcon={<SortIcon/>}>Sort by
+                                    Likes</Button>
+                            </Stack>
+                        </div>
+                    </Grid2>
+                </Grid2>
             </main>
         </div>
     )

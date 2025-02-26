@@ -12,6 +12,7 @@ import {
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
+import SortIcon from '@mui/icons-material/Sort';
 import {Fragment, useEffect, useState} from "react";
 import {SandpackCodeViewer, SandpackProvider} from "@codesandbox/sandpack-react";
 import Comment from "./Comment"
@@ -21,7 +22,7 @@ import {useUnlikePost} from "@/app/ui/api/useUnlikePost";
 import {useCreateComment} from "@/app/ui/api/useCreateComment";
 import {useRouter} from "next/navigation";
 
-const ForumPost = ({currentUser, post}) => {
+const ForumPost = ({currentUser, post, updateLikes}) => {
 
     const ExpandMore = styled((props) => {
         const {expand, ...other} = props;
@@ -59,10 +60,9 @@ const ForumPost = ({currentUser, post}) => {
     const [commentCreateError, setCommentCreateError] = useState(false);
     const [commentLoading, setCommentLoading] = useState(false);
 
-    const {likeLoading, likeError, likeData, likePostFn, likeSuccess} = useLikePost(post.id);
-    const {unlikeLoading, unlikeError, unlikeData, unlikePostFn, unlikeSuccess} = useUnlikePost(post.id);
+    const {likePostFn} = useLikePost(post.id);
+    const {unlikePostFn} = useUnlikePost(post.id);
     const {
-        createCommentLoading,
         createCommentError,
         createCommentData,
         createCommentFn,
@@ -104,12 +104,25 @@ const ForumPost = ({currentUser, post}) => {
     const likePost = () => {
         if (isLiked) {
             setLikes(likes - 1);
+            updateLikes(-1, post.id);
             unlikePostFn();
         } else {
             setLikes(likes + 1);
+            updateLikes(1, post.id);
             likePostFn();
         }
         setIsLiked(!isLiked);
+    }
+
+    const handleCommentLike = (modifier, id) => {
+        const updatedComments = [...comments];
+        updatedComments.map((comment) => {
+            if (id === comment.id) {
+                comment.likes += modifier;
+            }
+            return comment;
+        })
+        setComments(updatedComments);
     }
 
     const addComment = () => {
@@ -134,12 +147,30 @@ const ForumPost = ({currentUser, post}) => {
         }
     }
 
-    const cardSx = currentUser.id === post.userid ? {backgroundColor: "#f7ebc8"} : {};
+    const handleSortLikes = () => {
+        const sortedComments = [...comments];
+        sortedComments.sort((a, b) => {
+            return Number(b.likes) - Number(a.likes);
+        })
+        setComments(sortedComments);
+    }
+
+    const handleSortDates = () => {
+        const sortedComments = [...comments];
+        sortedComments.sort((a, b) => {
+            return (new Date(Date.parse(b.datetime)) - new Date(Date.parse(a.datetime)));
+        })
+        setComments(sortedComments);
+    }
+
+    const cardSx = currentUser?.id === post.userid ? {backgroundColor: "#f7ebc8"} : {};
 
     return (
         <Fragment>
             <Card className={modules.post} sx={cardSx}>
-                <CardHeader title={post.title} subheader={new Date(Date.parse(post.datetime)).toLocaleString()} avatar={
+                <CardHeader title={<Typography fontWeight="bold">
+                    {post.title}
+                </Typography>} subheader={new Date(Date.parse(post.datetime)).toLocaleString()} avatar={
                     <Tooltip title={post.username}>
                         <Avatar sx={{bgcolor: getAvatarColour(post.username)}} aria-label={"User " + post.username}>
                             {post.username.charAt(0).toUpperCase()}
@@ -174,14 +205,19 @@ const ForumPost = ({currentUser, post}) => {
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        <Tooltip title={"Add Comment"}>
-                            <IconButton onClick={addComment}>
-                                <AddIcon/>
-                            </IconButton>
-                        </Tooltip>
+                        <Button onClick={addComment} startIcon={<AddIcon/>}>
+                            Comment
+                        </Button>
+                        <Button onClick={handleSortLikes} startIcon={<SortIcon/>}>
+                            Likes
+                        </Button>
+                        <Button onClick={handleSortDates} startIcon={<SortIcon/>}>
+                            Date
+                        </Button>
                         {comments.length > 0 ? (
                             comments.map((comment) =>
-                                <Comment key={comment.id} comment={comment} currentUser={currentUser}/>
+                                <Comment key={comment.id} comment={comment} currentUser={currentUser}
+                                         updateLike={handleCommentLike}/>
                             )
                         ) : <Typography variant="body2" color="textSecondary" component="div">No comments yet, check
                             back
@@ -197,7 +233,7 @@ const ForumPost = ({currentUser, post}) => {
                         onChange={(e) => setCommentText(e.target.value)}/>
                         {commentCreateError &&
                             <p className={modules.error}>Failed to create comment, please try again</p>}
-                        {commentError && <p className={modules.error}>Comment can't be empty</p>}
+                        {commentError && <p className={modules.error}>{"Comment can't be empty"}</p>}
                     </>}
                 </DialogContent>
                 <DialogActions>

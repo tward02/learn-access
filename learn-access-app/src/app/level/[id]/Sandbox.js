@@ -245,7 +245,6 @@ const Sandbox = ({level, user, id}) => {
     const makeLinks = () => {
         const parts = level?.enhanceddescription.toString().split("\\links\\");
         if (parts && parts.length > 1) {
-            console.log("here")
             return parts[1].split(",").map((link, index) => {
                 return (<div key={index}><a rel={"WCAG Reference"} href={link}
                                             className={modules.descriptionLink}>{link}</a></div>);
@@ -258,7 +257,7 @@ const Sandbox = ({level, user, id}) => {
     return (
         <>
             <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
-                <Grid2 item direction="column" size={2.5}>
+                <Grid2 direction="column" size={2.5}>
                     <div className={modules.descriptionGrid}>
                         {/*description*/}
                         <h2 className={modules.leftTitle}>Description:</h2>
@@ -272,7 +271,7 @@ const Sandbox = ({level, user, id}) => {
                             <p key={index} className={modules.leftText}>{objective}</p>))}
                     </div>
                 </Grid2>
-                <Grid2 item size={4.5}>
+                <Grid2 size={4.5}>
                     <div className={modules.codeEditorGrid}>
                         {/*code editor*/}
                         <SandpackCodeEditor className={modules.codeEditor} showTabs showLineNumbers
@@ -281,7 +280,7 @@ const Sandbox = ({level, user, id}) => {
                     </div>
                     <div className={modules.testGrid}>
                         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
-                            <Grid2 item size={9}>
+                            <Grid2 size={9}>
                                 <div className={modules.testConsole}>
                                     <h2 className={modules.testTitle}>Test Output:</h2>
                                     <div className={modules.testingDisplay}>
@@ -292,7 +291,7 @@ const Sandbox = ({level, user, id}) => {
                                     </div>
                                 </div>
                             </Grid2>
-                            <Grid2 item size={3}>
+                            <Grid2 size={3}>
                                 <div className={modules.actionButtons}>
                                     {/*action buttons*/}
                                     <Stack spacing={3}>
@@ -312,7 +311,7 @@ const Sandbox = ({level, user, id}) => {
                         </Grid2>
                     </div>
                 </Grid2>
-                <Grid2 item size={5}>
+                <Grid2 size={5}>
                     <div className={modules.previewGrid}>
                         {/*code preview*/}
                         <SandpackLayout className={modules.previewContainer}>
@@ -388,15 +387,15 @@ const Sandbox = ({level, user, id}) => {
                 <DialogContent>
                     <DialogContentText id="hint-dialog-description">
                         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
-                            <Grid2 item direction="column" size={1}>
+                            <Grid2 direction="column" size={1}>
                                 <IconButton size="medium" onClick={handleHintMoveLeft} disabled={selectedHint === 0}>
                                     <ArrowBackIosNewIcon fontSize="inherit"/>
                                 </IconButton>
                             </Grid2>
-                            <Grid2 item direction="column" size={10}>
+                            <Grid2 direction="column" size={10}>
                                 {testHints[selectedHint].content}
                             </Grid2>
-                            <Grid2 item direction="column" size={1}>
+                            <Grid2 direction="column" size={1}>
                                 <IconButton size="medium" onClick={handleHintMoveRight}
                                             disabled={selectedHint === testHints.length - 1 || selectedHint + 1 >= hintsViewed}>
                                     <ArrowForwardIosIcon fontSize="inherit"/>

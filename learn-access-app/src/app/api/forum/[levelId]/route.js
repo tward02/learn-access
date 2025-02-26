@@ -17,7 +17,7 @@ export async function GET(req, {params}) {
         return Response.json({error: 'You have not unlocked this forum yet'}, {status: 403});
     }
 
-    const posts = await getPostsByLevelId(levelId);
+    const posts = await getPostsByLevelId(levelId, rqUser.id);
 
     const response = await Promise.all(posts.map(async (post) => {
         const user = await getUserById(post.userid);
@@ -31,8 +31,6 @@ export async function GET(req, {params}) {
         post.files = await getPostFiles(post.id);
         return post;
     }))
-
-    console.log(response)
 
     return Response.json(response);
 }
