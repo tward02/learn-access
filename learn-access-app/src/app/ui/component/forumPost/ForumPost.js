@@ -69,9 +69,6 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
         createCommentIsSuccess
     } = useCreateComment(post.id);
 
-    //TODO comment and post sorting functionality and refresh
-    //TODO refresh functionality
-
     useEffect(() => {
         if (createCommentIsSuccess && createCommentData) {
             const comment = {
