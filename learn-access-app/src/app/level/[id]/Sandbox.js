@@ -27,6 +27,8 @@ import {useTestSolution} from "@/app/ui/api/useTestSolution";
 import {useRouter} from "next/navigation";
 import {useSubmitSolution} from "@/app/ui/api/useSubmitSolution";
 import CreatePost from "@/app/ui/component/createPost/CreatePost";
+import {useDeleteSavedFiles} from "@/app/ui/api/useDeleteSavedFiles";
+import {useSaveFiles} from "@/app/ui/api/useSaveFiles";
 
 const testHints = [
     {
@@ -43,7 +45,7 @@ const testHints = [
     }
 ]
 
-const Sandbox = ({level, user, id}) => {
+const Sandbox = ({level, user, id, save, onSaveComplete}) => {
 
     const router = useRouter();
     const {
@@ -61,6 +63,10 @@ const Sandbox = ({level, user, id}) => {
         submitSolutionSuccess
     } = useSubmitSolution(id);
 
+    const {saveFilesError, saveFilesFn, saveFilesIsSuccess} = useSaveFiles(id);
+
+    const {deleteSavedFilesFn} = useDeleteSavedFiles(id);
+
     const {sandpack} = useSandpack();
 
     const [testError, setTestError] = useState(false);
@@ -75,6 +81,44 @@ const Sandbox = ({level, user, id}) => {
     const [selectedHint, setSelectedHint] = useState(0);
     const [canSubmit, setCanSubmit] = useState(false);
     const [postSolutionOpen, setPostSolutionOpen] = useState(false);
+    const [saveFailedOpen, setSaveFailedOpen] = useState(false);
+
+    useEffect(() => {
+        if (save) {
+            const payload = {
+                files: [
+                    {
+                        name: "App.js",
+                        fileType: "js",
+                        content: sandpack?.files["/App.js"]?.code
+                    },
+                    {
+                        name: "styles.css",
+                        fileType: "css",
+                        content: sandpack?.files["/styles.css"]?.code
+                    }
+                ]
+            }
+            saveFilesFn(payload);
+        }
+    }, [save]);
+
+    useEffect(() => {
+        if (saveFilesIsSuccess) {
+            onSaveComplete();
+        }
+    }, [saveFilesIsSuccess]);
+
+    useEffect(() => {
+        if (saveFilesError?.status === 401) {
+            router.push("/login");
+        } else if (saveFilesError?.status === 403 || testSolutionError?.status === 404) {
+            router.push("/");
+        } else if (saveFilesError) {
+            setSaveFailedOpen(true);
+            onSaveComplete();
+        }
+    }, [saveFilesError, router]);
 
     useEffect(() => {
         if (testSolutionData && testSolutionSuccess) {
@@ -87,6 +131,7 @@ const Sandbox = ({level, user, id}) => {
         if (submitSolutionSuccess && submitSolutionData) {
             if (submitSolutionData.success) {
                 setValid(true);
+                deleteSavedFilesFn();
             } else {
                 setSubmissionFailedOpen(true);
             }
@@ -291,7 +336,7 @@ const Sandbox = ({level, user, id}) => {
                     </div>
                     <div className={modules.testGrid}>
                         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
-                            <Grid2 size={9}>
+                            <Grid2 size={9.5}>
                                 <div className={modules.testConsole}>
                                     <h2 className={modules.testTitle}>Test Output:</h2>
                                     <div className={modules.testingDisplay}>
@@ -302,7 +347,7 @@ const Sandbox = ({level, user, id}) => {
                                     </div>
                                 </div>
                             </Grid2>
-                            <Grid2 size={3}>
+                            <Grid2 size={2.5}>
                                 <div className={modules.actionButtons}>
                                     {/*action buttons*/}
                                     <Stack spacing={3}>
@@ -391,6 +436,19 @@ const Sandbox = ({level, user, id}) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setSubmissionFailedOpen(false)} autoFocus>Close</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog aria-labelledby="save-failed-dialog-title"
+                    aria-describedby="save-failed-dialog-description"
+                    open={saveFailedOpen} onClose={() => setSubmissionFailedOpen(false)}>
+                <DialogTitle id="save-failed-dialog-title">Save Failed</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="save-failed-dialog-description">
+                        Your in progress solution failed to save, please try again.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSaveFailedOpen(false)} autoFocus>Close</Button>
                 </DialogActions>
             </Dialog>
             <Dialog aria-labelledby="hint-dialog-title" open={hintsOpen} onClose={handleHintClose}>

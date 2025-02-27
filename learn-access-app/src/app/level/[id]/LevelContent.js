@@ -5,7 +5,8 @@ import {
     Backdrop,
     Button,
     CircularProgress,
-    Dialog, DialogActions,
+    Dialog,
+    DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle
@@ -26,6 +27,8 @@ const LevelContent = ({session, user, id}) => {
 
     const [level, setLevel] = useState(null);
     const [expired, setExpired] = useState(false);
+    const [saveFilesOpen, setSaveFilesOpen] = useState(false);
+    const [save, setSave] = useState(false);
 
     const {levelLoading, levelError, levelData, levelSuccess} = useFetchLevel(id);
 
@@ -34,6 +37,9 @@ const LevelContent = ({session, user, id}) => {
             if ((Date.parse(levelData?.expiration) - new Date()) > 0) {
                 setExpired(true);
             } else {
+                if (levelData?.savedFiles?.length > 0) {
+                    setSaveFilesOpen(true);
+                }
                 setLevel(levelData);
             }
         }
@@ -59,12 +65,30 @@ const LevelContent = ({session, user, id}) => {
         return "There has been an error loading this level, please return to the homepage and try again later."
     }
 
+    const handleRestart = () => {
+        setSaveFilesOpen(false);
+    }
+
+    const handleContinue = () => {
+        levelData.files = levelData?.savedFiles;
+        setLevel(levelData);
+        setSaveFilesOpen(false);
+    }
+
+    const handleSaveComplete = () => {
+        setSave(false);
+    }
+
+    const handleSave = () => {
+        setSave(true);
+    }
+
     return (
         <main className={modules.gridContainer}>
-            <TopBar title={level?.name} loggedIn={session} username={user?.username} back/>
-            {!levelLoading && !levelError &&
+            <TopBar title={level?.name} loggedIn={session} username={user?.username} back onSave={handleSave} save={save}/>
+            {!levelLoading && !levelError && !saveFilesOpen &&
                 <SandpackProvider template={"react"} className={modules.provider} files={formatFiles(level?.files)}>
-                    <Sandbox user={user} id={id} level={level}/>
+                    <Sandbox user={user} id={id} level={level} save={save} onSaveComplete={handleSaveComplete} />
                 </SandpackProvider>}
             <Backdrop open={levelLoading}>
                 <CircularProgress/>
@@ -80,6 +104,19 @@ const LevelContent = ({session, user, id}) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeErrorPopup} autoFocus>Return to Homepage</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog aria-labelledby="save-dialog-title" aria-describedby="save-dialog-description"
+                    open={saveFilesOpen}>
+                <DialogTitle id="save-dialog-title">Continue with saved attempt?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="save-dialog-description">
+                        Do you want to load your previous unfinished attempt?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleRestart}>Restart</Button>
+                    <Button onClick={handleContinue}>Load Save</Button>
                 </DialogActions>
             </Dialog>
         </main>

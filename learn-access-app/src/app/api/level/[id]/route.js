@@ -1,5 +1,5 @@
 import {getUser, hasSession} from "@/app/lib/dal";
-import {getLevel, getLevelFiles, getLevelHints} from "@/app/lib/DAO/levelDAO";
+import {getLevel, getLevelFiles, getLevelHints, getSavedFiles} from "@/app/lib/DAO/levelDAO";
 
 export async function GET(request, {params}) {
 
@@ -24,11 +24,15 @@ export async function GET(request, {params}) {
         return Response.json({error: 'You don\'t have permission to view this level'}, {status: 403});
     }
 
-    const levelFiles = await getLevelFiles(id);
-    const levelHints = await getLevelHints(id);
+    const [levelFiles, levelHints, savedFiles] = await Promise.all([
+        getLevelFiles(id),
+        getLevelHints(id),
+        getSavedFiles(user.id, id)
+    ]);
 
     levelData.files = levelFiles;
     levelData.hints = levelHints;
+    levelData.savedFiles = savedFiles;
 
     return Response.json(levelData);
 }

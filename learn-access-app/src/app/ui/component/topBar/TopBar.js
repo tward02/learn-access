@@ -5,8 +5,9 @@ import {useRouter} from "next/navigation";
 import {logout} from "@/app/actions/auth";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import modules from "./topBar.module.css";
+import SaveIcon from "@mui/icons-material/Save";
 
-const TopBar = ({loggedIn, title, username, back}) => {
+const TopBar = ({loggedIn, title, username, back, onSave, save}) => {
 
     const router = useRouter();
 
@@ -36,6 +37,8 @@ const TopBar = ({loggedIn, title, username, back}) => {
                         </div>
                     )}
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>{title}</Typography>
+                    {onSave && <Button className={modules.saveButton} variant={"contained"} color={"warning"}
+                                       startIcon={<SaveIcon/>} onClick={onSave} loadingPosition={"end"} loading={save}>Save</Button>}
                     {loggedIn ? <Button color={"inherit"} onClick={logoutFn}>{username + " Logout"}</Button> :
                         <Button color={"inherit"} onClick={login}>Login</Button>}
                 </Toolbar>
