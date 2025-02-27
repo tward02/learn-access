@@ -191,21 +191,20 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                 </CardContent>
                 <CardActions>
                 <span>
-                    {comments.length > 0 && <ExpandMore expand={expanded}
-                                                        onClick={() => setExpanded(!expanded)}
-                                                        aria-expanded={expanded}
-                                                        aria-label="View comments">
+                    <ExpandMore expand={expanded}
+                                onClick={() => setExpanded(!expanded)}
+                                aria-expanded={expanded}
+                                aria-label="View comments">
                         <ExpandMoreIcon/>
-                    </ExpandMore>}
+                    </ExpandMore>
                     {comments.length + " Comments "}
-
                 </span>
-                    <Button onClick={addComment} startIcon={<AddIcon/>}>
-                        Comment
-                    </Button>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
+                        <Button onClick={addComment} startIcon={<AddIcon/>}>
+                            Comment
+                        </Button>
                         <Button onClick={handleSortLikes} startIcon={<SortIcon/>}>
                             Likes
                         </Button>
