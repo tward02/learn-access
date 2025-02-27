@@ -1,0 +1,29 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.app {
+    text-align: center;
+    padding: 50px;
+}
+
+.appContrast {
+    background-color: green;
+    padding: 50px;
+    text-align: center;
+}
+
+/* High Contrast Mode */
+.high-contrast {
+    background-color: black;
+    color: yellow;
+}
+
+.toggle-contrast {
+    margin-top: 20px;
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}

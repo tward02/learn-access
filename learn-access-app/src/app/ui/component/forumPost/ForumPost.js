@@ -198,13 +198,14 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                         <ExpandMoreIcon/>
                     </ExpandMore>}
                     {comments.length + " Comments "}
+
                 </span>
+                    <Button onClick={addComment} startIcon={<AddIcon/>}>
+                        Comment
+                    </Button>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        <Button onClick={addComment} startIcon={<AddIcon/>}>
-                            Comment
-                        </Button>
                         <Button onClick={handleSortLikes} startIcon={<SortIcon/>}>
                             Likes
                         </Button>

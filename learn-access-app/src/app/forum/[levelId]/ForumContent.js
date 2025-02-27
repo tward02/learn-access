@@ -62,7 +62,7 @@ const ForumContent = ({session, user, id}) => {
 
     return (
         <div className={modules.container}>
-            <TopBar back title={"Level 1 - Forum"} loggedIn={session} username={user?.username}/>
+            <TopBar back title={"Forum"} loggedIn={session} username={user?.username}/>
             <main className={modules.forumContent}>
                 <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
                     <Grid2 direction="column" size={3}>

@@ -141,7 +141,7 @@ const runJestTest = async (testDir, test, index) => {
 
 const transformReactImports = (source) => {
 
-    const importRegex = /^import\s+(?:React,\s+)?\{\s*([^}]+?)\s*\}\s+from\s+["']react["'];?$/gm;
+    const importRegex = /^import\s+(?:React,\s*)?\{\s*([^}]+?)\s*\}\s+from\s+["']react["'];?$/gm;
 
     return source.replace(importRegex, (match, hooksGroup) => {
         const hooksList = hooksGroup.split(",").map(hook => hook.trim());
