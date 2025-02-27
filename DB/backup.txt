@@ -1,0 +1,1 @@
+pg_dump [connection string] > database-backup.sql
