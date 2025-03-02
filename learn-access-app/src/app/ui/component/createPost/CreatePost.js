@@ -33,7 +33,6 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
     useEffect(() => {
         if (createPostIsSuccess) {
             router.push("/forum/" + levelId);
-            setLoading(false);
         }
     }, [createPostIsSuccess, router]);
 

@@ -291,7 +291,7 @@ const Sandbox = ({level, user, id, save, onSaveComplete}) => {
         const parts = level?.enhanceddescription.toString().split("\\links\\");
         if (parts && parts.length > 1) {
             return parts[1].split(",").map((link, index) => {
-                return (<div key={index}><a rel={"WCAG Reference"} href={link}
+                return (<div key={index}><a rel={"WCAG Reference"} href={link} target="_blank"
                                             className={modules.descriptionLink}>{link}</a></div>);
             })
         }

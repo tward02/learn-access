@@ -2,7 +2,7 @@ import tinycolor from "tinycolor2";
 
 export const formatFiles = (files) => {
     return files?.reduce((acc, item) => {
-        acc[item.name] = {code: item.content, readOnly: item.readOnly};
+        acc[item.name] = {code: item.content, readOnly: item.readonly};
         return acc;
     }, {});
 }
