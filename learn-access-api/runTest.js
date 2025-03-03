@@ -1,7 +1,7 @@
-import path from "path";
-import fs from "fs";
-import util from "util";
-import {exec} from "child_process";
+const util = require("util");
+const { exec } = require('child_process');
+const path = require('path');
+const fs = require('fs');
 
 const execPromise = util.promisify(exec);
 
@@ -24,43 +24,26 @@ const getPlaywrightRender = (reactCode, css) => `
 </html>
 `
 
-const runJestTest = async (testDir, testCode, index, testName, testType) => {
-    const testPath = path.join(testDir, 'App' + index + '.test.js');
-    fs.writeFileSync(testPath, testCode);
 
-    const resultList = [];
-
-    try {
-        const {stdout} = await execPromise(`npx jest --config jest.config.js --findRelatedTests ${path.normalize(testPath)} --json`);
-        const results = JSON.parse(stdout);
-        results.testResults.forEach((tests) => {
-            tests.assertionResults.forEach(testResult => {
-                resultList.push({
-                    passed: (testResult.status === "passed"),
-                    suite: testName,
-                    name: testResult.fullName,
-                    type: testType
-                });
-            })
-        })
-    } catch (error) {
-        if (error.stdout) {
-            const results = JSON.parse(error.stdout);
-            results.testResults.forEach((tests) => {
-                tests.assertionResults.forEach(testResult => {
-                    const passed = testResult.status === "passed";
-                    const resultObject = {passed: passed, suite: testName, name: testResult.fullName, type: testType};
-                    if (!passed) {
-                        resultObject.message = testResult.failureMessages;
-                    }
-                    resultList.push(resultObject);
-                })
-            })
-        } else {
-            resultList.push({passed: false, suite: testName, message: "Error running Jest", type: testType});
+function printDirectoryStructure(dir, indent = '') {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+        const fullPath = path.join(dir, file);
+        const isDirectory = fs.statSync(fullPath).isDirectory();
+        console.log(indent + (isDirectory ? '📁 ' : '📄 ') + file);
+        if (isDirectory) {
+            printDirectoryStructure(fullPath, indent + '  '); // Recursively print subdirectories
         }
     }
-    return resultList;
+}
+
+const runJestTest = async (testPath) => {
+
+    printDirectoryStructure('./');
+
+    const finalPath = testPath.replace(/\\/g, "/");
+
+    await execPromise(`npx jest --config jest.config.js --findRelatedTests ${finalPath} --json`);
 }
 
 const transformReactImports = (source) => {
@@ -129,14 +112,11 @@ const runPlaywrightTest = async (testDir, playwrightTestCode, code, css, index, 
 
 
 (async() => {
-    const testDir = process.env.TEST_DIR;
+    const testDir = process.env.TEST_PATH;
     const testType = process.env.TEST_TYPE;
-    const index = process.env.INDEX;
-    const testCode = process.env.TEST_CODE;
-    const testName = process.env.TEST_NAME;
 
     if (testType === "jest") {
-        return runJestTest(testDir, testCode, index, testName, testType);
+        return runJestTest(testDir);
     } else if (testType === "playwright") {
         const code = process.env.CODE;
         const css = process.env.CSS;

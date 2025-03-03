@@ -100,14 +100,31 @@ const authenticate = async (user) => {
     return user.password === dbUser.password;
 }
 
+const escapeShellArg = (arg) => {
+    if (process.platform === 'win32') {
+        console.log("HERE")
+        return `"${arg.replace(/(["^&<>|])/g, '^$1')}"`;
+    } else {
+        return `'${arg.replace(/'/g, "'\\''")}'`;
+    }
+}
+
 const runJestTest = async (testDir, test, index) => {
     const testPath = path.join(testDir, 'App' + index + '.test.js');
     fs.writeFileSync(testPath, test.code);
 
     const resultList = [];
 
+    const currentDir = process.cwd();
+
     try {
-        const {stdout} = await execPromise(`npx jest --config jest.config.js --findRelatedTests ${path.normalize(testPath)} --json`);
+        //const {stdout} = await execPromise(`npx jest --config jest.config.js --findRelatedTests ${path.normalize(testPath)} --json`);
+        const {stdout} = await execPromise(`docker run --rm --network=none --cap-drop=ALL --memory=512m --cpus=1 \
+-e TEST_PATH="${testPath}" \
+-e TEST_TYPE="jest" \
+-v ${currentDir}/testing/temp:/testing/temp \
+test-sandbox`);
+        console.log(stdout);
         const results = JSON.parse(stdout);
         results.testResults.forEach((tests) => {
             tests.assertionResults.forEach(testResult => {
@@ -120,6 +137,7 @@ const runJestTest = async (testDir, test, index) => {
             })
         })
     } catch (error) {
+        console.log(error);
         if (error.stdout) {
             const results = JSON.parse(error.stdout);
             results.testResults.forEach((tests) => {
@@ -228,13 +246,7 @@ const runTests = async (levelId, code, css) => {
     const results = await Promise.all(
         tests.map((test, index) => {
             if (test.type === "jest") {
-                // return runJestTest(tempDir, test, index);
-                exec(`docker run --rm --network none --cap-drop=ALL --memory=512m --cpus=1 -e TEST_DIR='${tempDir}' -e TEST_TYPE='${test.type}' -e INDEX='${index}' -e TEST_CODE='${test.code}' -e TEST_NAME='${test.name}' -v ${tempDir}:${tempDir} test-sandbox`, (e, std, stde) => {
-                    console.log(std)
-                    console.log(stde)
-                    console.log(e)
-                    return {passed: true}
-                })
+                return runJestTest(tempDir, test, index);
             } else if (test.type === "playwright") {
                 return runPlaywrightTest(tempDir, test, code, css, index);
             }
