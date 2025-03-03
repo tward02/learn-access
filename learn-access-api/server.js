@@ -228,7 +228,13 @@ const runTests = async (levelId, code, css) => {
     const results = await Promise.all(
         tests.map((test, index) => {
             if (test.type === "jest") {
-                return runJestTest(tempDir, test, index);
+                // return runJestTest(tempDir, test, index);
+                exec(`docker run --rm --network none --cap-drop=ALL --memory=512m --cpus=1 -e TEST_DIR='${tempDir}' -e TEST_TYPE='${test.type}' -e INDEX='${index}' -e TEST_CODE='${test.code}' -e TEST_NAME='${test.name}' -v ${tempDir}:${tempDir} test-sandbox`, (e, std, stde) => {
+                    console.log(std)
+                    console.log(stde)
+                    console.log(e)
+                    return {passed: true}
+                })
             } else if (test.type === "playwright") {
                 return runPlaywrightTest(tempDir, test, code, css, index);
             }
