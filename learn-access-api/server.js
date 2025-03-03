@@ -41,6 +41,34 @@ const getPlaywrightRender = (reactCode, css) => `
 </html>
 `
 
+function isSafeReactCode(code) {
+    const forbiddenPatterns = [
+        /\bfs\b/,
+        /\bpath\b/,
+        /\bchild_process\b/,
+        /\bhttp\b/,
+        /\bhttps\b/,
+        /\bnet\b/,
+        /\bdgram\b/,
+        /\bfetch\s*\(/,
+        /\baxios\s*\(/,
+        /\bXMLHttpRequest\b/,
+        /\brequire\s*\(/,
+        /\bprocess\b/,
+        /\bBuffer\b/,
+        /\bcrypto\b/,
+        /\bvm\b/,
+        /\bworker_threads\b/,
+        /\bcluster\b/
+    ];
+
+    const stringAndHtmlRegex = /(['"`])([^\\\1]|\\.)*\1|<[^>]*>/g;
+
+    const codeWithoutStringsOrHtml = code.replace(stringAndHtmlRegex, '');
+
+    return !forbiddenPatterns.some(pattern => pattern.test(codeWithoutStringsOrHtml));
+}
+
 const getUserById = async (id) => {
     const {rows} = (await sql`
         SELECT id, username, password
@@ -240,7 +268,6 @@ const runTests = async (levelId, code, css) => {
 }
 
 //TODO when deploying run npx playwright install
-//TODO security
 
 app.post('/submit/:levelId', async (req, res) => {
 
@@ -302,6 +329,10 @@ app.post('/test/:levelId', async (req, res) => {
 
     if (!code) {
         return res.status(400).json({message: 'Missing Required Attribute'});
+    }
+
+    if (!isSafeReactCode(code)) {
+        return res.status(400).json({message: 'Your React code failed to compile or is unsafe'});
     }
 
     if (!css) {

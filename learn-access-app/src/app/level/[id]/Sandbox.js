@@ -385,7 +385,9 @@ const Sandbox = ({level, user, id, save, onSaveComplete}) => {
                 <DialogContent>
                     <DialogContentText id="error-dialog-description">
                         There has been an error running the test suite for this level, please ensure your code is valid
-                        and free from syntax errors by looking at the console output. If it is then please try again
+                        and free from syntax errors by looking at the console output. This error can also be caused by
+                        trying to carry out unsafe operations in your code, such are using the file system or executing
+                        commands. If it is then please try again
                         later.
                     </DialogContentText>
                 </DialogContent>

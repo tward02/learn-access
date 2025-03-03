@@ -50,15 +50,6 @@ Testable in:
 ✅ Jest (verify elements have appropriate roles)
 ✅ Playwright (check screen reader output or structure)
 
-Level 6: Responsive Reflow & Text Resizing
-WCAG Reference: 1.4.10 Reflow, 1.4.4 Resize Text
-Challenge:
-
-Ensure text scales up to 200% without breaking layout.
-Implement a CSS grid or flexbox layout that supports reflow on small screens.
-Testable in:
-✅ Playwright (simulate different viewport sizes and zoom levels)
-
 Level 7: Accessible Dropdown Menus
 WCAG Reference: 2.1.1 Keyboard, 4.1.2 Name, Role, Value
 Challenge:
