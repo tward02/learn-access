@@ -186,8 +186,9 @@ const runPlaywrightTest = async (testDir, test, code, css, index) => {
     formattedCode = formattedCode.replaceAll("import \'./styles.css\'", "")
     formattedCode = formattedCode.replaceAll("import \"./styles.css\"", "")
     formattedCode = formattedCode.replace("export default App", "")
+    formattedCode = formattedCode.replaceAll("export default", "");
     formattedCode = formattedCode.replaceAll("export", "");
-    formattedCode = formattedCode.replace("default", "");
+
     const render = getPlaywrightRender(formattedCode, css);
     const testCode = test.code.replaceAll("///Render///", render);
     fs.writeFileSync(testPath, testCode);
