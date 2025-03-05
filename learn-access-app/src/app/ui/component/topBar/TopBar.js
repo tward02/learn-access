@@ -30,8 +30,8 @@ const TopBar = ({loggedIn, title, username, back, onSave, save}) => {
                     {back && (
                         <div className={modules.backButtonContainer}>
                             <Tooltip title={"Back to homepage"}>
-                                <IconButton className={modules.backButton}>
-                                    <ArrowBackIcon onClick={backToHomepage}/>
+                                <IconButton onClick={backToHomepage} className={modules.backButton}>
+                                    <ArrowBackIcon/>
                                 </IconButton>
                             </Tooltip>
                         </div>

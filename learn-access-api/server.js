@@ -128,6 +128,13 @@ const authenticate = async (user) => {
     return user.password === dbUser.password;
 }
 
+const convertTemplateLiteralsToStrings = (code) => {
+    return code.replace(/`([^`]*?)`/g, (match, content) => {
+        const transformedContent = content.replace(/\$\{([^}]+)\}/g, '" + $1 + "');
+        return `"${transformedContent}"`;
+    });
+}
+
 const runJestTest = async (testDir, test, index) => {
     const testPath = path.join(testDir, 'App' + index + '.test.js');
     fs.writeFileSync(testPath, test.code);
@@ -188,6 +195,7 @@ const runPlaywrightTest = async (testDir, test, code, css, index) => {
     formattedCode = formattedCode.replace("export default App", "")
     formattedCode = formattedCode.replaceAll("export default", "");
     formattedCode = formattedCode.replaceAll("export", "");
+    formattedCode = convertTemplateLiteralsToStrings(formattedCode);
 
     const render = getPlaywrightRender(formattedCode, css);
     const testCode = test.code.replaceAll("///Render///", render);
@@ -273,7 +281,7 @@ const runTests = async (levelId, code, css) => {
 app.post('/submit/:levelId', async (req, res) => {
 
     let {code, css, user} = req?.body?.data;
-    const levelId = req?.params?.levelId;
+    const levelId = await req?.params?.levelId;
 
     if (!user || !await authenticate(user)) {
         return res.status(401).json({message: 'Not Authenticated'});
@@ -305,6 +313,10 @@ app.post('/submit/:levelId', async (req, res) => {
 
     if (passed) {
         await passLevel(user.id, levelId);
+    }
+
+    if (testResultsList.length === 0) {
+        passed = false;
     }
 
     res.status(200).json({success: passed});
