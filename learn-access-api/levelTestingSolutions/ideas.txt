@@ -70,7 +70,7 @@ Testable in:
 ✅ Jest (check ARIA attributes and presence in DOM)
 ✅ Playwright (simulate actions triggering toasts and check announcements)
 
-Level 9: Alternative Text for Images & Media
+Level 9: Alternative Text for Images & Media ATTENTION - DO THIS WHEN I HAVE MORE TIME
 WCAG Reference: 1.1.1 Non-text Content
 Challenge:
 
