@@ -85,10 +85,14 @@ const LevelContent = ({session, user, id}) => {
 
     return (
         <main className={modules.gridContainer}>
-            <TopBar title={level?.name} loggedIn={session} username={user?.username} back onSave={handleSave} save={save}/>
+            <TopBar title={level?.name} loggedIn={session} username={user?.username} back onSave={handleSave}
+                    save={save}/>
             {!levelLoading && !levelError && !saveFilesOpen &&
-                <SandpackProvider template={"react"} className={modules.provider} files={formatFiles(level?.files)}>
-                    <Sandbox user={user} id={id} level={level} save={save} onSaveComplete={handleSaveComplete} />
+                <SandpackProvider options={{
+                    experimental_enableServiceWorker: true,
+                    experimental_enableStableServiceWorkerId: false
+                }} template={"react"} className={modules.provider} files={formatFiles(level?.files)}>
+                    <Sandbox user={user} id={id} level={level} save={save} onSaveComplete={handleSaveComplete}/>
                 </SandpackProvider>}
             <Backdrop open={levelLoading}>
                 <CircularProgress/>
