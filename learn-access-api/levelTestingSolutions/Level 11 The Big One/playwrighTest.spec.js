@@ -108,7 +108,7 @@ button {
 </html>
 `
 
-test("Ensure text scales properly without breaking layout", async ({ page }) => {
+test("Ensures there are no accessibility issues on the page", async ({ page }) => {
     await page.setContent(getPlaywrightRender());
 
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
