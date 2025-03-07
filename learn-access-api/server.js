@@ -41,65 +41,33 @@ const getPlaywrightRender = (reactCode, css) => `
 </html>
 `
 
-const jestTestExample = `
-import React from 'react';
-import { screen, render } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import App from './App';
+function isSafeReactCode(code) {
+    const forbiddenPatterns = [
+        /\bfs\b/,
+        /\bpath\b/,
+        /\bchild_process\b/,
+        /\bhttp\b/,
+        /\bhttps\b/,
+        /\bnet\b/,
+        /\bdgram\b/,
+        /\bfetch\s*\(/,
+        /\baxios\s*\(/,
+        /\bXMLHttpRequest\b/,
+        /\brequire\s*\(/,
+        /\bprocess\b/,
+        /\bBuffer\b/,
+        /\bcrypto\b/,
+        /\bvm\b/,
+        /\bworker_threads\b/,
+        /\bcluster\b/
+    ];
 
-it('renders root element', () => {
-    render(<App />);
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    const rootElement = screen.getByText('Hello, JSX & CSS World!');
-});
+    const stringAndHtmlRegex = /(['"`])([^\\\1]|\\.)*\1|<[^>]*>/g;
 
-it('renders root element 2', () => {
-    render(<App />);
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    const rootElement = screen.getByText('Hello, JSX & CSS World!');
-});
+    const codeWithoutStringsOrHtml = code.replace(stringAndHtmlRegex, '');
 
-it('renders root element 3', () => {
-    render(<App />);
-    expect(screen.getByText('Hello, JSX & CSS World!')).toBeInTheDocument();
-    const rootElement = screen.getByText('Hello, JSX & CSS World!');
-});
-`
-
-const playwrightTestExample = `
-import { test, expect } from '@playwright/test';
-
-test('checks CSS styling', async ({ page }) => {
-        
-    
-    await page.setContent(\`
-        ///Render///
-    \`);
-
-    await page.waitForSelector('h1');
-
-    const element = await page.locator('h1');
-    await expect(element).toHaveCSS('color', 'rgb(0, 0, 255)');
-    await expect(element).toHaveCSS('text-align', 'center');     // Expect centered text
-});
-
-test('checks CSS styling 2', async ({ page }) => {
-        
-    
-    await page.setContent(\`
-        ///Render///
-    \`);
-
-    await page.waitForSelector('h1');
-
-    const element = await page.locator('h1');
-    await expect(element).toHaveCSS('color', 'rgb(0, 0, 255)');
-    await expect(element).toHaveCSS('text-align', 'center');     // Expect centered text
-});
-
-`
+    return !forbiddenPatterns.some(pattern => pattern.test(codeWithoutStringsOrHtml));
+}
 
 const getUserById = async (id) => {
     const {rows} = (await sql`
@@ -116,30 +84,10 @@ const getTests = async (levelId) => {
         from level_tests
         WHERE levelId = ${levelId};
     `)
+    rows.map((test) => {
+        test.code = test.code.replace(/\\n/g, '\n');
+    })
     return rows;
-    // return [
-    //     {
-    //         type: "jest",
-    //         code: jestTestExample,
-    //         name: "Jest Test Suite 1"
-    //     },
-    //     {
-    //         type: "playwright",
-    //         name: "Playwright Test Suite 1",
-    //         code: playwrightTestExample
-    //     },
-    //     {
-    //         type: "playwright",
-    //         name: "Playwright Test Suite 2",
-    //         code: playwrightTestExample
-    //
-    //     },
-    //     {
-    //         type: "jest",
-    //         code: jestTestExample,
-    //         name: "Jest Test Suite 2"
-    //     }
-    // ];
 }
 
 export const getLevel = async (userId, levelId) => {
@@ -178,6 +126,13 @@ const authenticate = async (user) => {
     }
 
     return user.password === dbUser.password;
+}
+
+const convertTemplateLiteralsToStrings = (code) => {
+    return code.replace(/`([^`]*?)`/g, (match, content) => {
+        const transformedContent = content.replace(/\$\{([^}]+)\}/g, '" + $1 + "');
+        return `"${transformedContent}"`;
+    });
 }
 
 const runJestTest = async (testDir, test, index) => {
@@ -219,10 +174,29 @@ const runJestTest = async (testDir, test, index) => {
     return resultList;
 }
 
+const transformReactImports = (source) => {
+
+    const importRegex = /^import\s+(?:React,\s*)?\{\s*([^}]+?)\s*}\s+from\s+["']react["'];?$/gm;
+
+    return source.replace(importRegex, (match, hooksGroup) => {
+        const hooksList = hooksGroup.split(",").map(hook => hook.trim());
+        return `const { ${hooksList.join(", ")} } = React;`;
+    });
+}
+
 const runPlaywrightTest = async (testDir, test, code, css, index) => {
     const testPath = path.join(testDir, 'playwrightTest' + index + '.spec.js');
-    let formattedCode = code.replaceAll("export", "");
-    formattedCode = formattedCode.replace("default", "");
+    let formattedCode = transformReactImports(code);
+    formattedCode = formattedCode.replaceAll("import React from \'react\'", "")
+    formattedCode = formattedCode.replaceAll("import React from \"react\"", "")
+    formattedCode = formattedCode.replaceAll("import React from \"react\"", "")
+    formattedCode = formattedCode.replaceAll("import \'./styles.css\'", "")
+    formattedCode = formattedCode.replaceAll("import \"./styles.css\"", "")
+    formattedCode = formattedCode.replace("export default App", "")
+    formattedCode = formattedCode.replaceAll("export default", "");
+    formattedCode = formattedCode.replaceAll("export", "");
+    formattedCode = convertTemplateLiteralsToStrings(formattedCode);
+
     const render = getPlaywrightRender(formattedCode, css);
     const testCode = test.code.replaceAll("///Render///", render);
     fs.writeFileSync(testPath, testCode);
@@ -273,7 +247,15 @@ const runTests = async (levelId, code, css) => {
     const appPath = path.join(tempDir, 'App.js');
     const cssPath = path.join(tempDir, 'styles.css');
 
-    const jestCode = "import React from \'react\';\nimport \'./styles.css\'\n" + code;
+    let jestCode = code;
+
+    if (!code.includes("import React from \'react\'") && !code.includes("import React from \"react\"") && !code.includes("import React")) {
+        jestCode = "import React from \'react\';\n" + jestCode;
+    }
+
+    if (!code.includes("import \'./styles.css\'\n") && !code.includes("import \"./styles.css\"\n")) {
+        jestCode = "import \'./styles.css\'\n" + jestCode;
+    }
 
     fs.writeFileSync(appPath, jestCode);
     fs.writeFileSync(cssPath, css);
@@ -298,8 +280,8 @@ const runTests = async (levelId, code, css) => {
 
 app.post('/submit/:levelId', async (req, res) => {
 
-    const {code, css, user} = req?.body?.data;
-    const levelId = req?.params?.levelId;
+    let {code, css, user} = req?.body?.data;
+    const levelId = await req?.params?.levelId;
 
     if (!user || !await authenticate(user)) {
         return res.status(401).json({message: 'Not Authenticated'});
@@ -314,8 +296,12 @@ app.post('/submit/:levelId', async (req, res) => {
         return res.status(403).json({message: 'You don\'t have permission to do this level'});
     }
 
-    if (!code || !css) {
+    if (!code) {
         return res.status(400).json({message: 'Missing Required Attribute'});
+    }
+
+    if (!css) {
+        css = "";
     }
 
     const testResultsList = await runTests(levelId, code, css);
@@ -329,15 +315,17 @@ app.post('/submit/:levelId', async (req, res) => {
         await passLevel(user.id, levelId);
     }
 
+    if (testResultsList.length === 0) {
+        passed = false;
+    }
+
     res.status(200).json({success: passed});
 });
 
-//TODO extract more appropriate error message
-
 app.post('/test/:levelId', async (req, res) => {
 
-    const {code, css, user} = req?.body?.data;
-    const levelId = req?.params?.levelId;
+    let {code, css, user} = req?.body?.data;
+    const levelId = await req?.params?.levelId;
 
     if (!user || !await authenticate(user)) {
         return res.status(401).json({message: 'Not Authenticated'});
@@ -352,8 +340,16 @@ app.post('/test/:levelId', async (req, res) => {
         return res.status(403).json({message: 'You don\'t have permission to do this level'});
     }
 
-    if (!code || !css) {
+    if (!code) {
         return res.status(400).json({message: 'Missing Required Attribute'});
+    }
+
+    if (!isSafeReactCode(code)) {
+        return res.status(400).json({message: 'Your React code failed to compile or is unsafe'});
+    }
+
+    if (!css) {
+        css = "";
     }
 
     const testResultsList = await runTests(levelId, code, css);
@@ -362,6 +358,10 @@ app.post('/test/:levelId', async (req, res) => {
     testResultsList.forEach(test => {
         passed = test.passed && passed;
     })
+
+    if (testResultsList.length === 0) {
+        passed = false;
+    }
 
     res.status(200).json({passed: passed, tests: testResultsList});
 });

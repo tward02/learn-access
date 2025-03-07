@@ -1,55 +1,62 @@
 import modules from "./forumPost.module.css"
-import {Box, Card, CardContent, CardHeader, IconButton, Typography} from "@mui/material";
+import {Avatar, Card, CardHeader, IconButton, Tooltip, Typography} from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import {useState} from "react";
+import {useLikeComment} from "@/app/ui/api/useLikeComment";
+import {useUnlikeComment} from "@/app/ui/api/useUnlikeComment";
+import {getAvatarColour} from "@/app/ui/utility";
 
-const Comment = ({comment, handleLike, currentUser}) => {
+const Comment = ({comment, currentUser, updateLike}) => {
 
-    const [likes, setLikes] = useState(comment.likes);
-    const [isLiked, setIsLiked] = useState(comment.isLiked);
+    const [likes, setLikes] = useState(Number(comment.likes));
+    const [isLiked, setIsLiked] = useState(comment.isliked);
+
+    const {likeCommentFn} = useLikeComment(comment.id);
+    const {unlikeCommentFn} = useUnlikeComment(comment.id);
 
     const likeComment = () => {
         if (isLiked) {
+            updateLike(-1, comment.id);
             setLikes(likes - 1);
+            unlikeCommentFn();
         } else {
+            updateLike(1, comment.id);
             setLikes(likes + 1);
+            likeCommentFn();
         }
         setIsLiked(!isLiked);
-        handleLike();
     }
 
     const cardSx = {
         display: 'flex',
         flexDirection: 'column',
-        p: 2,
         minWidth: "100%",
         marginBottom: "20px",
         border: "1px solid lightgray"
     }
 
-    if (comment.userId === currentUser.id) {
+    if (comment.userid === currentUser.id) {
         cardSx.backgroundColor = "lightYellow";
     }
 
     return (
         <Card sx={cardSx}>
-            <CardHeader title={<Typography variant="subtitle2" fontWeight="bold">
-                {comment.username}
+            <CardHeader title={<Typography variant="body2">
+                {comment.message}
             </Typography>} subheader={<Typography variant="caption" color="text.secondary">
-                {comment.timestamp}
-            </Typography>} action={
+                {new Date(Date.parse(comment.datetime)).toLocaleString()}
+            </Typography>} avatar={
+                <Tooltip title={comment.username}>
+                    <Avatar sx={{bgcolor: getAvatarColour(comment.username)}} aria-label={"User " + comment.username}>
+                        {comment.username.charAt(0).toUpperCase()}
+                    </Avatar>
+                </Tooltip>
+            } action={
                 <IconButton color={isLiked ? "primary" : ""} aria-label="like post" onClick={likeComment}>
                     <ThumbUpIcon className={modules.likeIcon}/>
                     {likes}
                 </IconButton>
             }/>
-            <CardContent>
-                <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-                    <Typography variant="body1" sx={{flexGrow: 1}}>
-                        {comment.content}
-                    </Typography>
-                </Box>
-            </CardContent>
         </Card>
     )
 }

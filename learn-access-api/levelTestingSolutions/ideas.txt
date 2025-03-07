@@ -1,0 +1,102 @@
+Level 1: Keyboard Navigation & Focus Management
+WCAG Reference: 2.1.1 Keyboard, 2.4.3 Focus Order
+Challenge:
+
+Create a modal component that can be opened with a button.
+Ensure focus is trapped within the modal when open.
+Ensure focus returns to the triggering button when closed.
+Testable in:
+✅ Playwright (simulate keyboard navigation and focus order)
+✅ Jest (test focus management logic in React)
+
+Level 2: Accessible Forms with Labels and Errors
+WCAG Reference: 3.3.2 Labels or Instructions, 4.1.2 Name, Role, Value
+Challenge:
+
+Create a login form with email and password fields.
+Ensure each input has an associated <label> or aria-label.
+Implement error messages that are announced by screen readers.
+Testable in:
+✅ Jest (check aria-live attributes and label presence)
+✅ Playwright (simulate invalid input and check announcements)
+
+Level 3: Color Contrast Compliance
+WCAG Reference: 1.4.3 Contrast (Minimum)
+Challenge:
+
+Implement a button component with a high-contrast mode.
+Ensure that text contrast meets a minimum ratio of 4.5:1.
+Testable in:
+✅ Jest (use axe-core to check contrast violations)
+✅ Playwright (screenshot comparison with contrast validation)
+
+Level 4: Skip Links for Improved Navigation
+WCAG Reference: 2.4.1 Bypass Blocks
+Challenge:
+
+Implement a "Skip to Content" link that allows users to bypass navigation.
+Ensure it is visible when focused.
+Testable in:
+✅ Playwright (simulate tabbing and check visibility/focus behavior)
+✅ Jest (ensure the link is present in the DOM and functional)
+
+Level 5: ARIA Landmarks and Roles
+WCAG Reference: 1.3.1 Info and Relationships
+Challenge:
+
+Build a webpage layout with semantic HTML (<header>, <main>, <nav>, etc.).
+Ensure correct ARIA landmarks are used where needed.
+Testable in:
+✅ Jest (verify elements have appropriate roles)
+✅ Playwright (check screen reader output or structure)
+
+Level 7: Accessible Dropdown Menus
+WCAG Reference: 2.1.1 Keyboard, 4.1.2 Name, Role, Value
+Challenge:
+
+Implement a dropdown menu that is fully keyboard-accessible.
+Ensure it can be navigated using arrow keys and closed with Esc.
+Testable in:
+✅ Playwright (keyboard navigation testing)
+✅ Jest (test aria-expanded and event handlers)
+
+Level 8: Accessible Toast Notifications
+WCAG Reference: 4.1.3 Status Messages
+Challenge:
+
+Create a toast notification system that does not interrupt users.
+Ensure important messages use aria-live="polite" or assertive".
+Testable in:
+✅ Jest (check ARIA attributes and presence in DOM)
+✅ Playwright (simulate actions triggering toasts and check announcements)
+
+Level 9: Alternative Text for Images & Media ATTENTION - DO THIS WHEN I HAVE MORE TIME
+WCAG Reference: 1.1.1 Non-text Content
+Challenge:
+
+Display an image gallery where each image has an alt attribute.
+Implement a video player with captions and transcripts.
+Testable in:
+✅ Jest (check for missing alt attributes)
+✅ Playwright (verify caption rendering and screen reader behavior)
+
+Level 10: Accessible Tables and Data Grids
+WCAG Reference: 1.3.1 Info and Relationships
+Challenge:
+
+Create a data table with headers using <th scope="col">.
+Ensure screen readers can correctly interpret the structure.
+Testable in:
+✅ Jest (verify presence of headers and relationships)
+✅ Playwright (test keyboard navigation within the table)
+
+Bonus Level: Dark Mode & User Preferences
+WCAG Reference: 1.4.11 Non-Text Contrast
+Challenge:
+
+Implement a theme toggle (light/dark mode) that respects system preferences.
+Ensure focus visibility remains clear in both themes.
+Testable in:
+✅ Jest (check CSS variables and prefers-color-scheme)
+✅ Playwright (simulate different color schemes)
+

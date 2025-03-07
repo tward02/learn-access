@@ -9,20 +9,43 @@ import {
 } from "@codesandbox/sandpack-react";
 import {useEffect, useState} from "react";
 import {
-    Button, CircularProgress,
-    Dialog, DialogActions,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
     Grid2,
+    IconButton,
     Stack
 } from "@mui/material";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import modules from "@/app/level/[id]/levels.module.css";
 import {useTestSolution} from "@/app/ui/api/useTestSolution";
 import {useRouter} from "next/navigation";
 import {useSubmitSolution} from "@/app/ui/api/useSubmitSolution";
+import CreatePost from "@/app/ui/component/createPost/CreatePost";
+import {useDeleteSavedFiles} from "@/app/ui/api/useDeleteSavedFiles";
+import {useSaveFiles} from "@/app/ui/api/useSaveFiles";
 
-const Sandbox = ({level, user, id}) => {
+const testHints = [
+    {
+        name: "Hint 1",
+        content: "This is a hint for the current level that is really useful to the users"
+    },
+    {
+        name: "Hint 2",
+        content: "This is a hint for the current level that is really useful to the users, This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users"
+    },
+    {
+        name: "Hint 3",
+        content: "This is a hint for the current level that is really useful to the users, This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users"
+    }
+]
+
+const Sandbox = ({level, user, id, save, onSaveComplete}) => {
 
     const router = useRouter();
     const {
@@ -40,6 +63,10 @@ const Sandbox = ({level, user, id}) => {
         submitSolutionSuccess
     } = useSubmitSolution(id);
 
+    const {saveFilesError, saveFilesFn, saveFilesIsSuccess} = useSaveFiles(id);
+
+    const {deleteSavedFilesFn} = useDeleteSavedFiles(id);
+
     const {sandpack} = useSandpack();
 
     const [testError, setTestError] = useState(false);
@@ -49,6 +76,49 @@ const Sandbox = ({level, user, id}) => {
     const [valid, setValid] = useState(false);
     const [resetOpen, setResetOpen] = useState(false);
     const [submissionFailedOpen, setSubmissionFailedOpen] = useState(false);
+    const [hintsOpen, setHintsOpen] = useState(false);
+    const [hintsViewed, setHintsViewed] = useState(0);
+    const [selectedHint, setSelectedHint] = useState(0);
+    const [canSubmit, setCanSubmit] = useState(false);
+    const [postSolutionOpen, setPostSolutionOpen] = useState(false);
+    const [saveFailedOpen, setSaveFailedOpen] = useState(false);
+
+    useEffect(() => {
+        if (save) {
+            const payload = {
+                files: [
+                    {
+                        name: "App.js",
+                        fileType: "js",
+                        content: sandpack?.files["/App.js"]?.code
+                    },
+                    {
+                        name: "styles.css",
+                        fileType: "css",
+                        content: sandpack?.files["/styles.css"]?.code
+                    }
+                ]
+            }
+            saveFilesFn(payload);
+        }
+    }, [save]);
+
+    useEffect(() => {
+        if (saveFilesIsSuccess) {
+            onSaveComplete();
+        }
+    }, [saveFilesIsSuccess]);
+
+    useEffect(() => {
+        if (saveFilesError?.status === 401) {
+            router.push("/login");
+        } else if (saveFilesError?.status === 403 || testSolutionError?.status === 404) {
+            router.push("/");
+        } else if (saveFilesError) {
+            setSaveFailedOpen(true);
+            onSaveComplete();
+        }
+    }, [saveFilesError, router]);
 
     useEffect(() => {
         if (testSolutionData && testSolutionSuccess) {
@@ -61,6 +131,7 @@ const Sandbox = ({level, user, id}) => {
         if (submitSolutionSuccess && submitSolutionData) {
             if (submitSolutionData.success) {
                 setValid(true);
+                deleteSavedFilesFn();
             } else {
                 setSubmissionFailedOpen(true);
             }
@@ -89,6 +160,16 @@ const Sandbox = ({level, user, id}) => {
             setTestError(true);
         }
     }, [submitSolutionError, router]);
+
+    useEffect(() => {
+        if (testResults) {
+            setCanSubmit(testResults.passed)
+        }
+    }, [testResults]);
+
+    useEffect(() => {
+        setCanSubmit(false);
+    }, [sandpack?.files["/App.js"]?.code, sandpack?.files["/styles.css"]?.code]);
 
     const handleTestSolution = () => {
         const payload = {
@@ -121,6 +202,46 @@ const Sandbox = ({level, user, id}) => {
         setResetOpen(false);
     }
 
+    const handleHint = () => {
+        setHintsOpen(true);
+        if (hintsViewed < testHints.length) {
+            setHintsViewed(hintsViewed + 1);
+        }
+    }
+
+    const handleHintClose = () => {
+        setHintsOpen(false);
+        if (hintsViewed < testHints.length) {
+            setSelectedHint(selectedHint + 1);
+        }
+    }
+
+    const handleHintMoveRight = () => {
+        if (selectedHint < testHints.length - 1 && selectedHint + 1 < hintsViewed) {
+            setSelectedHint(selectedHint + 1);
+        }
+    }
+
+    const handleHintMoveLeft = () => {
+        if (selectedHint > 0) {
+            setSelectedHint(selectedHint - 1);
+        }
+    }
+
+    const handleCancelPost = () => {
+        setPostSolutionOpen(false);
+        setValid(true);
+    }
+
+    const handleOpenPost = () => {
+        setValid(false);
+        setPostSolutionOpen(true);
+    }
+
+    const handleGoToForum = () => {
+        router.push("/forum/" + id);
+    }
+
     const filterMessage = (message) => {
         return message.replaceAll(/\x1B\[\d+m/g, "");
     }
@@ -134,6 +255,11 @@ const Sandbox = ({level, user, id}) => {
                     numPassed++;
                 }
             })
+
+            if (results.length === 0) {
+                return <div
+                    className={modules.testFailed}>{"Error running tests, possible that yor code contains syntax errors preventing it form rendering"}</div>
+            }
 
             return (
                 <div className={modules.testResultsField}>
@@ -151,26 +277,57 @@ const Sandbox = ({level, user, id}) => {
         }
     }
 
-    //TODO hint functionality
+    const makeDescription = () => {
+        const parts = level?.enhanceddescription.toString().split("\\links\\");
+        if (parts) {
+            return parts[0].split(/\r?\n\r?\n/).map((description, index) => (
+                <p key={index} className={modules.leftText}>{description}</p>));
+        }
+        return <></>
+    }
+
+
+    const makeLinks = () => {
+        const parts = level?.enhanceddescription.toString().split("\\links\\");
+        if (parts && parts.length > 1) {
+            return parts[1].split(",").map((link, index) => {
+                return (<div key={index}><a rel={"WCAG Reference"} href={link} target="_blank"
+                                            className={modules.descriptionLink}>{link}</a></div>);
+            })
+        }
+    }
 
     return (
         <>
             <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
-                <Grid2 item direction="column" size={2.5}>
+                <Grid2 direction="column" size={2.5}>
                     <div className={modules.descriptionGrid}>
                         {/*description*/}
                         <h2 className={modules.leftTitle}>Description:</h2>
-                        {level?.enhanceddescription.toString().split(/\r?\n\r?\n/).map((description, index) => (
-                            <p key={index} className={modules.leftText}>{description}</p>))}
+                        {makeDescription()}
+                        <div className={modules.linkBox}>{makeLinks()}</div>
                     </div>
                     <div className={modules.objectivesGrid}>
                         {/*objectives*/}
                         <h2 className={modules.leftTitle}>Objectives:</h2>
                         {level?.objectives.toString().split(/\r?\n\r?\n/).map((objective, index) => (
                             <p key={index} className={modules.leftText}>{objective}</p>))}
+                        <ul className={modules.noteBox}>
+                            <h3 className={modules.noteTitle}>Please note:</h3>
+                            <li className={modules.note}>Some levels may require the use of a screen reader to verify
+                                aria labels and other accessible features.
+                            </li>
+                            <li className={modules.note}>It is important that you do not delete pre programmed IDs and
+                                other similar attributes on elements.
+                            </li>
+                            <li className={modules.note}>Please do not change the signature of the App method or try to
+                                export any other functions/components. It is recommended that you also stick to using
+                                the "function" key word rather than any alternatives.
+                            </li>
+                        </ul>
                     </div>
                 </Grid2>
-                <Grid2 item size={4.5}>
+                <Grid2 size={4.5}>
                     <div className={modules.codeEditorGrid}>
                         {/*code editor*/}
                         <SandpackCodeEditor className={modules.codeEditor} showTabs showLineNumbers
@@ -179,7 +336,7 @@ const Sandbox = ({level, user, id}) => {
                     </div>
                     <div className={modules.testGrid}>
                         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
-                            <Grid2 item size={9}>
+                            <Grid2 size={9.5}>
                                 <div className={modules.testConsole}>
                                     <h2 className={modules.testTitle}>Test Output:</h2>
                                     <div className={modules.testingDisplay}>
@@ -190,17 +347,19 @@ const Sandbox = ({level, user, id}) => {
                                     </div>
                                 </div>
                             </Grid2>
-                            <Grid2 item size={3}>
+                            <Grid2 size={2.5}>
                                 <div className={modules.actionButtons}>
                                     {/*action buttons*/}
                                     <Stack spacing={3}>
                                         <Button disabled={testSolutionLoading || testsLoading}
-                                                variant={"contained"}>{"Hints 0/3"}</Button>
+                                                variant={"contained"}
+                                                onClick={handleHint}>{"Hints " + hintsViewed + "/" + testHints.length}</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
                                                 color={"error"} onClick={() => setResetOpen(true)}>Reset</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
                                                 color={"secondary"} onClick={handleTestSolution}>Test</Button>
-                                        <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
+                                        <Button disabled={testSolutionLoading || testsLoading || !canSubmit}
+                                                variant={"contained"}
                                                 color={"success"} onClick={handleTestSubmission}>Submit</Button>
                                     </Stack>
                                 </div>
@@ -208,7 +367,7 @@ const Sandbox = ({level, user, id}) => {
                         </Grid2>
                     </div>
                 </Grid2>
-                <Grid2 item size={5}>
+                <Grid2 size={5}>
                     <div className={modules.previewGrid}>
                         {/*code preview*/}
                         <SandpackLayout className={modules.previewContainer}>
@@ -226,7 +385,9 @@ const Sandbox = ({level, user, id}) => {
                 <DialogContent>
                     <DialogContentText id="error-dialog-description">
                         There has been an error running the test suite for this level, please ensure your code is valid
-                        and free from syntax errors by looking at the console output. If it is then please try again
+                        and free from syntax errors by looking at the console output. This error can also be caused by
+                        trying to carry out unsafe operations in your code, such are using the file system or executing
+                        commands. If it is then please try again
                         later.
                     </DialogContentText>
                 </DialogContent>
@@ -239,10 +400,8 @@ const Sandbox = ({level, user, id}) => {
                         forum?
                     </DialogContentText>
                     <DialogActions>
-                        <Button onClick={() => {
-                        }}>Go To Forum</Button>
-                        <Button onClick={() => {
-                        }} autoFocus>Post Solution</Button>
+                        <Button onClick={handleGoToForum}>Go To Forum</Button>
+                        <Button onClick={handleOpenPost} autoFocus>Post Solution</Button>
                     </DialogActions>
                 </DialogContent>
             </Dialog>
@@ -281,6 +440,43 @@ const Sandbox = ({level, user, id}) => {
                     <Button onClick={() => setSubmissionFailedOpen(false)} autoFocus>Close</Button>
                 </DialogActions>
             </Dialog>
+            <Dialog aria-labelledby="save-failed-dialog-title"
+                    aria-describedby="save-failed-dialog-description"
+                    open={saveFailedOpen} onClose={() => setSubmissionFailedOpen(false)}>
+                <DialogTitle id="save-failed-dialog-title">Save Failed</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="save-failed-dialog-description">
+                        Your in progress solution failed to save, please try again.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSaveFailedOpen(false)} autoFocus>Close</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog aria-labelledby="hint-dialog-title" open={hintsOpen} onClose={handleHintClose}>
+                <DialogTitle id="hint-dialog-title">{testHints[selectedHint].name}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="hint-dialog-description">
+                        <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
+                            <Grid2 direction="column" size={1}>
+                                <IconButton size="medium" onClick={handleHintMoveLeft} disabled={selectedHint === 0}>
+                                    <ArrowBackIosNewIcon fontSize="inherit"/>
+                                </IconButton>
+                            </Grid2>
+                            <Grid2 direction="column" size={10}>
+                                {testHints[selectedHint].content}
+                            </Grid2>
+                            <Grid2 direction="column" size={1}>
+                                <IconButton size="medium" onClick={handleHintMoveRight}
+                                            disabled={selectedHint === testHints.length - 1 || selectedHint + 1 >= hintsViewed}>
+                                    <ArrowForwardIosIcon fontSize="inherit"/>
+                                </IconButton>
+                            </Grid2>
+                        </Grid2>
+                    </DialogContentText>
+                </DialogContent>
+            </Dialog>
+            <CreatePost open={postSolutionOpen} files={sandpack?.files} handleCancel={handleCancelPost} levelId={id}/>
         </>
     );
 }

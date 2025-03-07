@@ -18,7 +18,7 @@ export const useFetchForum = (levelId) => {
         isRefetching: forumRefetching,
         isRefetchError: refetchError
     } = useQuery({
-        queryKey: ['forum'],
+        queryKey: ['forum', levelId],
         retry: false,
         refetchOnWindowFocus: false,
         queryFn: async () => await getForumPosts(levelId),

@@ -4,7 +4,7 @@ import {
     Card,
     CardActions,
     CardContent,
-    CardHeader,
+    CardHeader, CircularProgress,
     Collapse, Dialog, DialogActions, DialogContent, DialogTitle,
     IconButton,
     styled, TextField, Tooltip, Typography,
@@ -12,13 +12,17 @@ import {
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
-import tinycolor from "tinycolor2";
-import {Fragment, useState} from "react";
+import SortIcon from '@mui/icons-material/Sort';
+import {Fragment, useEffect, useState} from "react";
 import {SandpackCodeViewer, SandpackProvider} from "@codesandbox/sandpack-react";
 import Comment from "./Comment"
-import {formatFiles} from "@/app/ui/utility";
+import {formatFiles, getAvatarColour} from "@/app/ui/utility";
+import {useLikePost} from "@/app/ui/api/useLikePost";
+import {useUnlikePost} from "@/app/ui/api/useUnlikePost";
+import {useCreateComment} from "@/app/ui/api/useCreateComment";
+import {useRouter} from "next/navigation";
 
-const ForumPost = ({currentUser, post}) => {
+const ForumPost = ({currentUser, post, updateLikes}) => {
 
     const ExpandMore = styled((props) => {
         const {expand, ...other} = props;
@@ -44,34 +48,78 @@ const ForumPost = ({currentUser, post}) => {
         ],
     }));
 
+    const router = useRouter();
+
     const [expanded, setExpanded] = useState(false);
-    const [isLiked, setIsLiked] = useState(post.isLiked);
-    const [likes, setLikes] = useState(post.likes);
+    const [isLiked, setIsLiked] = useState(post.isliked);
+    const [likes, setLikes] = useState(Number(post.likes));
     const [comments, setComments] = useState(post.comments);
     const [addCommentOpen, setAddCommentOpen] = useState(false);
     const [commentText, setCommentText] = useState("");
+    const [commentError, setCommentError] = useState(false);
+    const [commentCreateError, setCommentCreateError] = useState(false);
+    const [commentLoading, setCommentLoading] = useState(false);
 
-    //TODO add comment creation functionality
-    //TODO Comment and post sorting functionality
+    const {likePostFn} = useLikePost(post.id);
+    const {unlikePostFn} = useUnlikePost(post.id);
+    const {
+        createCommentError,
+        createCommentData,
+        createCommentFn,
+        createCommentIsSuccess
+    } = useCreateComment(post.id);
 
-    const getAvatarColour = (username) => {
-        const hash = [...username].reduce((acc, char) => acc + char.charCodeAt(0), 0);
-        const colour = tinycolor({h: hash % 360, s: 70, l: 55});
-
-        if (tinycolor.isReadable(colour, "#000", {level: "AA", size: "small"})) {
-            return colour.toHexString();
-        } else {
-            return colour.lighten(10).toHexString();
+    useEffect(() => {
+        if (createCommentIsSuccess && createCommentData) {
+            const comment = {
+                id: createCommentData?.id,
+                userid: currentUser.id,
+                username: currentUser.username,
+                message: commentText,
+                datetime: new Date(),
+                likes: 0,
+                isLiked: false
+            }
+            const newComments = [comment, ...comments];
+            setComments(newComments);
+            setCommentLoading(false);
+            closeAddComment();
         }
-    }
+    }, [createCommentIsSuccess, createCommentData]);
+
+    useEffect(() => {
+        if (createCommentError?.status === 401) {
+            router.push("/login");
+        } else if (createCommentError?.status === 403 || createCommentError?.status === 404) {
+            router.push("/");
+        } else if (createCommentError) {
+            setCommentCreateError(true);
+            setCommentLoading(false);
+        }
+    }, [createCommentError, router]);
 
     const likePost = () => {
         if (isLiked) {
             setLikes(likes - 1);
+            updateLikes(-1, post.id);
+            unlikePostFn();
         } else {
             setLikes(likes + 1);
+            updateLikes(1, post.id);
+            likePostFn();
         }
         setIsLiked(!isLiked);
+    }
+
+    const handleCommentLike = (modifier, id) => {
+        const updatedComments = [...comments];
+        updatedComments.map((comment) => {
+            if (id === comment.id) {
+                comment.likes += modifier;
+            }
+            return comment;
+        })
+        setComments(updatedComments);
     }
 
     const addComment = () => {
@@ -81,27 +129,50 @@ const ForumPost = ({currentUser, post}) => {
     const closeAddComment = () => {
         setAddCommentOpen(false);
         setCommentText("");
+        setCommentCreateError(false);
+        setCommentError(false);
     }
 
     const handleAddComment = () => {
+        setCommentCreateError(false);
+        setCommentError(false);
         if (!commentText || commentText?.trim() === "") {
-
+            setCommentError(true);
         } else {
-            //Add comment text
-            console.log(commentText);
-            closeAddComment();
+            setCommentLoading(true);
+            createCommentFn({message: commentText})
         }
     }
 
-    const cardSx = currentUser.id === post.userId ? {backgroundColor: "#f7ebc8"} : {};
+    const handleSortLikes = () => {
+        const sortedComments = [...comments];
+        sortedComments.sort((a, b) => {
+            return Number(b.likes) - Number(a.likes);
+        })
+        setComments(sortedComments);
+    }
+
+    const handleSortDates = () => {
+        const sortedComments = [...comments];
+        sortedComments.sort((a, b) => {
+            return (new Date(Date.parse(b.datetime)) - new Date(Date.parse(a.datetime)));
+        })
+        setComments(sortedComments);
+    }
+
+    const cardSx = currentUser?.id === post.userid ? {backgroundColor: "#f7ebc8"} : {};
 
     return (
         <Fragment>
             <Card className={modules.post} sx={cardSx}>
-                <CardHeader title={post.title} subheader={post.timestamp} avatar={
-                    <Avatar sx={{bgcolor: getAvatarColour(post.username)}} aria-label={"User " + post.username}>
-                        {post.username.charAt(0).toUpperCase()}
-                    </Avatar>
+                <CardHeader title={<Typography fontWeight="bold">
+                    {post.title}
+                </Typography>} subheader={new Date(Date.parse(post.datetime)).toLocaleString()} avatar={
+                    <Tooltip title={post.username}>
+                        <Avatar sx={{bgcolor: getAvatarColour(post.username)}} aria-label={"User " + post.username}>
+                            {post.username.charAt(0).toUpperCase()}
+                        </Avatar>
+                    </Tooltip>
                 } action={
                     <IconButton color={isLiked ? "primary" : ""} aria-label="like post" onClick={likePost}>
                         <ThumbUpIcon className={modules.likeIcon}/>
@@ -120,26 +191,30 @@ const ForumPost = ({currentUser, post}) => {
                 </CardContent>
                 <CardActions>
                 <span>
-                    {comments.length > 0 && <ExpandMore expand={expanded}
-                                                        onClick={() => setExpanded(!expanded)}
-                                                        aria-expanded={expanded}
-                                                        aria-label="View comments">
+                    <ExpandMore expand={expanded}
+                                onClick={() => setExpanded(!expanded)}
+                                aria-expanded={expanded}
+                                aria-label="View comments">
                         <ExpandMoreIcon/>
-                    </ExpandMore>}
+                    </ExpandMore>
                     {comments.length + " Comments "}
                 </span>
-                    <Tooltip title={"Add Comment"}>
-                        <IconButton onClick={addComment}>
-                            <AddIcon/>
-                        </IconButton>
-                    </Tooltip>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
+                        <Button onClick={addComment} startIcon={<AddIcon/>}>
+                            Comment
+                        </Button>
+                        <Button onClick={handleSortLikes} startIcon={<SortIcon/>}>
+                            Likes
+                        </Button>
+                        <Button onClick={handleSortDates} startIcon={<SortIcon/>}>
+                            Date
+                        </Button>
                         {comments.length > 0 ? (
                             comments.map((comment) =>
-                                <Comment key={comment.id} comment={comment} handleLike={() => {
-                                }} currentUser={currentUser}/>
+                                <Comment key={comment.id} comment={comment} currentUser={currentUser}
+                                         updateLike={handleCommentLike}/>
                             )
                         ) : <Typography variant="body2" color="textSecondary" component="div">No comments yet, check
                             back
@@ -147,11 +222,16 @@ const ForumPost = ({currentUser, post}) => {
                     </CardContent>
                 </Collapse>
             </Card>
-            <Dialog open={addCommentOpen} onClose={closeAddComment} fullWidth>
-                <DialogTitle>Add Comment</DialogTitle>
+            <Dialog open={addCommentOpen} onClose={closeAddComment} fullWidth aria-labelledby="comment-dialog-title">
+                <DialogTitle id={"comment-dialog-title"}>Add Comment</DialogTitle>
                 <DialogContent>
-                    <TextField autoFocus required margin={"dense"} label="Comment" fullWidth variant="standard"
-                               onChange={(e) => setCommentText(e.target.value)}/>
+                    {commentLoading ? <div className={modules.loading}><CircularProgress/></div> : <><TextField
+                        autoFocus required margin={"dense"} label="Comment" fullWidth variant="standard"
+                        onChange={(e) => setCommentText(e.target.value)}/>
+                        {commentCreateError &&
+                            <p className={modules.error}>Failed to create comment, please try again</p>}
+                        {commentError && <p className={modules.error}>{"Comment can't be empty"}</p>}
+                    </>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeAddComment}>Cancel</Button>

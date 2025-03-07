@@ -68,7 +68,7 @@ const LevelListDisplay = () => {
                         <h2 className={modules.listHeader}>{"Learn WCAG"}</h2>
                         <Grid2 container spacing={1} className={modules.mainListContainer}>
                             {levels.map(level => (
-                                <Grid2 item xs={12} sm={6} key={level.id}>
+                                <Grid2 xs={12} sm={6} key={level.id}>
                                     <LevelCard key={level.id} level={level}/>
                                 </Grid2>
                             ))}

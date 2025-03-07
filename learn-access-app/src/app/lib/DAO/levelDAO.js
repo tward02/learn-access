@@ -6,19 +6,18 @@ export const getLevels = async (userId) => {
                                        FROM user_levels
                                        WHERE userID = ${userId})
         SELECT DISTINCT
-        ON (l.id)
-            l.id AS id,
-            l.name,
-            l.description,
-            l.objectives,
-            l.expiration,
-            l.enhancedDescription,
-            COALESCE (ul.levelID IS NOT NULL, FALSE) AS completed,
-            COALESCE (l.previousLevelId IS NOT NULL AND upl.levelID IS NULL, FALSE) AS locked
+            ON (l.id) l.id                                                                   AS id,
+                      l.name,
+                      l.description,
+                      l.objectives,
+                      l.expiration,
+                      l.enhancedDescription,
+                      COALESCE(ul.levelID IS NOT NULL, FALSE)                                AS completed,
+                      COALESCE(l.previousLevelId IS NOT NULL AND upl.levelID IS NULL, FALSE) AS locked
         FROM levels l
-            LEFT JOIN user_completed_levels ul
-        ON l.id = ul.levelID
-            LEFT JOIN user_completed_levels upl ON l.previousLevelId = upl.levelID
+                 LEFT JOIN user_completed_levels ul
+                           ON l.id = ul.levelID
+                 LEFT JOIN user_completed_levels upl ON l.previousLevelId = upl.levelID
         ORDER BY l.id;`
 
     return result.rows;
@@ -72,12 +71,43 @@ export const getLevelHints = async (levelId) => {
     return result.rows;
 }
 
-export const saveFile = async (userId, levelId, name, type, content) => {
-
+export const hasCompletedLevel = async (userId, levelId) => {
+    const result = await sql`
+        SELECT *
+        FROM user_levels
+        WHERE levelID = ${levelId}
+          AND userID = ${userId};
+    `
+    return result?.rows?.length > 0;
 }
 
-export const getFiles = async (userId, levelId) => {
+export const saveFile = async (userId, levelId, name, type, content) => {
+    await sql`
+        INSERT INTO saved_files (userId, levelId, name, fileType, content, datetime)
+        VALUES (${userId}, ${levelId}, ${name}, ${type}, ${content}, NOW())
+        ON CONFLICT (userId, levelId, name)
+            DO UPDATE SET content  = EXCLUDED.content,
+                          datetime = NOW();
+    `
+}
 
+export const getSavedFiles = async (userId, levelId) => {
+    const result = await sql`
+        SELECT *
+        FROM saved_files
+        WHERE levelid = ${levelId}
+          AND userid = ${userId};
+    `
+    return result.rows;
+}
+
+export const deleteSavedFiles = async (userId, levelId) => {
+    await sql`
+        DELETE
+        FROM saved_files
+        WHERE levelid = ${levelId}
+          AND userid = ${userId};
+    `
 }
 
 export const getSolution = async (levelId) => {

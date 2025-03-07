@@ -1,0 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+button {
+    background: none;
+    border: none;
+}
+
+p {
+    color: #888;
+}
+
+canvas {
+    width: 300px;
+    height: 150px;
+}
+
+img {
+    width: 20px;
+}

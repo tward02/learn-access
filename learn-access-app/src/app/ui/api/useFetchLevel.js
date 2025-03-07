@@ -15,8 +15,10 @@ export const useFetchLevel = (id) => {
         data: levelData,
         isSuccess: levelSuccess,
     } = useQuery({
-        queryKey: ['level'],
+        queryKey: ['level', id],
         retry: false,
+        cacheTime: 0,
+        staleTime: 0,
         refetchOnWindowFocus: false,
         queryFn: async () => await getLevel(id),
     });

@@ -1,5 +1,7 @@
 import {getUser, hasSession} from "@/app/lib/dal";
-import {forumPost} from "@/app/lib/testData";
+import {hasCompletedLevel} from "@/app/lib/DAO/levelDAO";
+import {createPost, getCommentsByPostId, getPostFiles, getPostsByLevelId} from "@/app/lib/DAO/forumDAO";
+import {getUserById} from "@/app/lib/DAO/userDAO";
 
 export async function GET(req, {params}) {
 
@@ -9,11 +11,59 @@ export async function GET(req, {params}) {
     console.log("user authenticated")
 
     const levelId = (await params).levelId;
+    const rqUser = await getUser();
 
+    if (!await hasCompletedLevel(rqUser.id, levelId)) {
+        return Response.json({error: 'You have not unlocked this forum yet'}, {status: 403});
+    }
+
+    const posts = await getPostsByLevelId(levelId, rqUser.id);
+
+    const response = await Promise.all(posts.map(async (post) => {
+        const user = await getUserById(post.userid);
+        post.username = user.username;
+        const comments = await getCommentsByPostId(post.id, rqUser.id);
+        post.comments = await Promise.all(comments.map(async (comment) => {
+            const commentUser = await getUserById(comment.userid);
+            comment.username = commentUser.username;
+            return comment;
+        }));
+        post.files = await getPostFiles(post.id);
+        return post;
+    }))
+
+    return Response.json(response);
+}
+
+export async function POST(req, {params}) {
+
+    if (!await hasSession()) {
+        return Response.json({error: 'You are not authenticated, please login'}, {status: 401});
+    }
+    console.log("user authenticated")
+
+    const levelId = (await params).levelId;
+    const body = await req.json();
     const user = await getUser();
-    //TODO implement DAO and levels in database, ensure user is allowed to look at the levels
 
-    const forum = forumPost;
+    if (!await hasCompletedLevel(user.id, levelId)) {
+        return Response.json({error: 'You have not unlocked this forum yet'}, {status: 403});
+    }
 
-    return Response.json(forum);
+    const {title, message, files} = body.data;
+
+    if (!title || !message || !files) {
+        return Response.json({error: 'You are missing required fields'}, {status: 400});
+    }
+
+    files.forEach((file) => {
+        const {name, fileType, content} = file;
+        if (!name || !content || !fileType) {
+            return Response.json({error: 'You are missing required fields'}, {status: 400});
+        }
+    })
+
+    await createPost(user.id, levelId, files, title, message);
+
+    return Response.json(null, {status: 201});
 }
