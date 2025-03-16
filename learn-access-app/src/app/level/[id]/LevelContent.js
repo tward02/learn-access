@@ -1,6 +1,5 @@
 'use client'
 
-import TopBar from "@/app/ui/component/topBar/TopBar";
 import {
     Backdrop,
     Button,
@@ -21,14 +20,11 @@ import Sandbox from "@/app/level/[id]/Sandbox";
 
 const LevelContent = ({session, user, id}) => {
 
-    //TODO dark mode + text sizes
-
     const router = useRouter();
 
     const [level, setLevel] = useState(null);
     const [expired, setExpired] = useState(false);
     const [saveFilesOpen, setSaveFilesOpen] = useState(false);
-    const [save, setSave] = useState(false);
 
     const {levelLoading, levelError, levelData, levelSuccess} = useFetchLevel(id);
 
@@ -75,24 +71,14 @@ const LevelContent = ({session, user, id}) => {
         setSaveFilesOpen(false);
     }
 
-    const handleSaveComplete = () => {
-        setSave(false);
-    }
-
-    const handleSave = () => {
-        setSave(true);
-    }
-
     return (
         <main className={modules.gridContainer}>
-            <TopBar title={level?.name} loggedIn={session} username={user?.username} back onSave={handleSave}
-                    save={save}/>
             {!levelLoading && !levelError && !saveFilesOpen &&
                 <SandpackProvider options={{
                     experimental_enableServiceWorker: true,
                     experimental_enableStableServiceWorkerId: false
                 }} template={"react"} className={modules.provider} files={formatFiles(level?.files)}>
-                    <Sandbox user={user} id={id} level={level} save={save} onSaveComplete={handleSaveComplete}/>
+                    <Sandbox user={user} id={id} level={level} session={session}/>
                 </SandpackProvider>}
             <Backdrop open={levelLoading}>
                 <CircularProgress/>

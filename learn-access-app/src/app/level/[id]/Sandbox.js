@@ -29,6 +29,7 @@ import {useSubmitSolution} from "@/app/ui/api/useSubmitSolution";
 import CreatePost from "@/app/ui/component/createPost/CreatePost";
 import {useDeleteSavedFiles} from "@/app/ui/api/useDeleteSavedFiles";
 import {useSaveFiles} from "@/app/ui/api/useSaveFiles";
+import TopBar from "@/app/ui/component/topBar/TopBar";
 
 const testHints = [
     {
@@ -45,7 +46,7 @@ const testHints = [
     }
 ]
 
-const Sandbox = ({level, user, id, save, onSaveComplete}) => {
+const Sandbox = ({level, user, id, session}) => {
 
     const router = useRouter();
     const {
@@ -82,6 +83,7 @@ const Sandbox = ({level, user, id, save, onSaveComplete}) => {
     const [canSubmit, setCanSubmit] = useState(false);
     const [postSolutionOpen, setPostSolutionOpen] = useState(false);
     const [saveFailedOpen, setSaveFailedOpen] = useState(false);
+    const [save, setSave] = useState(false);
 
     useEffect(() => {
         if (save) {
@@ -105,7 +107,7 @@ const Sandbox = ({level, user, id, save, onSaveComplete}) => {
 
     useEffect(() => {
         if (saveFilesIsSuccess) {
-            onSaveComplete();
+            setSave(false);
         }
     }, [saveFilesIsSuccess]);
 
@@ -116,7 +118,7 @@ const Sandbox = ({level, user, id, save, onSaveComplete}) => {
             router.push("/");
         } else if (saveFilesError) {
             setSaveFailedOpen(true);
-            onSaveComplete();
+            setSave(false);
         }
     }, [saveFilesError, router]);
 
@@ -212,7 +214,11 @@ const Sandbox = ({level, user, id, save, onSaveComplete}) => {
     const handleHintClose = () => {
         setHintsOpen(false);
         if (hintsViewed < testHints.length) {
-            setSelectedHint(selectedHint + 1);
+            const timer = setTimeout(() => {
+                setSelectedHint(selectedHint + 1);
+            }, 500);
+
+            return () => clearTimeout(timer);
         }
     }
 
@@ -240,6 +246,10 @@ const Sandbox = ({level, user, id, save, onSaveComplete}) => {
 
     const handleGoToForum = () => {
         router.push("/forum/" + id);
+    }
+
+    const handleSave = () => {
+        setSave(true);
     }
 
     const filterMessage = (message) => {
@@ -299,6 +309,8 @@ const Sandbox = ({level, user, id, save, onSaveComplete}) => {
 
     return (
         <>
+            <TopBar title={level?.name} loggedIn={session} username={user?.username} back onSave={handleSave}
+                    save={save}/>
             <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
                 <Grid2 direction="column" size={2.5}>
                     <div className={modules.descriptionGrid}>
