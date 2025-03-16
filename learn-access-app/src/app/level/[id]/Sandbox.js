@@ -330,7 +330,7 @@ const Sandbox = ({level, user, id, session}) => {
                                 aria labels and other accessible features.
                             </li>
                             <li className={modules.note}>It is important that you do not delete pre programmed IDs and
-                                other similar attributes on elements.
+                                other similar attributes on elements or refresh the page without saving your progress first.
                             </li>
                             <li className={modules.note}>Please do not change the signature of the App method or try to
                                 export any other functions/components. It is recommended that you also stick to using
