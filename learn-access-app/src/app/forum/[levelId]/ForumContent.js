@@ -60,6 +60,28 @@ const ForumContent = ({session, user, id}) => {
         setPosts(sortedPosts);
     }
 
+    const getErrorMessage = () => {
+        if (refetchError?.status === 404 || forumError?.status === 404) {
+            return <p className={modules.errorMessage}>The forum you are looking for doesn't seem to exist, please
+                return to the homepage and select another forum.</p>
+        }
+
+        if (refetchError?.status === 401 || forumError?.status === 401) {
+            return <p className={modules.errorMessage}>You don't seem to be authenticated, please return to the homepage
+                and login or register.</p>
+        }
+
+        if (refetchError?.status === 403 || forumError?.status === 403) {
+            return <p className={modules.errorMessage}>You don't have permission to view this forum at the moment,
+                please return to the homepage and choose a forum or level you have unlocked.</p>
+        }
+
+        return <p className={modules.errorMessage}>Failed to load forum posts. Please&nbsp;<Link
+            className={modules.link}
+            onClick={reloadForum}>try
+            again</Link></p>
+    }
+
     return (
         <div className={modules.container}>
             <TopBar back title={"Forum"} loggedIn={session} username={user?.username}/>
@@ -74,11 +96,7 @@ const ForumContent = ({session, user, id}) => {
                                 key={post.id}
                                 updateLikes={handlePostLike}/>)) : forumLoading || forumRefetching ? (
                                 <CircularProgress className={modules.loading}
-                                                  size="8rem"/>) : forumError || refetchError ? (
-                                <p className={modules.errorMessage}>Failed to load forum posts. Please&nbsp;<Link
-                                    className={modules.link}
-                                    onClick={reloadForum}>try
-                                    again</Link></p>) : (
+                                                  size="8rem"/>) : forumError || refetchError ? (getErrorMessage()) : (
                                 <p className={modules.emptyMessage}>No posts right now, please check again later</p>)}
                         </div>
                     </Grid2>
