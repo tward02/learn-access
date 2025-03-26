@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import App from "./App";
 import React from 'react';
-import React,{useRef} from 'react'
 
 it("All expected elements in structure", () => {
     render(<App />);
