@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./styles.css";
 
+//IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself
+
 const Toast = ({ message, type, onClose }) => {
     const toastRef = useRef(null);
 

@@ -3,6 +3,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import App from "./App";
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
+
 it('Correct elements shown when Modal closed and opened', () => {
     render(<App />);
     const openButton = screen.getByText("Open Modal");

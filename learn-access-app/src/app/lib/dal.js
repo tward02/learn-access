@@ -5,6 +5,8 @@ import {cache} from "react";
 import {redirect} from "next/navigation";
 import {getUserById} from "@/app/lib/DAO/userDAO";
 
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication
+//verifies that a session cookie a user provides is correct
 export const verifySession = cache(async () => {
     const cookie = (await cookies()).get('session')?.value
     const session = await decrypt(cookie)
@@ -16,6 +18,7 @@ export const verifySession = cache(async () => {
     return {isAuth: true, userId: session.userId}
 })
 
+//verifies that a user currently has a session
 export const hasSession = cache(async () => {
     const cookie = (await cookies()).get('session')?.value
     const session = await decrypt(cookie)
@@ -23,6 +26,7 @@ export const hasSession = cache(async () => {
     return !!session?.userId;
 })
 
+//gets a user object from their current session
 export const getUser = cache(async () => {
     const session = await verifySession()
     if (!session) return null

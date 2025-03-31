@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+//IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
+
 function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

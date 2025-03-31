@@ -7,6 +7,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import modules from "./topBar.module.css";
 import SaveIcon from "@mui/icons-material/Save";
 
+//Displays at the top iof every page offering navigation and actions for users
 const TopBar = ({loggedIn, title, username, back, onSave, save}) => {
 
     const router = useRouter();

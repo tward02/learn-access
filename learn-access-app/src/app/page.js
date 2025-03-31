@@ -4,6 +4,7 @@ import {getUser, hasSession} from "@/app/lib/dal";
 import LevelListDisplay from "@/app/ui/component/levelList/LevelListDisplay";
 import NoSession from "@/app/ui/component/noSession/NoSession";
 
+//main homepage
 const HomePage = async () => {
 
     const session = await hasSession();

@@ -5,6 +5,8 @@ import {cookies} from 'next/headers'
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
 
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication
+//encrypts session cookie
 export async function encrypt(payload) {
     return new SignJWT(payload)
         .setProtectedHeader({alg: 'HS256'})
@@ -13,6 +15,7 @@ export async function encrypt(payload) {
         .sign(encodedKey)
 }
 
+//decrypts session cookie
 export async function decrypt(session) {
     try {
         const {payload} = await jwtVerify(session, encodedKey, {
@@ -24,6 +27,7 @@ export async function decrypt(session) {
     }
 }
 
+//creates a session cookie
 export async function createSession(userId) {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     const session = await encrypt({userId, expiresAt})
@@ -38,25 +42,7 @@ export async function createSession(userId) {
     })
 }
 
-export async function updateSession() {
-    const session = (await cookies()).get('session')?.value
-    const payload = await decrypt(session)
-
-    if (!session || !payload) {
-        return null
-    }
-
-    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)(
-        await cookies()
-    ).set('session', session, {
-        httpOnly: true,
-        secure: true,
-        expires: expires,
-        sameSite: 'lax',
-        path: '/',
-    })
-}
-
+//deleets a session cookie
 export async function deleteSession() {
     const cookieStore = await cookies()
     cookieStore.delete('session')

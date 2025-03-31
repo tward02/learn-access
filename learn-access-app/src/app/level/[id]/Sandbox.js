@@ -85,6 +85,7 @@ const Sandbox = ({level, user, id, session}) => {
     const [saveFailedOpen, setSaveFailedOpen] = useState(false);
     const [save, setSave] = useState(false);
 
+    //API response handling useEffects
     useEffect(() => {
         if (save) {
             const payload = {
@@ -256,6 +257,7 @@ const Sandbox = ({level, user, id, session}) => {
         return message.replaceAll(/\x1B\[\d+m/g, "");
     }
 
+    //Creates HTML from the test results to be displayed in the test console
     const formatTestResults = (results) => {
         if (results) {
             const passed = results.passed;
@@ -287,6 +289,7 @@ const Sandbox = ({level, user, id, session}) => {
         }
     }
 
+    //constructs description
     const makeDescription = () => {
         const parts = level?.enhanceddescription.toString().split("\\links\\");
         if (parts) {
@@ -296,7 +299,7 @@ const Sandbox = ({level, user, id, session}) => {
         return <></>
     }
 
-
+    //constructs links to be displayed at the ned of description area
     const makeLinks = () => {
         const parts = level?.enhanceddescription.toString().split("\\links\\");
         if (parts && parts.length > 1) {
@@ -333,8 +336,7 @@ const Sandbox = ({level, user, id, session}) => {
                                 other similar attributes on elements or refresh the page without saving your progress first.
                             </li>
                             <li className={modules.note}>Please do not change the signature of the App method or try to
-                                export any other functions/components. It is recommended that you also stick to using
-                                the "function" key word rather than any alternatives.
+                                export any other functions/components.
                             </li>
                         </ul>
                     </div>
@@ -390,6 +392,7 @@ const Sandbox = ({level, user, id, session}) => {
                     </div>
                 </Grid2>
             </Grid2>
+            {/*error handling and action popups*/}
             <Dialog aria-labelledby="error-dialog-title" aria-describedby="error-dialog-description"
                     open={testError}
                     onClose={() => setTestError(false)}>

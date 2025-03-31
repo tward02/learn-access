@@ -3,6 +3,8 @@ import App from "./App";
 import React from 'react';
 import "@testing-library/jest-dom";
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
+
 beforeAll(() => {
     HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
         fillRect: jest.fn(),

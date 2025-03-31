@@ -22,7 +22,6 @@ const ForumContent = ({session, user, id}) => {
         refetchError
     } = useFetchForum(id);
 
-
     useEffect(() => {
         if (forumSuccess && forumData) {
             setPosts(forumData);

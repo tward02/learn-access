@@ -8,6 +8,7 @@ import {Button, Card, Link, Stack} from "@mui/material";
 import Person2Icon from "@mui/icons-material/Person2";
 import {ArrowBack} from "@mui/icons-material";
 
+//adpated from https://nextjs.org/docs/app/building-your-application/authentication
 export default function Login() {
 
     const router = useRouter();

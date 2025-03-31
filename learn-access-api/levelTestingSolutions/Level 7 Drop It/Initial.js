@@ -1,5 +1,7 @@
 import {useState} from "react";
 
+//IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
+
 const DropDown = ({items}) => {
     const [isOpen, setIsOpen] = useState(false);
 

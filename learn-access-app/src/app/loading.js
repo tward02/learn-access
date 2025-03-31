@@ -2,6 +2,7 @@ import TopBar from "@/app/ui/component/topBar/TopBar";
 import {CircularProgress} from "@mui/material";
 import modules from "./loading.module.css";
 
+//displays when page is loading from the backend
 const Loading = () => {
 
     return (

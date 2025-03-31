@@ -7,6 +7,7 @@ import Countdown from "@/app/ui/component/countdown/Countdown";
 import LockIcon from '@mui/icons-material/Lock';
 import DoneIcon from '@mui/icons-material/Done';
 
+//displays and individual level and its status to the user
 const LevelCard = ({level}) => {
 
     const router = useRouter();

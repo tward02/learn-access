@@ -3,6 +3,8 @@ import {fireEvent, render, screen} from "@testing-library/react";
 import '@testing-library/jest-dom';
 import App from "./App";
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
+
 it("Form renders correctly with all required components", () => {
     const result = render(<App/>);
     expect(screen.getByText("Accessible Login Form")).toBeInTheDocument();

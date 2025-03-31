@@ -2,6 +2,7 @@ import {db} from '@vercel/postgres';
 
 const client = await db.connect();
 
+//Seeds the database with all the correct tables (I reccomend using the bd backup which can be found in the learn-access-db project)
 async function seedUsers() {
 
     await client.sql`

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 
+//IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
+
 const Toast = ({ message, type, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(onClose, 5000);

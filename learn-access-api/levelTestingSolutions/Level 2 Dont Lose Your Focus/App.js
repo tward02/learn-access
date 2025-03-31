@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 import "./styles.css";
 
+//IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself
 const Modal = ({ isOpen, onClose }) => {
     const modalRef = useRef(null);
     const closeButtonRef = useRef(null);

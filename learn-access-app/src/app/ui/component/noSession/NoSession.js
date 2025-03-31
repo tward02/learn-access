@@ -4,6 +4,7 @@ import {Link} from "@mui/material";
 import modules from "./noSession.module.css"
 import {useRouter} from "next/navigation";
 
+//displays when the user isn't logged in
 const NoSession = () => {
 
     const router = useRouter();

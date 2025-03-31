@@ -1,5 +1,8 @@
 import {sql} from "@vercel/postgres";
 
+//data access object for all database items to do with level functionality
+
+//gets list of levels and whether they have been completed by joining the user levels and whether they are unlocked based on the user requesting them
 export const getLevels = async (userId) => {
     const result = await sql`
         WITH user_completed_levels AS (SELECT levelID
@@ -23,6 +26,7 @@ export const getLevels = async (userId) => {
     return result.rows;
 }
 
+//gets a single level and whether it has been completed by joining the user levels and whether it is unlocked based on the user requesting it
 export const getLevel = async (userId, levelId) => {
     const result = await sql`
         WITH user_completed_levels AS (SELECT levelID
@@ -41,6 +45,7 @@ export const getLevel = async (userId, levelId) => {
                  LEFT JOIN user_completed_levels upl ON l.previousLevelId = upl.levelID
         WHERE l.id = ${levelId};`
 
+    //removes any database encoding so that it dispays on the UI correctly
     result.rows.map((level) => {
         level.enhanceddescription = level?.enhanceddescription?.replace(/\\n/g, '\n');
         level.objectives = level?.objectives?.replace(/\\n/g, '\n');
@@ -108,8 +113,4 @@ export const deleteSavedFiles = async (userId, levelId) => {
         WHERE levelid = ${levelId}
           AND userid = ${userId};
     `
-}
-
-export const getSolution = async (levelId) => {
-
 }

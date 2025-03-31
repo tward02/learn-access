@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
 import React from "react";
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
+
 const getPlaywrightRender = () => `
 <html lang="en">
         <head>

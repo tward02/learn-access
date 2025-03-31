@@ -6,6 +6,7 @@ import {useLikeComment} from "@/app/ui/api/useLikeComment";
 import {useUnlikeComment} from "@/app/ui/api/useUnlikeComment";
 import {getAvatarColour} from "@/app/ui/utility";
 
+//represents a comment on a post and handles likes and unlikes
 const Comment = ({comment, currentUser, updateLike}) => {
 
     const [likes, setLikes] = useState(Number(comment.likes));

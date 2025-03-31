@@ -2,6 +2,8 @@ import {db} from '@vercel/postgres';
 
 const client = await db.connect();
 
+//This is an example of how to seed a new level into the database
+
 const seedTutorial = async () => {
     await client.sql`
         INSERT INTO levels (name, description, objectives, expiration, previousLevelId, enhancedDescription)
@@ -26,15 +28,6 @@ const seedTutorial = async () => {
     `
 }
 
-const seedFocus = async () => {
-    await client.sql`
-        INSERT INTO levels (name, description, objectives, expiration, previousLevelId, enhancedDescription)
-        VALUES ('Keeping Focus', 'This level explores the importance of focus and keyboard navigation in user interfaces',
-                '1. Ensure that when the Modal is opened focus switches onto the button on the Modal \n\n2. When the Modal is closed ensure focus is switched back to the open button \n\n3. The user should also be able to use the keyboard to carry out operations, the Escape key should close the modal, pressing Enter or Space should activate the buttons and pressing Tab should allow the user to navigate between focusable elements',
-                NULL, 6,
-                'Focus Order (WCAG Refernce 2.4.3) and Keyboard Navigation (WCAG Reference 2.1.1) are both very important parts of WCAG. When they are implemented badly or not at all people who are unable to use a mouse can find it very difficult or even impossible to navigate web pages. \n\nIt is important that when users carry out certain actions the focus remains/is moved to a place on the page that is relevenat to the action and makes sense to the user. \n\n Goals:\n\n 1. Everything can be done with a keyboard except freehand movements. Esnure pointer actions have a keyboard equivalent, as many people rely on the keyboard interface, including blind and some mobility impaired people. \n\n2. Keyboard users navigate content in a correct order. Elements receive focus in an order that preserves meaning so that navigating a website with only a keyboard make sense. \\links\\https://www.w3.org/WAI/WCAG21/Understanding/keyboard.html,https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html')
-    `
-}
 
 export async function GET(request) {
 
@@ -57,7 +50,6 @@ export async function GET(request) {
     try {
         await client.sql`BEGIN`;
         await seedTutorial();
-        await seedFocus();
         await client.sql`COMMIT`;
 
         return Response.json({message: 'Levels seeded successfully'});

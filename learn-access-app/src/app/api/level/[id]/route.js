@@ -24,6 +24,7 @@ export async function GET(request, {params}) {
         return Response.json({error: 'You don\'t have permission to view this level'}, {status: 403});
     }
 
+    //Retrieve all in parallel
     const [levelFiles, levelHints, savedFiles] = await Promise.all([
         getLevelFiles(id),
         getLevelHints(id),

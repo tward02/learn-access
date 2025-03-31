@@ -6,6 +6,8 @@ import {createUser, getUser} from "@/app/lib/DAO/userDAO";
 import {redirect} from "next/navigation";
 import {createSession, deleteSession} from "@/app/lib/session";
 
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication
+//server side function to validate and create a new user and session
 export async function signup(state, formData) {
     const validatedFields = SignupFormSchema.safeParse({
         name: formData.get('name'),
@@ -35,6 +37,7 @@ export async function signup(state, formData) {
     redirect('/');
 }
 
+//server side function to validate and log a user in
 export async function login(state, formData) {
     const users = await getUser(formData.get('name'));
 

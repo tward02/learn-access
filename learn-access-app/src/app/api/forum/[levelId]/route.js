@@ -19,6 +19,7 @@ export async function GET(req, {params}) {
 
     const posts = await getPostsByLevelId(levelId, rqUser.id);
 
+    //gets all post data in parallel
     const response = await Promise.all(posts.map(async (post) => {
         const user = await getUserById(post.userid);
         post.username = user.username;
@@ -56,6 +57,7 @@ export async function POST(req, {params}) {
         return Response.json({error: 'You are missing required fields'}, {status: 400});
     }
 
+    //validates all files
     files.forEach((file) => {
         const {name, fileType, content} = file;
         if (!name || !content || !fileType) {

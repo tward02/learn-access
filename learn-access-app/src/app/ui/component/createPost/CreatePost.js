@@ -30,6 +30,7 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
         createPostIsSuccess
     } = useCreatePost(levelId);
 
+    //handles API sending and responses
     useEffect(() => {
         if (createPostIsSuccess) {
             router.push("/forum/" + levelId);
@@ -70,6 +71,7 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
         }
     }
 
+    //validates form fields
     const validate = () => {
         setTitleError("");
         setMessageError("");

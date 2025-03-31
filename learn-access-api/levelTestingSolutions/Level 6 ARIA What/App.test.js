@@ -3,6 +3,8 @@ import "@testing-library/jest-dom";
 import App from "./App";
 import React from 'react';
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
+
 it("Correct roles to exist in document: banner, navigation, main, contentinfo", () => {
     render(<App />);
     expect(screen.getByRole("banner", { hidden: true })).toBeInTheDocument();

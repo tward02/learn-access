@@ -1,6 +1,8 @@
 import "./styles.css";
 import React, {useRef, useEffect} from 'react';
 
+//IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
+
 export default function App() {
 
     const chartRef = useRef(null);

@@ -1,5 +1,7 @@
 import {sql} from '@vercel/postgres';
 
+//data access object for all database items to do with user functionality
+
 export const createUser = async (user) => {
     const {username, password} = user;
     const result = await sql`
@@ -25,11 +27,4 @@ export const getUserById = async (id) => {
         WHERE id = ${id};`);
 
     return rows[0];
-}
-
-export const deleteUser = (username) => {
-}
-
-export const updateUser = (user) => {
-
 }

@@ -22,8 +22,10 @@ import {useUnlikePost} from "@/app/ui/api/useUnlikePost";
 import {useCreateComment} from "@/app/ui/api/useCreateComment";
 import {useRouter} from "next/navigation";
 
+//representa a post in a forum
 const ForumPost = ({currentUser, post, updateLikes}) => {
 
+    //adapted from https://mui.com/material-ui/react-card/?srsltid=AfmBOoobtfeCJGpWXMCiBmQldTGBlUy-SyPSKk8Rx6hkH6FAsXnmBmZz
     const ExpandMore = styled((props) => {
         const {expand, ...other} = props;
         return <IconButton {...other} />;
@@ -69,6 +71,7 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
         createCommentIsSuccess
     } = useCreateComment(post.id);
 
+    //handles API responses
     useEffect(() => {
         if (createCommentIsSuccess && createCommentData) {
             const comment = {
@@ -164,6 +167,7 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
 
     return (
         <Fragment>
+            {/*main forum section*/}
             <Card className={modules.post} sx={cardSx}>
                 <CardHeader title={<Typography fontWeight="bold">
                     {post.title}
@@ -200,6 +204,7 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                     {comments.length + " Comments "}
                 </span>
                 </CardActions>
+                {/*comments display*/}
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
                         <Button onClick={addComment} startIcon={<AddIcon/>}>

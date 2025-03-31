@@ -6,6 +6,7 @@ import {CircularProgress, Grid2, Link, Stack} from "@mui/material";
 import LevelCard from "@/app/ui/component/levelCard/LevelCard";
 import {useFetchLevels} from "@/app/ui/api/useFetchLevels";
 
+//used to fetch and display all the level cards to the user
 const LevelListDisplay = () => {
 
     const {

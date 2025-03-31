@@ -8,6 +8,7 @@ import Person2Icon from '@mui/icons-material/Person2';
 import {ArrowBack} from "@mui/icons-material";
 import {useRouter} from 'next/navigation'
 
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication
 export default function Register() {
 
     const router = useRouter();

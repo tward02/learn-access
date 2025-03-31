@@ -3,6 +3,8 @@ import {render, screen, fireEvent} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import App from "./App";
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
+
 it("Correct elements render on page initially", () => {
     render(<App/>);
     expect(screen.getByText("☰ Menu")).toBeInTheDocument();

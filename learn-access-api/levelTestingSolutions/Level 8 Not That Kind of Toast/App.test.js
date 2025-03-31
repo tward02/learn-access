@@ -3,6 +3,8 @@ import "@testing-library/jest-dom";
 import App from "./App";
 import React from 'react';
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
+
 jest.useFakeTimers();
 
 it("Initial screen renders with all required elements", () => {

@@ -3,6 +3,7 @@ import { screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import App from './App';
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
 it('Expect text I love WCAG! on screen', () => {
     render(<App />);
     expect(screen.getByText('I love WCAG!')).toBeInTheDocument();

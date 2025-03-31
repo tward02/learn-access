@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 
+//IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
+
 function Modal(props) {
     const { isOpen, onClose } = props;
     // TODO: Add focus management logic when the modal is open

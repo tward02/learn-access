@@ -1,5 +1,7 @@
 import {sql} from "@vercel/postgres";
 
+//data access object for all database items to do with forum functionality
+
 export const getPostFiles = async (postId) => {
     const result = await sql`
         SELECT *
@@ -9,6 +11,7 @@ export const getPostFiles = async (postId) => {
     return result.rows;
 }
 
+//Adds a post to the database as well as all the file associated with that post, if anything fails then the whole transaction is rolled back
 export const createPost = async (userId, levelId, files, title, message) => {
     try {
         await sql`BEGIN;`;
@@ -111,6 +114,7 @@ export const createComment = async (postId, userId, message) => {
     return result.rows;
 }
 
+//gets all comments for a post and how many likes they have as well as whether the user has liked them and the user who created it
 export const getCommentsByPostId = async (postId, userId) => {
     const result = await sql`
         SELECT p.*,
@@ -127,6 +131,7 @@ export const getCommentsByPostId = async (postId, userId) => {
     return result.rows;
 }
 
+//gets all posts for a forum and how many likes they have as well as whether the user has liked them and the user who created it
 export const getPostsByLevelId = async (levelId, userId) => {
     const result = await sql`
         SELECT p.*,

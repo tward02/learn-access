@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./styles.css";
 
+//IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself
+
 function App() {
     const [highContrast, setHighContrast] = useState(false);
 

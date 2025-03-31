@@ -1,7 +1,9 @@
-
 import "./styles.css";
 
 import React, {useRef} from 'react'
+
+//IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself
+
 function App() {
 
     const mainHeadingRef = useRef(null);

@@ -1,5 +1,7 @@
 import {z} from 'zod'
 
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication
+//validates login and register forms
 export const SignupFormSchema = z.object({
     name: z
         .string()

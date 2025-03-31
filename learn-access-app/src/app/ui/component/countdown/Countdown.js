@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import modules from "./countdown.module.css"
 
 const Countdown = ({targetDate}) => {
+
+    //adapted from https://www.w3schools.com/howto/howto_js_countdown.asp
     const calculateTimeLeft = () => {
         const difference = Date.parse(targetDate) - new Date();
 

@@ -3,6 +3,8 @@ import App from "./App";
 import "@testing-library/jest-dom";
 import React from 'react';
 
+//IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
+
 it("UI render with all correct components", () => {
     render(<App />);
     expect(screen.getByText("Media Gallery")).toBeInTheDocument();
