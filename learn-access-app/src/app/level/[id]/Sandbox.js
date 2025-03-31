@@ -347,7 +347,7 @@ const Sandbox = ({level, user, id, session}) => {
                         <SandpackCodeEditor className={modules.codeEditor} showTabs showLineNumbers
                                             showInlineErrors
                                             wrapContent
-                                            tabInex={0}
+                                            tabIndex={0}
                                             aria-label={"Code editor, press enter to start editing"}/>
                     </div>
                     <div className={modules.testGrid}>
