@@ -47,8 +47,9 @@ const LevelListDisplay = () => {
     return (
         <Stack className={modules.levelLists} direction={"row"} spacing={15}>
             {(levelsError || refetchError) ? (
-                <p className={modules.errorText}>Failed to load levels. Please&nbsp;<Link className={modules.link}
-                                                                                          onClick={reloadLevels}>try
+                <p role={"alert"} className={modules.errorText}>Failed to load levels. Please&nbsp;<Link
+                    className={modules.link}
+                    onClick={reloadLevels}>try
                     again</Link></p>
             ) : (levelsLoading || levelsRefetching) ? (
                     <div className={modules.loading}>

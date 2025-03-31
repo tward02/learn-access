@@ -25,26 +25,29 @@ const TopBar = ({loggedIn, title, username, back, onSave, save}) => {
     }
 
     return (
-        <Box sx={{flexGrow: 1}}>
-            <AppBar position="static">
-                <Toolbar>
-                    {back && (
-                        <div className={modules.backButtonContainer}>
-                            <Tooltip title={"Back to homepage"}>
-                                <IconButton onClick={backToHomepage} className={modules.backButton}>
-                                    <ArrowBackIcon/>
-                                </IconButton>
-                            </Tooltip>
-                        </div>
-                    )}
-                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>{title}</Typography>
-                    {onSave && <Button className={modules.saveButton} variant={"contained"} color={"warning"}
-                                       startIcon={<SaveIcon/>} onClick={onSave} loadingPosition={"end"} loading={save}>Save</Button>}
-                    {loggedIn ? <Button color={"inherit"} onClick={logoutFn}>{username + " Logout"}</Button> :
-                        <Button color={"inherit"} onClick={login}>Login</Button>}
-                </Toolbar>
-            </AppBar>
-        </Box>
+        <nav>
+            <Box sx={{flexGrow: 1}}>
+                <AppBar position="static">
+                    <Toolbar>
+                        {back && (
+                            <div className={modules.backButtonContainer}>
+                                <Tooltip title={"Back to homepage"}>
+                                    <IconButton onClick={backToHomepage} className={modules.backButton}>
+                                        <ArrowBackIcon/>
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
+                        )}
+                        <Typography variant="h6" component="div" sx={{flexGrow: 1}}>{title}</Typography>
+                        {onSave && <Button className={modules.saveButton} variant={"contained"} color={"warning"}
+                                           startIcon={<SaveIcon/>} onClick={onSave} loadingPosition={"end"}
+                                           loading={save}>Save</Button>}
+                        {loggedIn ? <Button color={"inherit"} onClick={logoutFn}>{username + " Logout"}</Button> :
+                            <Button color={"inherit"} onClick={login}>Login</Button>}
+                    </Toolbar>
+                </AppBar>
+            </Box>
+        </nav>
     );
 }
 

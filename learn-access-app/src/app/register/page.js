@@ -22,32 +22,37 @@ export default function Register() {
     const completed = usernameValue.length > 0 && passwordValue.length > 0 && rePasswordValue.length > 0;
 
     return (
-        <div className={modules.container}>
+        <main className={modules.container}>
             <Card className={modules.card}>
                 <form action={action} className={modules.form}>
-                    <Button className={modules.back} variant={"text"} startIcon={<ArrowBack/>}
-                            onClick={() => router.push('/')}>
-                        Back
-                    </Button>
+                    <nav>
+                        <Button className={modules.back} variant={"text"} startIcon={<ArrowBack/>}
+                                onClick={() => router.push('/')}>
+                            Back
+                        </Button>
+                    </nav>
                     <div className={modules.iconWrapper}>
                         <Person2Icon fontSize={"large"} className={modules.icon}/>
                     </div>
+                    <h1 className={modules.title}>Register</h1>
                     <Stack spacing={3}>
                         <div className={modules.inputGroup}>
                             <label htmlFor="name" className={modules.label}>Username</label>
-                            <input value={usernameValue} onChange={e => setUsernameValue(e.target.value)} id="name"
+                            <input autoComplete={"off"} value={usernameValue}
+                                   onChange={e => setUsernameValue(e.target.value)} id="name"
                                    name="name" className={modules.input}/>
                         </div>
-                        {state?.errors?.name && <p className={modules.error}>{state.errors.name}</p>}
+                        {state?.errors?.name && <p role={"alert"} className={modules.error}>{state.errors.name}</p>}
 
                         <div className={modules.inputGroup}>
                             <label htmlFor="password" className={modules.label}>Password</label>
-                            <input value={passwordValue} onChange={e => setPasswordValue(e.target.value)} id="password"
+                            <input autoComplete={"off"} value={passwordValue}
+                                   onChange={e => setPasswordValue(e.target.value)} id="password"
                                    name="password" type="password" className={modules.input}/>
                         </div>
                         {state?.errors?.password && (
                             <div className={modules.errorList}>
-                                <p>Password must:</p>
+                                <p role={"alert"}>Password must:</p>
                                 <ul className={modules.errorItems}>
                                     {state.errors.password.map((error) => (
                                         <li key={error} className={modules.error}>- {error}</li>
@@ -57,16 +62,18 @@ export default function Register() {
                         )}
                         <div className={modules.inputGroup}>
                             <label htmlFor="repassword" className={modules.label}>Re-Enter Password</label>
-                            <input value={rePasswordValue} onChange={e => setRePasswordValue(e.target.value)}
+                            <input autoComplete={"off"} value={rePasswordValue}
+                                   onChange={e => setRePasswordValue(e.target.value)}
                                    id="repassword" name="repassword" type="password" className={modules.input}/>
                         </div>
                         {passwordValue !== rePasswordValue && (
-                            <p className={modules.error}>
+                            <p role={"alert"} className={modules.error}>
                                 Password does not match
                             </p>
                         )}
-                        <Link className={modules.link} onClick={() => router.push('/login')}>Already have an account?
-                            Click here to login</Link>
+                        <Link href={"/login"} className={modules.link} onClick={() => router.push('/login')}>Already
+                            have an account?
+                            Go here to login</Link>
                         <button disabled={pending || passwordValue !== rePasswordValue || !completed} type="submit"
                                 className={`${modules.button} ${
                                     pending || passwordValue !== rePasswordValue || !completed
@@ -78,6 +85,6 @@ export default function Register() {
                     </Stack>
                 </form>
             </Card>
-        </div>
+        </main>
     )
 }

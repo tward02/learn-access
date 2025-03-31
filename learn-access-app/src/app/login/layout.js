@@ -1,7 +1,4 @@
 import {Geist, Geist_Mono} from "next/font/google";
-import "./globals.css";
-import {ReactQueryProvider} from "@/app/ui/ReactQueryProvider";
-import {Analytics} from "@vercel/analytics/next";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -14,18 +11,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-    title: "Learn Access",
-    description: "Learn how to program accessibly in React",
+    title: "Learn Access | Login",
+    description: "Learn how to program accessibly in React - login to an account",
 };
 
 //wraps application
-export default function RootLayout({children}) {
+export default function LoginLayout({children}) {
 
     return (
         <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
-        <Analytics/>
+        {children}
         </body>
         </html>
     );

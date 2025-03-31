@@ -35,7 +35,7 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
         if (createPostIsSuccess) {
             router.push("/forum/" + levelId);
         }
-    }, [createPostIsSuccess, router]);
+    }, [createPostIsSuccess, levelId, router]);
 
     useEffect(() => {
         if (createPostError?.status === 401) {
@@ -102,21 +102,31 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
             <DialogContent>
                 <Card className={forumPostModules.post} style={{width: "100%"}}>
                     <CardContent className={modules.card}>
-                        {loading ? <div className={modules.loading}><CircularProgress/></div> : <><TextField
-                            onChange={(event) => {
-                                setTitle(event.target.value);
-                            }} error={titleError.length > 0} helperText={titleError.length > 0 && titleError}
-                            className={modules.titleField} placeholder={"Post Title"}/>
+                        {loading ? <div className={modules.loading}><CircularProgress/></div> : <>
+                            <label htmlFor="postTitle" className={modules.label}>Post Title</label>
+                            <TextField
+                                id={"postTitle"}
+                                name={"postTitle"}
+                                autoComplete={"off"}
+                                onChange={(event) => {
+                                    setTitle(event.target.value);
+                                }} error={titleError.length > 0} helperText={titleError.length > 0 && titleError}
+                                className={modules.titleField} placeholder={"Post Title"}/>
                             {files && (<div className={forumPostModules.codeDisplay}>
                                 <SandpackCodeViewer showTabs showLineNumbers wrapContent/>
                             </div>)}
                             <div>
-                                <TextField onChange={(event) => {
-                                    setMessage(event.target.value);
-                                }} error={messageError.length > 0} helperText={messageError.length > 0 && messageError}
+                                <label htmlFor="postDescription" className={modules.label}>Post Description</label>
+                                <TextField id={"postDescription"} name={"postDescription"} autoComplete={"off"}
+                                           onChange={(event) => {
+                                               setMessage(event.target.value);
+                                           }} error={messageError.length > 0}
+                                           helperText={messageError.length > 0 && messageError}
                                            className={modules.messageField} placeholder={"Post Message"}
                                            multiline={true}/>
-                                {postError && <p className={modules.error}>Failed to create post. Please try again</p>}
+                                {postError &&
+                                    <p role={"alert"} className={modules.error}>Failed to create post. Please try
+                                        again</p>}
                             </div>
                         </>}
                     </CardContent>

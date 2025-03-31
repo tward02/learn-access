@@ -61,21 +61,21 @@ const ForumContent = ({session, user, id}) => {
 
     const getErrorMessage = () => {
         if (refetchError?.status === 404 || forumError?.status === 404) {
-            return <p className={modules.errorMessage}>The forum you are looking for doesn't seem to exist, please
+            return <p role={"alert"} className={modules.errorMessage}>The forum you are looking for doesn&apos;t seem to exist, please
                 return to the homepage and select another forum.</p>
         }
 
         if (refetchError?.status === 401 || forumError?.status === 401) {
-            return <p className={modules.errorMessage}>You don't seem to be authenticated, please return to the homepage
+            return <p role={"alert"} className={modules.errorMessage}>You don&apos;t seem to be authenticated, please return to the homepage
                 and login or register.</p>
         }
 
         if (refetchError?.status === 403 || forumError?.status === 403) {
-            return <p className={modules.errorMessage}>You don't have permission to view this forum at the moment,
+            return <p role={"alert"} className={modules.errorMessage}>You don&apos;t have permission to view this forum at the moment,
                 please return to the homepage and choose a forum or level you have unlocked.</p>
         }
 
-        return <p className={modules.errorMessage}>Failed to load forum posts. Please&nbsp;<Link
+        return <p role={"alert"} className={modules.errorMessage}>Failed to load forum posts. Please&nbsp;<Link
             className={modules.link}
             onClick={reloadForum}>try
             again</Link></p>
@@ -96,7 +96,7 @@ const ForumContent = ({session, user, id}) => {
                                 updateLikes={handlePostLike}/>)) : forumLoading || forumRefetching ? (
                                 <CircularProgress className={modules.loading}
                                                   size="8rem"/>) : forumError || refetchError ? (getErrorMessage()) : (
-                                <p className={modules.emptyMessage}>No posts right now, please check again later</p>)}
+                                <p role={"alert"} className={modules.emptyMessage}>No posts right now, please check again later</p>)}
                         </div>
                     </Grid2>
                     <Grid2 direction="column" size={3}>
@@ -104,9 +104,9 @@ const ForumContent = ({session, user, id}) => {
                             <Stack>
                                 <Button color="inherit" onClick={reloadForum} startIcon={<RefreshIcon/>}>Refresh
                                     Feed</Button>
-                                <Button color="inherit" onClick={handleSortByDate} startIcon={<SortIcon/>}>Sort by
+                                <Button color="inherit" aria-label={"Sort posts by date"} onClick={handleSortByDate} startIcon={<SortIcon/>}>Sort by
                                     Date</Button>
-                                <Button color="inherit" onClick={handleSortByLikes} startIcon={<SortIcon/>}>Sort by
+                                <Button color="inherit" aria-label={"Sort posts by likes"} onClick={handleSortByLikes} startIcon={<SortIcon/>}>Sort by
                                     Likes</Button>
                             </Stack>
                         </div>

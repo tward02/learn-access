@@ -170,7 +170,7 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
             {/*main forum section*/}
             <Card className={modules.post} sx={cardSx}>
                 <CardHeader title={<Typography fontWeight="bold">
-                    {post.title}
+                    <h1>{post.title}</h1>
                 </Typography>} subheader={new Date(Date.parse(post.datetime)).toLocaleString()} avatar={
                     <Tooltip title={post.username}>
                         <Avatar sx={{bgcolor: getAvatarColour(post.username)}} aria-label={"User " + post.username}>
@@ -178,7 +178,9 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                         </Avatar>
                     </Tooltip>
                 } action={
-                    <IconButton color={isLiked ? "primary" : ""} aria-label="like post" onClick={likePost}>
+                    <IconButton color={isLiked ? "primary" : ""}
+                                aria-label={isLiked ? "unlike " + post.title + ": " + post.message + " post: " + likes : "like " + post.title + ": " + post.message + " post: " + likes}
+                                onClick={likePost}>
                         <ThumbUpIcon className={modules.likeIcon}/>
                         {likes}
                     </IconButton>
@@ -210,10 +212,12 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                         <Button onClick={addComment} startIcon={<AddIcon/>}>
                             Comment
                         </Button>
-                        <Button onClick={handleSortLikes} startIcon={<SortIcon/>}>
+                        <Button aria-label={"Sort " + post.title + " comments by likes"} onClick={handleSortLikes}
+                                startIcon={<SortIcon/>}>
                             Likes
                         </Button>
-                        <Button onClick={handleSortDates} startIcon={<SortIcon/>}>
+                        <Button aria-label={"Sort " + post.title + " comments by date"} onClick={handleSortDates}
+                                startIcon={<SortIcon/>}>
                             Date
                         </Button>
                         {comments.length > 0 ? (
@@ -231,7 +235,8 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                 <DialogTitle id={"comment-dialog-title"}>Add Comment</DialogTitle>
                 <DialogContent>
                     {commentLoading ? <div className={modules.loading}><CircularProgress/></div> : <><TextField
-                        autoFocus required margin={"dense"} label="Comment" fullWidth variant="standard"
+                        autoComplete={"off"} autoFocus required margin={"dense"} label="Comment" fullWidth
+                        variant="standard"
                         onChange={(e) => setCommentText(e.target.value)}/>
                         {commentCreateError &&
                             <p className={modules.error}>Failed to create comment, please try again</p>}

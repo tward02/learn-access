@@ -4,6 +4,12 @@ import {getUser, hasSession} from "@/app/lib/dal";
 import LevelListDisplay from "@/app/ui/component/levelList/LevelListDisplay";
 import NoSession from "@/app/ui/component/noSession/NoSession";
 
+export const metadata = {
+    title: "Learn Access | Home",
+    description: "Learn how to program accessibly in React - homepage and level select",
+};
+
+
 //main homepage
 const HomePage = async () => {
 

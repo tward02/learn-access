@@ -25,3 +25,9 @@
     align-items: center;
     min-height: 300px;
 }
+
+.label {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: black;
+}

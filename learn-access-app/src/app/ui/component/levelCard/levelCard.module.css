@@ -18,3 +18,7 @@
 .doneIcon {
     color: green;
 }
+
+.link {
+    color: blue !important;
+}

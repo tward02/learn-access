@@ -43,7 +43,7 @@ const Comment = ({comment, currentUser, updateLike}) => {
     return (
         <Card sx={cardSx}>
             <CardHeader title={<Typography variant="body2">
-                {comment.message}
+                <h2>{comment.message}</h2>
             </Typography>} subheader={<Typography variant="caption" color="text.secondary">
                 {new Date(Date.parse(comment.datetime)).toLocaleString()}
             </Typography>} avatar={
@@ -53,7 +53,9 @@ const Comment = ({comment, currentUser, updateLike}) => {
                     </Avatar>
                 </Tooltip>
             } action={
-                <IconButton color={isLiked ? "primary" : ""} aria-label="like post" onClick={likeComment}>
+                <IconButton color={isLiked ? "primary" : ""}
+                            aria-label={isLiked ? "unlike " + comment.message + "comment: " + likes : "like " + comment.message + " comment: " + likes}
+                            onClick={likeComment}>
                     <ThumbUpIcon className={modules.likeIcon}/>
                     {likes}
                 </IconButton>

@@ -19,9 +19,10 @@ const NoSession = () => {
 
     return (
         <div>
-            <p className={modules.session}>To start learning WCAG or continue where you left off, please&nbsp;<Link
-                className={modules.link} onClick={login}>Login</Link>&nbsp;or&nbsp; <Link className={modules.link}
-                                                                                          onClick={register}>Register</Link>
+            <p role={"alert"} className={modules.session}>To start learning WCAG or continue where you left off,
+                please&nbsp;<Link
+                    className={modules.link} onClick={login}>Login</Link>&nbsp;or&nbsp; <Link className={modules.link}
+                                                                                              onClick={register}>Register</Link>
             </p>
         </div>
     )

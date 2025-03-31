@@ -104,7 +104,7 @@ const Sandbox = ({level, user, id, session}) => {
             }
             saveFilesFn(payload);
         }
-    }, [save]);
+    }, [sandpack?.files, save, saveFilesFn]);
 
     useEffect(() => {
         if (saveFilesIsSuccess) {
@@ -121,7 +121,7 @@ const Sandbox = ({level, user, id, session}) => {
             setSaveFailedOpen(true);
             setSave(false);
         }
-    }, [saveFilesError, router]);
+    }, [saveFilesError, router, testSolutionError?.status]);
 
     useEffect(() => {
         if (testSolutionData && testSolutionSuccess) {
@@ -140,7 +140,7 @@ const Sandbox = ({level, user, id, session}) => {
             }
             setSubmissionLoading(false);
         }
-    }, [submitSolutionData, submitSolutionSuccess]);
+    }, [deleteSavedFilesFn, submitSolutionData, submitSolutionSuccess]);
 
     useEffect(() => {
         if (testSolutionError?.status === 401) {
@@ -275,11 +275,11 @@ const Sandbox = ({level, user, id, session}) => {
 
             return (
                 <div className={modules.testResultsField}>
-                    <div key={0}
-                         className={passed ? modules.testPassed : modules.testFailed}>{"RESULTS: " + (numPassed) + " PASSED, " + (results?.tests?.length - numPassed) + " FAILED, " + (results?.tests?.length) + " TOTAL"}</div>
+                    <span role={"alert"} key={0}
+                         className={passed ? modules.testPassed : modules.testFailed}>{"RESULTS: " + (numPassed) + " PASSED, " + (results?.tests?.length - numPassed) + " FAILED, " + (results?.tests?.length) + " TOTAL"}</span>
                     {results?.tests?.map((testResult, index) => (<div key={index + 1}
                                                                       className={testResult?.passed ? modules?.testPassedDisplay : modules.testFailedDisplay}>
-                        <span
+                        <span role={"alert"}
                             className={modules.testNameResult}>{testResult?.name + ": " + (testResult?.passed ? "PASSED" : "FAILED")}</span><span>{(testResult?.message ? (" - " + (testResult.type === "jest" ? testResult.message.toString().split(/\r?\n/)[0] : filterMessage(testResult.message.toString()))) : "")}</span>
                     </div>))}
                 </div>
@@ -318,17 +318,17 @@ const Sandbox = ({level, user, id, session}) => {
                 <Grid2 direction="column" size={2.5}>
                     <div className={modules.descriptionGrid}>
                         {/*description*/}
-                        <h2 className={modules.leftTitle}>Description:</h2>
+                        <h2 className={modules.leftTitle} aria-label={"Description: Use up and down arrow keys to navigate"}>Description:</h2>
                         {makeDescription()}
                         <div className={modules.linkBox}>{makeLinks()}</div>
                     </div>
                     <div className={modules.objectivesGrid}>
                         {/*objectives*/}
-                        <h2 className={modules.leftTitle}>Objectives:</h2>
+                        <h2 className={modules.leftTitle} aria-label={"Objectives: Use up and down arrow keys to navigate"}>Objectives:</h2>
                         {level?.objectives.toString().split(/\r?\n\r?\n/).map((objective, index) => (
                             <p key={index} className={modules.leftText}>{objective}</p>))}
                         <ul className={modules.noteBox}>
-                            <h3 className={modules.noteTitle}>Please note:</h3>
+                            <li><h3 className={modules.noteTitle}>Please note:</h3></li>
                             <li className={modules.note}>Some levels may require the use of a screen reader to verify
                                 aria labels and other accessible features.
                             </li>
@@ -346,7 +346,9 @@ const Sandbox = ({level, user, id, session}) => {
                         {/*code editor*/}
                         <SandpackCodeEditor className={modules.codeEditor} showTabs showLineNumbers
                                             showInlineErrors
-                                            wrapContent/>
+                                            wrapContent
+                                            tabInex={0}
+                                            aria-label={"Code editor, press enter to start editing"}/>
                     </div>
                     <div className={modules.testGrid}>
                         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
@@ -387,8 +389,8 @@ const Sandbox = ({level, user, id, session}) => {
                         <SandpackLayout className={modules.previewContainer}>
                             <SandpackPreview className={modules.preview}/>
                         </SandpackLayout>
-                        <h3 className={modules.consoleTitle}>Console Output:</h3>
-                        <SandpackConsole className={modules.previewConsole}/>
+                        <h3 htmlFor={"console"} className={modules.consoleTitle}>Console Output:</h3>
+                        <SandpackConsole name={"console"} id={"console"} className={modules.previewConsole}/>
                     </div>
                 </Grid2>
             </Grid2>
@@ -396,7 +398,7 @@ const Sandbox = ({level, user, id, session}) => {
             <Dialog aria-labelledby="error-dialog-title" aria-describedby="error-dialog-description"
                     open={testError}
                     onClose={() => setTestError(false)}>
-                <DialogTitle id="error-dialog-title">Error Running Tests</DialogTitle>
+                <DialogTitle id="error-dialog-title" aria-label={"Error Running Tests: Use up and down arrow keys to navigate"}>Error Running Tests</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="error-dialog-description">
                         There has been an error running the test suite for this level, please ensure your code is valid
@@ -469,12 +471,12 @@ const Sandbox = ({level, user, id, session}) => {
                 </DialogActions>
             </Dialog>
             <Dialog aria-labelledby="hint-dialog-title" open={hintsOpen} onClose={handleHintClose}>
-                <DialogTitle id="hint-dialog-title">{testHints[selectedHint].name}</DialogTitle>
+                <DialogTitle aria-label={testHints[selectedHint].name + " Use up and down arrow keys to navigate"} id="hint-dialog-title">{testHints[selectedHint].name}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="hint-dialog-description">
                         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
                             <Grid2 direction="column" size={1}>
-                                <IconButton size="medium" onClick={handleHintMoveLeft} disabled={selectedHint === 0}>
+                                <IconButton aria-label={"See Previous Hint"} size="medium" onClick={handleHintMoveLeft} disabled={selectedHint === 0}>
                                     <ArrowBackIosNewIcon fontSize="inherit"/>
                                 </IconButton>
                             </Grid2>
@@ -482,7 +484,7 @@ const Sandbox = ({level, user, id, session}) => {
                                 {testHints[selectedHint].content}
                             </Grid2>
                             <Grid2 direction="column" size={1}>
-                                <IconButton size="medium" onClick={handleHintMoveRight}
+                                <IconButton aria-label={"See Next Hint"} size="medium" onClick={handleHintMoveRight}
                                             disabled={selectedHint === testHints.length - 1 || selectedHint + 1 >= hintsViewed}>
                                     <ArrowForwardIosIcon fontSize="inherit"/>
                                 </IconButton>
