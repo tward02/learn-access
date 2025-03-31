@@ -10,14 +10,12 @@ function App() {
 
     return (
         <div className={highContrast ? "appContrast" : "app"}>
-            <h1>Color Contrast Challenge</h1>
+            <h1 className={highContrast ? "contrastTitle" : "title"}>Color Contrast Challenge</h1>
             <button
                 className={highContrast ? "high-contrast" : "toggle-contrast"}
                 onClick={toggleContrast}
                 aria-label="Toggle high contrast mode"
-            >
-                Toggle High Contrast
-            </button>
+            >Toggle High Contrast</button>
         </div>
     );
 }

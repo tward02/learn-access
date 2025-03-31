@@ -234,7 +234,7 @@ const runPlaywrightTest = async (testDir, test, code, css, index) => {
                 })
             })
         } else {
-            resultList.push({passed: false, suite: test.name, message: "Error running Jest", type: test.type});
+            resultList.push({passed: false, suite: test.name, message: "Error running Playwright", type: test.type});
         }
     }
     return resultList;
