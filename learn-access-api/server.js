@@ -100,7 +100,7 @@ const getTests = async (levelId) => {
 }
 
 //gets level from database as well as whther it is availible to the user so that we can authenticate them
-export const getLevel = async (userId, levelId) => {
+const getLevel = async (userId, levelId) => {
     const result = await sql`
         WITH user_completed_levels AS (SELECT levelID
                                        FROM user_levels
@@ -206,7 +206,6 @@ const transformReactImports = (source) => {
 const runPlaywrightTest = async (testDir, test, code, css, index) => {
     //creates playwright test file
     const testPath = path.join(testDir, 'playwrightTest' + index + '.spec.js');
-
     //removes any unnecessary code from user React file so that it can be rendered and tested on by playwright correctly
     let formattedCode = transformReactImports(code);
     formattedCode = formattedCode.replaceAll("import React from \'react\'", "")
@@ -278,7 +277,7 @@ const runTests = async (levelId, code, css) => {
 
     let jestCode = code;
 
-    //adds correct imports to code to be testsed by jest
+    //adds correct imports to code to be tested by jest
     if (!code.includes("import React from \'react\'") && !code.includes("import React from \"react\"") && !code.includes("import React")) {
         jestCode = "import React from \'react\';\n" + jestCode;
     }
@@ -323,6 +322,7 @@ app.post('/submit/:levelId', async (req, res) => {
     }
 
     const levelData = await getLevel(user.id, levelId);
+
     if (levelData.length === 0) {
         return res.status(404).json({message: 'Level Not Found'});
     }
@@ -333,6 +333,10 @@ app.post('/submit/:levelId', async (req, res) => {
 
     if (!code) {
         return res.status(400).json({message: 'Missing Required Attribute'});
+    }
+
+    if (!isSafeReactCode(code)) {
+        return res.status(400).json({message: 'Your React code failed to compile or is unsafe'});
     }
 
     if (!css) {
@@ -371,6 +375,7 @@ app.post('/test/:levelId', async (req, res) => {
     }
 
     const levelData = await getLevel(user.id, levelId);
+
     if (levelData.length === 0) {
         return res.status(404).json({message: 'Level Not Found'});
     }
