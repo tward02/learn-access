@@ -6,7 +6,6 @@ export const metadata = {
     description: "Learn how to program accessibly in React - view forum",
 };
 
-
 const Forum = async ({params}) => {
 
     const id = (await params).levelId;

@@ -48,21 +48,23 @@ const LevelListDisplay = () => {
         <Stack className={modules.levelLists} direction={"row"} spacing={15}>
             {(levelsError || refetchError) ? (
                 <p role={"alert"} className={modules.errorText}>Failed to load levels. Please&nbsp;<Link
+                    data-testid={"try-again"}
                     className={modules.link}
                     onClick={reloadLevels}>try
                     again</Link></p>
             ) : (levelsLoading || levelsRefetching) ? (
-                    <div className={modules.loading}>
+                    <div data-testid={"loading"} className={modules.loading}>
                         <CircularProgress size="8rem"/>
                     </div>
                 ) :
                 <>
                     <div>
                         <h2 className={modules.listHeader}>{"Limited Time Levels"}</h2>
-                        <div className={modules.listContainer}>
+                        <div data-testid="lim-levels" className={modules.listContainer}>
                             {limitedLevels.length > 0 ? limitedLevels.map(level => (
                                 <LevelCard key={level.id} level={level}/>)) : (
-                                <p className={modules.noLevelsText}>None available right now, check back again
+                                <p role={"alert"} className={modules.noLevelsText}>None available right now, check back
+                                    again
                                     later</p>)}
                         </div>
                     </div>

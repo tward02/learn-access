@@ -37,14 +37,14 @@ export default function Login() {
                     <Stack spacing={3}>
                         <div className={modules.inputGroup}>
                             <label htmlFor="name" className={modules.label}>Username</label>
-                            <input autoComplete={"on"} value={usernameValue}
+                            <input data-testid="username" autoComplete={"on"} value={usernameValue}
                                    onChange={e => setUsernameValue(e.target.value)} id="name"
                                    name="name" className={modules.input}/>
                         </div>
 
                         <div className={modules.inputGroup}>
                             <label htmlFor="password" className={modules.label}>Password</label>
-                            <input autoComplete={"off"} value={passwordValue}
+                            <input data-testid="password" autoComplete={"off"} value={passwordValue}
                                    onChange={e => setPasswordValue(e.target.value)} id="password"
                                    name="password" type="password" className={modules.input}/>
                         </div>

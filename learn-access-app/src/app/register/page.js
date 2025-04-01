@@ -38,7 +38,7 @@ export default function Register() {
                     <Stack spacing={3}>
                         <div className={modules.inputGroup}>
                             <label htmlFor="name" className={modules.label}>Username</label>
-                            <input autoComplete={"off"} value={usernameValue}
+                            <input data-testid="username" autoComplete={"off"} value={usernameValue}
                                    onChange={e => setUsernameValue(e.target.value)} id="name"
                                    name="name" className={modules.input}/>
                         </div>
@@ -46,7 +46,7 @@ export default function Register() {
 
                         <div className={modules.inputGroup}>
                             <label htmlFor="password" className={modules.label}>Password</label>
-                            <input autoComplete={"off"} value={passwordValue}
+                            <input data-testid="password" autoComplete={"off"} value={passwordValue}
                                    onChange={e => setPasswordValue(e.target.value)} id="password"
                                    name="password" type="password" className={modules.input}/>
                         </div>
@@ -62,7 +62,7 @@ export default function Register() {
                         )}
                         <div className={modules.inputGroup}>
                             <label htmlFor="repassword" className={modules.label}>Re-Enter Password</label>
-                            <input autoComplete={"off"} value={rePasswordValue}
+                            <input data-testid="repassword" autoComplete={"off"} value={rePasswordValue}
                                    onChange={e => setRePasswordValue(e.target.value)}
                                    id="repassword" name="repassword" type="password" className={modules.input}/>
                         </div>

@@ -26,8 +26,9 @@ const LevelCard = ({level}) => {
     const getTitle = () => {
         return (
             <>
-                {level.locked && <LockIcon fontSize={"large"}/>}
-                {level.completed && <DoneIcon className={modules.doneIcon} fontSize={"large"}/>}
+                {level.locked && <LockIcon data-testid={"locked"} fontSize={"large"}/>}
+                {level.completed &&
+                    <DoneIcon data-testid={"completed"} className={modules.doneIcon} fontSize={"large"}/>}
                 {level.name}
             </>
         );
@@ -35,7 +36,7 @@ const LevelCard = ({level}) => {
 
     const getContent = () => {
         return (
-            <>
+            <div data-testid="level">
                 <CardHeader title={getTitle()} subheader={level.completed &&
                     <Link onClick={navigateToForum} className={modules.link} href={"/forum/" + level.id}>View
                         Forum</Link>}/>
@@ -43,7 +44,7 @@ const LevelCard = ({level}) => {
                     <Typography variant="body2">{level.description}</Typography>
                     {level.expiration && (<Countdown targetDate={level.expiration}/>)}
                 </CardContent>
-            </>
+            </div>
         )
     }
 
