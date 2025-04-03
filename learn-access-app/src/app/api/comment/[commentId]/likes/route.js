@@ -14,8 +14,6 @@ export async function POST(req, {params}) {
 
     const comments = await getCommentById(commentId);
 
-    console.log(comments);
-
     if (!comments || comments?.length === 0) {
         return Response.json({error: 'Comment does not exist'}, {status: 404});
     }
