@@ -14,7 +14,7 @@ export async function POST(req, {params}) {
 
     const posts = await getPostById(postId);
 
-    if (!posts || posts?.rows?.length === 0) {
+    if (!posts || posts?.length === 0) {
         return Response.json({error: 'Post does not exist'}, {status: 404});
     }
 
@@ -41,7 +41,7 @@ export async function DELETE(req, {params}) {
 
     const posts = await getPostById(postId);
 
-    if (!posts || posts?.rows?.length === 0) {
+    if (!posts || posts?.length === 0) {
         return Response.json({error: 'Post does not exist'}, {status: 404});
     }
 

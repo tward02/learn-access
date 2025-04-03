@@ -44,7 +44,7 @@ export async function POST(req, {params}) {
     console.log("user authenticated")
 
     const levelId = (await params).levelId;
-    const body = await req.json();
+    const body = typeof req.json === "function" ? await req.json() : req.body;
     const user = await getUser();
 
     if (!await hasCompletedLevel(user.id, levelId)) {
@@ -53,17 +53,17 @@ export async function POST(req, {params}) {
 
     const {title, message, files} = body.data;
 
-    if (!title || !message || !files) {
+    if (!title || !message || !files || files.length === 0) {
         return Response.json({error: 'You are missing required fields'}, {status: 400});
     }
 
     //validates all files
-    files.forEach((file) => {
-        const {name, fileType, content} = file;
+    for (let i = 0; i < files.length; i++) {
+        const {name, fileType, content} = files[i];
         if (!name || !content || !fileType) {
             return Response.json({error: 'You are missing required fields'}, {status: 400});
         }
-    })
+    }
 
     await createPost(user.id, levelId, files, title, message);
 

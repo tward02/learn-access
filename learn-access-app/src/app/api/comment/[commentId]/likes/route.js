@@ -14,7 +14,9 @@ export async function POST(req, {params}) {
 
     const comments = await getCommentById(commentId);
 
-    if (!comments || comments?.rows?.length === 0) {
+    console.log(comments);
+
+    if (!comments || comments?.length === 0) {
         return Response.json({error: 'Comment does not exist'}, {status: 404});
     }
 
@@ -41,8 +43,8 @@ export async function DELETE(req, {params}) {
 
     const comments = await getCommentById(commentId);
 
-    if (!comments || comments?.rows?.length === 0) {
-        return Response.json({error: 'Post does not exist'}, {status: 404});
+    if (!comments || comments?.length === 0) {
+        return Response.json({error: 'Comment does not exist'}, {status: 404});
     }
 
     const comment = comments[0];

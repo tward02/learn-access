@@ -10,12 +10,13 @@ export async function POST(req, {params}) {
     console.log("user authenticated")
 
     const postId = (await params).postId;
-    const body = await req.json();
+
+    const body = typeof req.json === "function" ? await req.json() : req.body;
     const user = await getUser();
 
     const posts = await getPostById(postId);
 
-    if (!posts || posts?.rows?.length === 0) {
+    if (!posts || posts?.length === 0) {
         return Response.json({error: 'Post does not exist'}, {status: 404});
     }
 

@@ -9,7 +9,7 @@ export async function POST(request, {params}) {
     console.log("user authenticated")
 
     const id = (await params).id;
-    const body = await request.json();
+    const body = typeof request.json === "function" ? await request.json() : request.body;
     const user = await getUser();
 
     const levelDataList = await getLevel(user.id, id);
@@ -30,12 +30,12 @@ export async function POST(request, {params}) {
         return Response.json({error: "You are missing required fields"}, {status: 400});
     }
 
-    files.forEach((file) => {
-        const {name, fileType, content} = file;
+    for (let i = 0; i < files.length; i++) {
+        const {name, fileType, content} = files[i];
         if (!name || !content || !fileType) {
             return Response.json({error: 'You are missing required fields'}, {status: 400});
         }
-    })
+    }
 
     await Promise.all(files.map(file => {
         saveFile(user.id, id, file.name, file.fileType, file.content)
