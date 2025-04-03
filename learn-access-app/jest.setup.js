@@ -17,6 +17,18 @@ jest.mock("./src/app/actions/auth", () => ({
     signup: jest.fn(),
 }));
 
+jest.mock('@react-hook/intersection-observer', () => {
+    return {
+        __esModule: true,
+        default: jest.fn(() => ({
+            isIntersecting: true,
+        })),
+        useIntersectionObserver: jest.fn(() => ({
+            isIntersecting: true,
+        })),
+    };
+});
+
 
 jest.mock('axios');
 axios.interceptors = jest.fn();

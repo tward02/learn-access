@@ -216,7 +216,7 @@ const Sandbox = ({level, user, id, session}) => {
         setHintsOpen(false);
         if (hintsViewed < testHints.length) {
             const timer = setTimeout(() => {
-                setSelectedHint(selectedHint + 1);
+                setSelectedHint(hintsViewed);
             }, 500);
 
             return () => clearTimeout(timer);
@@ -276,11 +276,11 @@ const Sandbox = ({level, user, id, session}) => {
             return (
                 <div className={modules.testResultsField}>
                     <span role={"alert"} key={0}
-                         className={passed ? modules.testPassed : modules.testFailed}>{"RESULTS: " + (numPassed) + " PASSED, " + (results?.tests?.length - numPassed) + " FAILED, " + (results?.tests?.length) + " TOTAL"}</span>
+                          className={passed ? modules.testPassed : modules.testFailed}>{"RESULTS: " + (numPassed) + " PASSED, " + (results?.tests?.length - numPassed) + " FAILED, " + (results?.tests?.length) + " TOTAL"}</span>
                     {results?.tests?.map((testResult, index) => (<div key={index + 1}
                                                                       className={testResult?.passed ? modules?.testPassedDisplay : modules.testFailedDisplay}>
                         <span role={"alert"}
-                            className={modules.testNameResult}>{testResult?.name + ": " + (testResult?.passed ? "PASSED" : "FAILED")}</span><span>{(testResult?.message ? (" - " + (testResult.type === "jest" ? testResult.message.toString().split(/\r?\n/)[0] : filterMessage(testResult.message.toString()))) : "")}</span>
+                              className={modules.testNameResult}>{testResult?.name + ": " + (testResult?.passed ? "PASSED" : "FAILED")}</span><span>{(testResult?.message ? (" - " + (testResult.type === "jest" ? testResult.message.toString().split(/\r?\n/)[0] : filterMessage(testResult.message.toString()))) : "")}</span>
                     </div>))}
                 </div>
             );
@@ -318,13 +318,15 @@ const Sandbox = ({level, user, id, session}) => {
                 <Grid2 direction="column" size={2.5}>
                     <div className={modules.descriptionGrid}>
                         {/*description*/}
-                        <h2 className={modules.leftTitle} aria-label={"Description: Use up and down arrow keys to navigate"}>Description:</h2>
+                        <h2 className={modules.leftTitle}
+                            aria-label={"Description: Use up and down arrow keys to navigate"}>Description:</h2>
                         {makeDescription()}
                         <div className={modules.linkBox}>{makeLinks()}</div>
                     </div>
                     <div className={modules.objectivesGrid}>
                         {/*objectives*/}
-                        <h2 className={modules.leftTitle} aria-label={"Objectives: Use up and down arrow keys to navigate"}>Objectives:</h2>
+                        <h2 className={modules.leftTitle}
+                            aria-label={"Objectives: Use up and down arrow keys to navigate"}>Objectives:</h2>
                         {level?.objectives.toString().split(/\r?\n\r?\n/).map((objective, index) => (
                             <p key={index} className={modules.leftText}>{objective}</p>))}
                         <ul className={modules.noteBox}>
@@ -333,7 +335,8 @@ const Sandbox = ({level, user, id, session}) => {
                                 aria labels and other accessible features.
                             </li>
                             <li className={modules.note}>It is important that you do not delete pre programmed IDs and
-                                other similar attributes on elements or refresh the page without saving your progress first.
+                                other similar attributes on elements or refresh the page without saving your progress
+                                first.
                             </li>
                             <li className={modules.note}>Please do not change the signature of the App method or try to
                                 export any other functions/components.
@@ -342,7 +345,7 @@ const Sandbox = ({level, user, id, session}) => {
                     </div>
                 </Grid2>
                 <Grid2 size={4.5}>
-                    <div className={modules.codeEditorGrid}>
+                    <div data-testid="editor-box" className={modules.codeEditorGrid}>
                         {/*code editor*/}
                         <SandpackCodeEditor className={modules.codeEditor} showTabs showLineNumbers
                                             showInlineErrors
@@ -358,7 +361,7 @@ const Sandbox = ({level, user, id, session}) => {
                                     <div className={modules.testingDisplay}>
                                         {/*test console*/}
                                         {testSolutionLoading || testsLoading ?
-                                            <div className={modules.testsLoading}><CircularProgress/>
+                                            <div data-testid="test-loading" className={modules.testsLoading}><CircularProgress/>
                                             </div> : formatTestResults(testResults)}
                                     </div>
                                 </div>
@@ -384,7 +387,7 @@ const Sandbox = ({level, user, id, session}) => {
                     </div>
                 </Grid2>
                 <Grid2 size={5}>
-                    <div className={modules.previewGrid}>
+                    <div data-testid="preview-box" className={modules.previewGrid}>
                         {/*code preview*/}
                         <SandpackLayout className={modules.previewContainer}>
                             <SandpackPreview className={modules.preview}/>
@@ -398,7 +401,9 @@ const Sandbox = ({level, user, id, session}) => {
             <Dialog aria-labelledby="error-dialog-title" aria-describedby="error-dialog-description"
                     open={testError}
                     onClose={() => setTestError(false)}>
-                <DialogTitle id="error-dialog-title" aria-label={"Error Running Tests: Use up and down arrow keys to navigate"}>Error Running Tests</DialogTitle>
+                <DialogTitle id="error-dialog-title"
+                             aria-label={"Error Running Tests: Use up and down arrow keys to navigate"}>Error Running
+                    Tests</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="error-dialog-description">
                         There has been an error running the test suite for this level, please ensure your code is valid
@@ -471,12 +476,14 @@ const Sandbox = ({level, user, id, session}) => {
                 </DialogActions>
             </Dialog>
             <Dialog aria-labelledby="hint-dialog-title" open={hintsOpen} onClose={handleHintClose}>
-                <DialogTitle aria-label={testHints[selectedHint].name + " Use up and down arrow keys to navigate"} id="hint-dialog-title">{testHints[selectedHint].name}</DialogTitle>
+                <DialogTitle aria-label={testHints[selectedHint].name + " Use up and down arrow keys to navigate"}
+                             id="hint-dialog-title">{testHints[selectedHint].name}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="hint-dialog-description">
                         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
                             <Grid2 direction="column" size={1}>
-                                <IconButton aria-label={"See Previous Hint"} size="medium" onClick={handleHintMoveLeft} disabled={selectedHint === 0}>
+                                <IconButton data-testid="hint-left" aria-label={"See Previous Hint"} size="medium" onClick={handleHintMoveLeft}
+                                            disabled={selectedHint === 0}>
                                     <ArrowBackIosNewIcon fontSize="inherit"/>
                                 </IconButton>
                             </Grid2>
@@ -484,7 +491,7 @@ const Sandbox = ({level, user, id, session}) => {
                                 {testHints[selectedHint].content}
                             </Grid2>
                             <Grid2 direction="column" size={1}>
-                                <IconButton aria-label={"See Next Hint"} size="medium" onClick={handleHintMoveRight}
+                                <IconButton data-testid="hint-right" aria-label={"See Next Hint"} size="medium" onClick={handleHintMoveRight}
                                             disabled={selectedHint === testHints.length - 1 || selectedHint + 1 >= hintsViewed}>
                                     <ArrowForwardIosIcon fontSize="inherit"/>
                                 </IconButton>

@@ -105,6 +105,7 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
                         {loading ? <div className={modules.loading}><CircularProgress/></div> : <>
                             <label htmlFor="postTitle" className={modules.label}>Post Title</label>
                             <TextField
+                                data-testid={"post-title"}
                                 id={"postTitle"}
                                 name={"postTitle"}
                                 autoComplete={"off"}
@@ -112,12 +113,13 @@ const CreatePost = ({open, files, handleCancel, levelId}) => {
                                     setTitle(event.target.value);
                                 }} error={titleError.length > 0} helperText={titleError.length > 0 && titleError}
                                 className={modules.titleField} placeholder={"Post Title"}/>
-                            {files && (<div className={forumPostModules.codeDisplay}>
+                            {files && (<div data-testid="preview-post" className={forumPostModules.codeDisplay}>
                                 <SandpackCodeViewer showTabs showLineNumbers wrapContent/>
                             </div>)}
                             <div>
                                 <label htmlFor="postDescription" className={modules.label}>Post Description</label>
-                                <TextField id={"postDescription"} name={"postDescription"} autoComplete={"off"}
+                                <TextField data-testid={"post-message"} id={"postDescription"} name={"postDescription"}
+                                           autoComplete={"off"}
                                            onChange={(event) => {
                                                setMessage(event.target.value);
                                            }} error={messageError.length > 0}

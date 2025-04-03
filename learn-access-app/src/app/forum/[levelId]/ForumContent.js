@@ -61,29 +61,35 @@ const ForumContent = ({session, user, id}) => {
 
     const getErrorMessage = () => {
         if (refetchError?.status === 404 || forumError?.status === 404) {
-            return <p role={"alert"} className={modules.errorMessage}>The forum you are looking for doesn&apos;t seem to exist, please
+            return <p role={"alert"} className={modules.errorMessage}>The forum you are looking for doesn&apos;t seem to
+                exist, please
                 return to the homepage and select another forum.</p>
         }
 
         if (refetchError?.status === 401 || forumError?.status === 401) {
-            return <p role={"alert"} className={modules.errorMessage}>You don&apos;t seem to be authenticated, please return to the homepage
+            return <p role={"alert"} className={modules.errorMessage}>You don&apos;t seem to be authenticated, please
+                return to the homepage
                 and login or register.</p>
         }
 
         if (refetchError?.status === 403 || forumError?.status === 403) {
-            return <p role={"alert"} className={modules.errorMessage}>You don&apos;t have permission to view this forum at the moment,
+            return <p role={"alert"} className={modules.errorMessage}>You don&apos;t have permission to view this forum
+                at the moment,
                 please return to the homepage and choose a forum or level you have unlocked.</p>
         }
 
-        return <p role={"alert"} className={modules.errorMessage}>Failed to load forum posts. Please&nbsp;<Link
-            className={modules.link}
-            onClick={reloadForum}>try
-            again</Link></p>
+        return <p role={"alert"} data-testid="error-general" className={modules.errorMessage}>Failed to load forum
+            posts. Please&nbsp;<Link
+                className={modules.link}
+                onClick={reloadForum}>try
+                again</Link></p>
     }
 
     return (
         <div className={modules.container}>
-            <TopBar back title={"Forum"} loggedIn={session} username={user?.username}/>
+            <h1>
+                <TopBar back title={"Forum"} loggedIn={session} username={user?.username}/>
+            </h1>
             <main className={modules.forumContent}>
                 <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
                     <Grid2 direction="column" size={3}>
@@ -94,19 +100,28 @@ const ForumContent = ({session, user, id}) => {
                                 currentUser={user} post={post}
                                 key={post.id}
                                 updateLikes={handlePostLike}/>)) : forumLoading || forumRefetching ? (
-                                <CircularProgress className={modules.loading}
+                                <CircularProgress data-testid="loading" className={modules.loading}
                                                   size="8rem"/>) : forumError || refetchError ? (getErrorMessage()) : (
-                                <p role={"alert"} className={modules.emptyMessage}>No posts right now, please check again later</p>)}
+                                <p role={"alert"} className={modules.emptyMessage}>No posts right now, please check
+                                    again later</p>)}
                         </div>
                     </Grid2>
                     <Grid2 direction="column" size={3}>
                         <div className={modules.actions}>
                             <Stack>
-                                <Button color="inherit" onClick={reloadForum} startIcon={<RefreshIcon/>}>Refresh
+                                <Button
+                                    disabled={posts.length === 0 || forumError || refetchError || forumLoading || forumRefetching}
+                                    color="inherit" onClick={reloadForum} startIcon={<RefreshIcon/>}>Refresh
                                     Feed</Button>
-                                <Button color="inherit" aria-label={"Sort posts by date"} onClick={handleSortByDate} startIcon={<SortIcon/>}>Sort by
+                                <Button
+                                    disabled={posts.length === 0 || forumError || refetchError || forumLoading || forumRefetching}
+                                    color="inherit" aria-label={"Sort posts by date"} onClick={handleSortByDate}
+                                    startIcon={<SortIcon/>}>Sort by
                                     Date</Button>
-                                <Button color="inherit" aria-label={"Sort posts by likes"} onClick={handleSortByLikes} startIcon={<SortIcon/>}>Sort by
+                                <Button
+                                    disabled={posts.length === 0 || forumError || refetchError || forumLoading || forumRefetching}
+                                    color="inherit" aria-label={"Sort posts by likes"} onClick={handleSortByLikes}
+                                    startIcon={<SortIcon/>}>Sort by
                                     Likes</Button>
                             </Stack>
                         </div>

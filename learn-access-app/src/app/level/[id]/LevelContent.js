@@ -81,7 +81,7 @@ const LevelContent = ({session, user, id}) => {
                     <Sandbox user={user} id={id} level={level} session={session}/>
                 </SandpackProvider>}
             <Backdrop open={levelLoading}>
-                <CircularProgress/>
+                <CircularProgress data-testid={"loading"}/>
             </Backdrop>
             <Dialog aria-labelledby="error-dialog-title" aria-describedby="error-dialog-description"
                     open={levelError || expired}

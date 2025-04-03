@@ -168,9 +168,9 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
     return (
         <Fragment>
             {/*main forum section*/}
-            <Card className={modules.post} sx={cardSx}>
+            <Card data-testid="post" className={modules.post} sx={cardSx}>
                 <CardHeader title={<Typography fontWeight="bold">
-                    <h1>{post.title}</h1>
+                    {post.title}
                 </Typography>} subheader={new Date(Date.parse(post.datetime)).toLocaleString()} avatar={
                     <Tooltip title={post.username}>
                         <Avatar sx={{bgcolor: getAvatarColour(post.username)}} aria-label={"User " + post.username}>
@@ -178,14 +178,14 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                         </Avatar>
                     </Tooltip>
                 } action={
-                    <IconButton color={isLiked ? "primary" : ""}
+                    <IconButton data-testid={"like-button-post." + isLiked} color={isLiked ? "primary" : ""}
                                 aria-label={isLiked ? "unlike " + post.title + ": " + post.message + " post: " + likes : "like " + post.title + ": " + post.message + " post: " + likes}
                                 onClick={likePost}>
                         <ThumbUpIcon className={modules.likeIcon}/>
                         {likes}
                     </IconButton>
                 }/>
-                <CardContent>
+                <CardContent data-testid="post-content">
                     {post?.files?.length > 0 && (<div className={modules.codeDisplay}>
                         <SandpackProvider template={"react"} files={formatFiles(post.files)}>
                             <SandpackCodeViewer showTabs showLineNumbers wrapContent/>
@@ -197,7 +197,7 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                 </CardContent>
                 <CardActions>
                 <span>
-                    <ExpandMore expand={expanded}
+                    <ExpandMore data-testid="expand-post" expand={expanded}
                                 onClick={() => setExpanded(!expanded)}
                                 aria-expanded={expanded}
                                 aria-label="View comments">
@@ -212,11 +212,13 @@ const ForumPost = ({currentUser, post, updateLikes}) => {
                         <Button onClick={addComment} startIcon={<AddIcon/>}>
                             Comment
                         </Button>
-                        <Button aria-label={"Sort " + post.title + " comments by likes"} onClick={handleSortLikes}
+                        <Button aria-label={"Sort " + post.title + " comments by likes"}
+                                disabled={comments.length === 0} onClick={handleSortLikes}
                                 startIcon={<SortIcon/>}>
                             Likes
                         </Button>
-                        <Button aria-label={"Sort " + post.title + " comments by date"} onClick={handleSortDates}
+                        <Button aria-label={"Sort " + post.title + " comments by date"} disabled={comments.length === 0}
+                                onClick={handleSortDates}
                                 startIcon={<SortIcon/>}>
                             Date
                         </Button>
