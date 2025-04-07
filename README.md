@@ -21,3 +21,6 @@ COMP3200 3rd Year Project: Learn Access
 6. Start the app server by running "npm run start"
 
 ---
+
+# Deployment
+As of writing this report and pushing this code to the repository the application is availible at https://www.learn-access.co.uk
