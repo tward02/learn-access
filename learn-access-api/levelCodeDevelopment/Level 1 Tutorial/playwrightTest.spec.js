@@ -9,9 +9,9 @@ const getPlaywrightRender = () => `
             <style>
 
             </style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
         </head>
         <body>
             <div id="root"></div>
@@ -27,7 +27,6 @@ const getPlaywrightRender = () => `
 
 test('Expect h1 element to be blue rgb(0, 0, 255)', async ({ page }) => {
 
-    //
     await page.setContent(getPlaywrightRender());
 
     await page.waitForSelector('h1');
