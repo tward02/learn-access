@@ -145,7 +145,7 @@ const authenticate = async (user) => {
 //searches for things defined as template literals (``) and converts them to regular strings so that code can be rendered correctly for playwright tests helped by https://regex101.com/
 const convertTemplateLiteralsToStrings = (code) => {
     return code.replace(/`([^`]*?)`/g, (match, content) => {
-        const transformedContent = content.replace(/\$\{([^}]+)\}/g, '" + $1 + "');
+        const transformedContent = content.replace(/\$\{([^}]+)}/g, '" + $1 + "');
         return `"${transformedContent}"`;
     });
 }
