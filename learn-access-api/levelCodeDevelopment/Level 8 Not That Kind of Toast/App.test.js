@@ -10,27 +10,27 @@ jest.useFakeTimers();
 it("Initial screen renders with all required elements", () => {
     render(<App/>);
 
-    expect(screen.getByText("Accessible Toast Notifications")).toBeInTheDocument();
-    expect(screen.getByText("Show Info Toast")).toBeInTheDocument();
-    expect(screen.getByText("Show Success Toast")).toBeInTheDocument();
-    expect(screen.getByText("Show Error Toast")).toBeInTheDocument();
+    expect(screen.getByText("Toast Notifications")).toBeInTheDocument();
+    expect(screen.getByText("Show Info Message")).toBeInTheDocument();
+    expect(screen.getByText("Show Success Message")).toBeInTheDocument();
+    expect(screen.getByText("Show Error Message")).toBeInTheDocument();
 });
 
 it("Toasts appear with correct text and elements", () => {
     render(<App/>);
 
-    fireEvent.click(screen.getByText("Show Info Toast"));
+    fireEvent.click(screen.getByText("Show Info Message"));
     expect(screen.getByText("Info message")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Show Success Toast"));
+    fireEvent.click(screen.getByText("Show Success Message"));
     expect(screen.getByText("Success message")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Show Error Toast"));
+    fireEvent.click(screen.getByText("Show Error Message"));
     expect(screen.getByText("Error message")).toBeInTheDocument();
 });
 
 it("Renders and announces an error toast with assertive aria-live and correct role", () => {
     render(<App/>);
 
-    fireEvent.click(screen.getByText("Show Error Toast"));
+    fireEvent.click(screen.getByText("Show Error Message"));
 
     const toast = screen.getByTestId("toast-error")
     expect(toast).toBeInTheDocument();
@@ -42,7 +42,7 @@ it("Renders and announces an error toast with assertive aria-live and correct ro
 it("Renders and announces a success toast with polite aria-live and correct role", () => {
     render(<App/>);
 
-    fireEvent.click(screen.getByText("Show Success Toast"));
+    fireEvent.click(screen.getByText("Show Success Message"));
 
     const toast = screen.getByTestId("toast-success")
     expect(toast).toBeInTheDocument();
@@ -54,7 +54,7 @@ it("Renders and announces a success toast with polite aria-live and correct role
 it("Renders and announces an info toast with polite aria-live and correct role", () => {
     render(<App/>);
 
-    fireEvent.click(screen.getByText("Show Info Toast"));
+    fireEvent.click(screen.getByText("Show Info Message"));
 
     const toast = screen.getByTestId("toast-info")
     expect(toast).toBeInTheDocument();
@@ -66,7 +66,7 @@ it("Renders and announces an info toast with polite aria-live and correct role",
 it("Toast can be dismissed by clicking the close button", () => {
     render(<App/>);
 
-    fireEvent.click(screen.getByText("Show Info Toast"));
+    fireEvent.click(screen.getByText("Show Info Message"));
 
     const toast = screen.getByTestId("toast-info")
     expect(toast).toBeInTheDocument();
@@ -79,7 +79,7 @@ it("Toast can be dismissed by clicking the close button", () => {
 it("Toast automatically disappears after timeout", () => {
     render(<App/>);
 
-    fireEvent.click(screen.getByText("Show Success Toast"));
+    fireEvent.click(screen.getByText("Show Success Message"));
 
     const toast = screen.getByTestId("toast-success")
     expect(toast).toBeInTheDocument();
@@ -94,10 +94,8 @@ it("Toast automatically disappears after timeout", () => {
 it("Toast does not take the focus when it appears on screen", () => {
     render(<App/>);
 
-    fireEvent.click(screen.getByText("Show Info Toast"));
+    fireEvent.click(screen.getByText("Show Info Message"));
 
     const toast = screen.getByTestId("toast-info")
     expect(toast).not.toHaveFocus();
 });
-
-

@@ -1,4 +1,5 @@
 import {test, expect} from "@playwright/test";
+import React, {useEffect, useRef, useState} from "react";
 
 //IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
 
@@ -7,10 +8,9 @@ const getPlaywrightRender = () => `
         <head>
             <title>test</title>
             <style>
-                .container {
-    font-family: Arial, sans-serif;
+               .container {
     text-align: center;
-    padding: 20px;
+
 }
 
 button {
@@ -18,11 +18,13 @@ button {
     padding: 10px 20px;
     border: none;
     cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
+    font-size: 20px;
+    border-radius: 10px;
+    color: white;
+    background-color: blue;
 }
 
-.toast-container {
+.messageDisplay {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -34,59 +36,55 @@ button {
 
 .toast {
     padding: 15px;
-    border-radius: 5px;
+    border-radius: 10px;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     min-width: 250px;
     max-width: 350px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    outline: none;
 }
 
 .toast:focus {
-    outline: 2px solid #ffffff;
+    outline: 2px solid grey;
 }
 
 .info {
-    background-color: #007bff;
+    background-color: blue;
 }
 
 .success {
-    background-color: #28a745;
+    background-color: green;
 }
 
 .error {
-    background-color: #dc3545;
+    background-color: red;
 }
 
 .toast button {
     background: none;
     border: none;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
-    margin-left: 10px;
+    margin-left: 15px;
 }
 
 
             </style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
         </head>
         <body>
             <div id="root"></div>
             <script type="text/babel">
                      const { useState, useEffect, useRef } = React;
 
-const Toast = ({ message, type, onClose }) => {
+const ToastMessage = ({ message, type, onClose }) => {
     const toastRef = useRef(null);
 
     useEffect(() => {
-        toastRef.current?.focus();
         const timer = setTimeout(onClose, 5000);
         return () => clearTimeout(timer);
     }, [onClose]);
@@ -109,19 +107,19 @@ const App = () => {
     const [toasts, setToasts] = useState([]);
 
     const showToast = (message, type = "info") => {
-        setToasts([...toasts, { id: Date.now(), message, type }]);
+        setToasts([...toasts, { id: Math.random().toString(16).slice(2), message, type }]);
     };
 
     return (
         <div className="container">
-            <h1>Accessible Toast Notifications</h1>
-            <button onClick={() => showToast("Info message", "info")}>Show Info Toast</button>
-            <button onClick={() => showToast("Success message", "success")}>Show Success Toast</button>
-            <button onClick={() => showToast("Error message", "error")}>Show Error Toast</button>
+            <h1>Toast Notifications</h1>
+            <button onClick={() => showToast("Info message", "info")}>Show Info Message</button>
+            <button onClick={() => showToast("Success message", "success")}>Show Success Message</button>
+            <button onClick={() => showToast("Error message", "error")}>Show Error Message</button>
 
-            <div className="toast-container">
+            <div className="messageDisplay">
                 {toasts.map((toast) => (
-                    <Toast
+                    <ToastMessage
                         key={toast.id}
                         message={toast.message}
                         type={toast.type}
@@ -132,6 +130,7 @@ const App = () => {
         </div>
     );
 };
+
                      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
             </script>
         </body>
@@ -144,7 +143,7 @@ test("Can use keyboard to dismiss toast", async ({page}) => {
     await page.keyboard.press("Tab");
     await page.keyboard.press("Enter");
 
-    const toast = await page.getByText("Info message");
+    const toast = await page.getByTestId('toast-info');
     expect(toast).toBeVisible();
 
     await page.keyboard.press("Tab");
@@ -159,19 +158,25 @@ test("Can use keyboard to dismiss toast", async ({page}) => {
 test("Toasts should be the correct colours", async ({page}) => {
     await page.setContent(getPlaywrightRender());
 
-    await page.click('text="Show Info Toast"');
+    const info = await page.getByText("Show Info Message");
+    await info.click();
+
     const infoToast = await page.waitForSelector('[data-testid="toast-info"]');
     const infoColor = await infoToast.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(infoColor).toBe("rgb(0, 123, 255)");
+    expect(infoColor).toBe("rgb(0, 0, 255)");
 
-    await page.click('text="Show Success Toast"');
+    const success = await page.getByText("Show Success Message");
+    await success.click();
+
     const successToast = await page.waitForSelector('[data-testid="toast-success"]');
     const successColor = await successToast.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(successColor).toBe("rgb(40, 167, 69)");
+    expect(successColor).toBe("rgb(0, 128, 0)");
 
-    await page.click('text="Show Error Toast"');
+    const error = await page.getByText("Show Error Message");
+    await error.click();
+
     const errorToast = await page.waitForSelector('[data-testid="toast-error"]');
     const errorColor = await errorToast.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(errorColor).toBe("rgb(220, 53, 69)");
+    expect(errorColor).toBe("rgb(255, 0, 0)");
 });
 

@@ -3,7 +3,7 @@ import "./styles.css";
 
 //IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself
 
-const Toast = ({ message, type, onClose }) => {
+const ToastMessage = ({ message, type, onClose }) => {
     const toastRef = useRef(null);
 
     useEffect(() => {
@@ -29,19 +29,19 @@ const App = () => {
     const [toasts, setToasts] = useState([]);
 
     const showToast = (message, type = "info") => {
-        setToasts([...toasts, { id: Date.now(), message, type }]);
+        setToasts([...toasts, { id: Math.random().toString(16).slice(2), message, type }]);
     };
 
     return (
         <div className="container">
-            <h1>Accessible Toast Notifications</h1>
-            <button onClick={() => showToast("Info message", "info")}>Show Info Toast</button>
-            <button onClick={() => showToast("Success message", "success")}>Show Success Toast</button>
-            <button onClick={() => showToast("Error message", "error")}>Show Error Toast</button>
+            <h1>Toast Notifications</h1>
+            <button onClick={() => showToast("Info message", "info")}>Show Info Message</button>
+            <button onClick={() => showToast("Success message", "success")}>Show Success Message</button>
+            <button onClick={() => showToast("Error message", "error")}>Show Error Message</button>
 
-            <div className="toast-container">
+            <div className="messageDisplay">
                 {toasts.map((toast) => (
-                    <Toast
+                    <ToastMessage
                         key={toast.id}
                         message={toast.message}
                         type={toast.type}

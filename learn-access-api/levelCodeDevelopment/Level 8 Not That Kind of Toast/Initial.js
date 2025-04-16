@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./styles.css";
 
 //IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
+//adapted from https://blog.logrocket.com/how-to-create-custom-toast-component-react/
 
-const Toast = ({ message, type, onClose }) => {
+const ToastMessage = ({ message, type, onClose }) => {
     useEffect(() => {
         const timer = setTimeout(onClose, 5000);
         return () => clearTimeout(timer);
@@ -16,19 +17,19 @@ export default function App() {
     const [toasts, setToasts] = useState([]);
 
     const showToast = (message, type = "info") => {
-        setToasts([...toasts, { id: Date.now(), message, type }]);
+        setToasts([...toasts, { id: Math.random().toString(16).slice(2), message, type }]);
     };
 
     return (
         <div className="container">
             <h1>Toast Notifications</h1>
-            <button onClick={() => showToast("Info message", "info")}>Show Info Toast</button>
-            <button onClick={() => showToast("Success message", "success")}>Show Success Toast</button>
-            <button onClick={() => showToast("Error message", "error")}>Show Error Toast</button>
+            <button onClick={() => showToast("Info message", "info")}>Show Info Message</button>
+            <button onClick={() => showToast("Success message", "success")}>Show Success Message</button>
+            <button onClick={() => showToast("Error message", "error")}>Show Error Message</button>
 
-            <div className="toast-container">
+            <div className="messageDisplay">
                 {toasts.map((toast) => (
-                    <Toast
+                    <ToastMessage
                         key={toast.id}
                         message={toast.message}
                         type={toast.type}
