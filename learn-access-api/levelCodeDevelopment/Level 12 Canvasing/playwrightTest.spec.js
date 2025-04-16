@@ -9,16 +9,17 @@ const getPlaywrightRender = () => `
         <head>
             <title>test</title>
             <style>
-                body {
-    font-family: Arial, sans-serif;
-}
-
 button {
-    background: #007BFF;
+    background: black;
     color: white;
-    border: none;
     padding: 10px;
     cursor: pointer;
+    font-size: 20px;
+}
+
+.settings {
+    background: none;
+    border: none;
 }
 
 p {
@@ -31,29 +32,14 @@ canvas {
     border: 1px solid #ccc;
 }
 
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 10px;
-    background: #000;
-    color: white;
-    padding: 5px;
-}
-
-.skip-link:focus {
-    top: 10px;
-}
-
 img {
     width: 20px;
 }
 
-
-
             </style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
         </head>
         <body>
             <div id="root"></div>
@@ -72,61 +58,56 @@ function App() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "red";
-        ctx.fillRect(50, 50, 100, 100);
-
+        ctx.fillRect(50, 50, 30, 100);
         ctx.fillStyle = "blue";
-        ctx.beginPath();
-        ctx.arc(200, 100, 50, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.strokeStyle = "green";
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.moveTo(50, 200);
-        ctx.lineTo(250, 200);
-        ctx.stroke();
+        ctx.fillRect(80, 60, 30, 90);
+        ctx.fillStyle = "red";
+        ctx.fillRect(110, 50, 30, 100);
+        ctx.fillStyle = "blue";
+        ctx.fillRect(140, 60, 30, 90);
+        ctx.fillStyle = "red";
+        ctx.fillRect(170, 50, 30, 100);
+        ctx.fillStyle = "blue";
+        ctx.fillRect(200, 60, 30, 90);
     }, []);
 
     return (
         <div className="dashboard">
             <header>
-                <h1>Dashboard</h1>
-                <button aria-label="Open Settings">
+                <h1>Sales Dashboard</h1>
+                <button className="settings" aria-label="Open Settings">
                     <img src="/public/settings.svg" alt="Settings" />
                 </button>
             </header>
 
             <nav role="navigation">
                 <ul>
-                    <li><a href="#analytics">View Analytics</a></li>
-                    <li><a href="#reports">Download Reports</a></li>
+                    <li><a href="#moreGraphs">View More Graphs</a></li>
+                    <li><a href="#reportsData">View Sales Reports Data</a></li>
                 </ul>
             </nav>
 
             <main id="main-content">
-                <h2>Statistics</h2>
-                <p>This is a dashboard about the stats!</p>
+                <h2>Sales Statistics</h2>
+                <p>This is a dashboard about sales stats</p>
                 <canvas data-testid="canvas" ref={chartRef} id="chart" aria-label="Sales data over the past year"></canvas>
-                <button aria-label="Refresh Data">🔄</button>
+                <button aria-label="Refresh Data">Refresh</button>
             </main>
 
             <aside>
-                <h2>Notifications</h2>
+                <h2>Types:</h2>
                 <ul>
-                    <li><span role="alert" aria-label="Warning">⚠</span>Alert: System Update Required</li>
-                    <li><span role="status" aria-label="Information">ℹ</span>Info: New Report Available</li>
+                    <li><span role="alert" aria-label="Warning">Blue</span>: Projected sales</li>
+                    <li><span role="status" aria-label="Information">Red</span>: Actual sales</li>
                 </ul>
             </aside>
 
             <footer role="contentinfo">
-                <p>© 2025 Dashboard</p>
+                <p>Made by someone in React</p>
             </footer>
         </div>
     );
 }
-
-
-
                      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
             </script>
         </body>

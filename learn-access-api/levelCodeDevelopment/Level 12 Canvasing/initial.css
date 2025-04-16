@@ -1,9 +1,6 @@
 /*IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes*/
-body {
-    font-family: Arial, sans-serif;
-}
 
-button {
+.settings {
     background: none;
     border: none;
 }
