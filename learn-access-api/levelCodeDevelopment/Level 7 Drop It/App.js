@@ -1,9 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, {useRef, useState, useEffect} from "react";
 import "./styles.css";
 
 //IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself
 
-const DropDown = ({ items }) => {
+export default function App() {
+
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
@@ -41,16 +42,18 @@ const DropDown = ({ items }) => {
         }
     };
 
+    const items = ["Option 1", "Option 2", "Option 3"];
+
     return (
-        <>
+        <div className="container">
             <button
                 ref={buttonRef}
-                className="menu-button"
+                className="dropdownButton"
                 aria-haspopup="true"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}
             >
-                ☰ Menu
+                Dropdown
             </button>
             {isOpen && (
                 <ul ref={menuRef} className="dropdown" onKeyDown={handleKeyDown} tabIndex={-1}>
@@ -61,18 +64,6 @@ const DropDown = ({ items }) => {
                     ))}
                 </ul>
             )}
-        </>
-    );
-};
-
-export default function App() {
-    const items = ["Option 1", "Option 2", "Option 3"];
-
-    return (
-        <div className="container">
-            <nav role="navigation" className="navbar">
-                <DropDown items={items} />
-            </nav>
         </div>
     );
 }

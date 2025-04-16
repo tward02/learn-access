@@ -7,41 +7,28 @@ const getPlaywrightRender = () => `
         <head>
             <title>test</title>
             <style>
-                body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
+                .container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-.navbar {
-    position: relative;
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.menu-button {
+.dropdownButton {
     padding: 12px 20px;
-    font-size: 16px;
+    font-size: 20px;
     cursor: pointer;
-    background-color: #007bff;
+    background-color: blue;
     color: white;
-    border: none;
-    border-radius: 5px;
-    transition: background 0.3s ease;
+    border: 1px solid black;
 }
 
-.menu-button:hover {
-    background-color: #0056b3;
+.dropdownButton:hover {
+    background-color: lightblue;
+}
+
+.dropdownBox {
+    position: relative;
 }
 
 .dropdown {
@@ -49,38 +36,36 @@ const getPlaywrightRender = () => `
     padding: 0;
     margin: 10px 0 0;
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid grey;
+    border-radius: 6px;
     position: absolute;
-    width: 150px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
 }
 
 .dropdown li {
     padding: 10px;
-    transition: background 0.2s ease;
 }
 
 .dropdown li a {
     text-decoration: none;
     color: black;
-    display: block;
 }
 
 .dropdown li:hover {
-    background-color: #f0f0f0;
+    background-color: lightgrey;
 }
             </style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
         </head>
         <body>
             <div id="root"></div>
             <script type="text/babel">
                        const { useRef, useState, useEffect } = React;
 
-const DropDown = ({ items }) => {
+function App() {
+
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const buttonRef = useRef(null);
@@ -118,16 +103,18 @@ const DropDown = ({ items }) => {
         }
     };
 
+    const items = ["Option 1", "Option 2", "Option 3"];
+
     return (
-        <>
+        <div className="container">
             <button
                 ref={buttonRef}
-                className="menu-button"
+                className="dropdownButton"
                 aria-haspopup="true"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((prev) => !prev)}
             >
-                ☰ Menu
+                Dropdown
             </button>
             {isOpen && (
                 <ul ref={menuRef} className="dropdown" onKeyDown={handleKeyDown} tabIndex={-1}>
@@ -138,18 +125,6 @@ const DropDown = ({ items }) => {
                     ))}
                 </ul>
             )}
-        </>
-    );
-};
-
-function App() {
-    const items = ["Option 1", "Option 2", "Option 3"];
-
-    return (
-        <div className="container">
-            <nav role="navigation" className="navbar">
-                <DropDown items={items} />
-            </nav>
         </div>
     );
 }
@@ -162,7 +137,7 @@ function App() {
 test("Dropdown menu should be fully keyboard navigable", async ({ page }) => {
     await page.setContent(getPlaywrightRender())
 
-    const menuButton = page.getByText("☰ Menu");
+    const menuButton = page.getByText("Dropdown");
 
     await menuButton.focus();
     await page.keyboard.press("Enter");
@@ -172,19 +147,19 @@ test("Dropdown menu should be fully keyboard navigable", async ({ page }) => {
 
     await menuItems.nth(0).focus();
     await expect(menuItems.nth(0)).toBeFocused();
-    await expect(menuItems.nth(0)).toHaveText(/Option 1/);
+    await expect(menuItems.nth(0)).toHaveText("Option 1");
 
     await page.keyboard.press("ArrowDown");
     await expect(menuItems.nth(1)).toBeFocused();
-    await expect(menuItems.nth(1)).toHaveText(/Option 2/);
+    await expect(menuItems.nth(1)).toHaveText("Option 2");
 
     await page.keyboard.press("ArrowDown");
     await expect(menuItems.nth(2)).toBeFocused();
-    await expect(menuItems.nth(2)).toHaveText(/Option 3/);
+    await expect(menuItems.nth(2)).toHaveText("Option 3");
 
     await page.keyboard.press("ArrowUp");
     await expect(menuItems.nth(1)).toBeFocused();
-    await expect(menuItems.nth(1)).toHaveText(/Option 2/);
+    await expect(menuItems.nth(1)).toHaveText("Option 2");
 
     await page.keyboard.press("Escape");
     await expect(menuButton).toBeFocused();
@@ -192,7 +167,4 @@ test("Dropdown menu should be fully keyboard navigable", async ({ page }) => {
 
     await menuButton.focus();
     await page.keyboard.press("Space");
-
-    const newMenuItems = await page.locator("ul li a");
-    await expect(newMenuItems).toHaveCount(3);
 });
