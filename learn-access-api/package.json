@@ -7,7 +7,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
   "description": "",
   "dependencies": {
     "@axe-core/playwright": "^4.10.1",
@@ -32,8 +31,8 @@
     "pixelmatch": "^7.1.0",
     "playwright": "^1.50.1",
     "pngjs": "^7.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "uuid": "^11.0.5"
   },
   "devDependencies": {
