@@ -1,9 +1,6 @@
 /*IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself*/
-body {
-    font-family: Arial, sans-serif;
-}
 
-.app {
+.container {
     text-align: center;
     padding: 50px;
 }
@@ -14,13 +11,12 @@ body {
     text-align: center;
 }
 
-/* High Contrast Mode */
-.high-contrast {
+.highContrast {
     background-color: black;
     color: yellow;
 }
 
-.toggle-contrast {
+.toggleButton {
     margin-top: 20px;
     background-color: blue;
     color: white;

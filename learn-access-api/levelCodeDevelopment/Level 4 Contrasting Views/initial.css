@@ -1,14 +1,10 @@
 /*IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes*/
-body {
-    font-family: Arial, sans-serif;
-}
 
-.app {
+.container {
     text-align: center;
-    padding: 50px;
 }
 
-.custom-button {
+.toggleButton {
     background-color: lightgray;
     color: white;
     border: none;
@@ -18,5 +14,5 @@ body {
 }
 
 .title {
-    color: #cccccc;
+    color: lightgrey;
 }

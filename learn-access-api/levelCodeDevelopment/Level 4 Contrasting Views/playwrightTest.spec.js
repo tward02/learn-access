@@ -48,9 +48,9 @@ body {
 }
 
             </style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
         </head>
         <body>
             <div id="root"></div>
@@ -67,7 +67,7 @@ body {
         <div className={highContrast ? "appContrast" : "app"}>
             <h1 className={highContrast ? "contrastTitle" : "title"}>Color Contrast Challenge</h1>
             <button
-                className={highContrast ? "high-contrast" : "toggle-contrast"}
+                className={highContrast ? "highContrast" : "toggleButton"}
                 onClick={toggleContrast}
                 aria-label="Toggle high contrast mode"
             >Toggle High Contrast</button>
@@ -93,8 +93,6 @@ test("Initial UI should have no colour contrast issues", async ({ page }) => {
 test("Button should toggle high contrast mode, which should be different from the original UI", async ({ page }) => {
     await page.setContent(getPlaywrightRender());
 
-    await page.screenshot({ path: "screenshots/default-state.png" });
-
     const button = page.getByText("Toggle High Contrast");
     const title = await page.getByText("Color Contrast Challenge");
 
@@ -104,13 +102,10 @@ test("Button should toggle high contrast mode, which should be different from th
 
     await button.click();
 
-    await page.screenshot({ path: "screenshots/high-contrast.png" });
-
     const newTitleColour = await title.evaluate(el => getComputedStyle(el).color);
     const newButtonBackground = await button.evaluate(el => getComputedStyle(el).backgroundColor);
     const newButtonColour = await button.evaluate(el => getComputedStyle(el).color);
 
-    expect(await page.locator("button").screenshot()).not.toEqual("screenshots/default-state.png");
     expect(titleColour).not.toEqual(newTitleColour);
     expect(buttonBackground).not.toEqual(newButtonBackground);
     expect(buttonColour).not.toEqual(newButtonColour);
