@@ -7,10 +7,10 @@ import React from 'react';
 
 it("Correct roles to exist in document: banner, navigation, main, contentinfo", () => {
     render(<App />);
-    expect(screen.getByRole("banner", { hidden: true })).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { hidden: true })).toBeInTheDocument();
-    expect(screen.getByRole("main", { hidden: true })).toBeInTheDocument();
-    expect(screen.getByRole("contentinfo", { hidden: true })).toBeInTheDocument();
+    expect(screen.getByRole("banner")).toBeInTheDocument();
+    expect(screen.getByRole("navigation")).toBeInTheDocument();
+    expect(screen.getByRole("main")).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo")).toBeInTheDocument();
 });
 
 it("Semantic elements are used and the correct elements exist within each", () => {
@@ -27,15 +27,16 @@ it("Semantic elements are used and the correct elements exist within each", () =
     const main = container.querySelector("main");
     expect(main).toBeInTheDocument();
     expect(within(main).getByText("Welcome")).toBeInTheDocument();
-    expect(within(main).getByText("This is the main content area.")).toBeInTheDocument();
+    expect(within(main).getByText("This is some main content the webpage displays...")).toBeInTheDocument();
+    expect(within(main).getByText("This is some more content that is different from the stuff above.")).toBeInTheDocument();
 
     const header = container.querySelector("header");
     expect(header).toBeInTheDocument();
-    expect(within(header).getByText("Website Title")).toBeInTheDocument();
+    expect(within(header).getByText("Website Banner")).toBeInTheDocument();
 
     const footer = container.querySelector("footer");
     expect(footer).toBeInTheDocument();
-    expect(within(footer).getByText("© 2024 Company Name")).toBeInTheDocument();
+    expect(within(footer).getByText("Made by someone in React")).toBeInTheDocument();
 });
 
 it("Semantic elements have the correct roles on them", () => {
