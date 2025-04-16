@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 
 //IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
 //Inspired by my own login and registration forms created in the Next App and the tutorial form Next.js https://nextjs.org/docs/app/building-your-application/authentication

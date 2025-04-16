@@ -6,7 +6,7 @@ import React from 'react';
 //IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
 
 it("Correct roles to exist in document: banner, navigation, main, contentinfo", () => {
-    render(<App />);
+    render(<App/>);
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByRole("navigation")).toBeInTheDocument();
     expect(screen.getByRole("main")).toBeInTheDocument();
@@ -14,7 +14,7 @@ it("Correct roles to exist in document: banner, navigation, main, contentinfo", 
 });
 
 it("Semantic elements are used and the correct elements exist within each", () => {
-    const {container} = render(<App />);
+    const {container} = render(<App/>);
 
     const nav = container.querySelector("nav");
     expect(nav).toBeInTheDocument();
@@ -40,7 +40,7 @@ it("Semantic elements are used and the correct elements exist within each", () =
 });
 
 it("Semantic elements have the correct roles on them", () => {
-    const {container} = render(<App />);
+    const {container} = render(<App/>);
 
     const nav = container.querySelector("nav");
     expect(nav.getAttribute("role")).toBe("navigation");

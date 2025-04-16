@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import {render, screen} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import App from "./App";
 import React from 'react'
@@ -6,7 +6,7 @@ import React from 'react'
 //IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
 
 it("Ensure table renders correctly with all the correct data", () => {
-    render(<App />);
+    render(<App/>);
 
     const table = screen.getByRole("table");
     expect(table).toBeInTheDocument();
@@ -28,7 +28,7 @@ it("Ensure table renders correctly with all the correct data", () => {
 });
 
 it("Header scopes are assigned correctly", () => {
-    render(<App />);
+    render(<App/>);
 
     const table = screen.getByRole("table");
     expect(table).toBeInTheDocument();
@@ -49,7 +49,7 @@ it("Header scopes are assigned correctly", () => {
 });
 
 it("Table has correct caption and is assigned to the table correctly using aria-describedby", () => {
-    render(<App />);
+    render(<App/>);
 
     const table = screen.getByRole("table");
     expect(table).toBeInTheDocument();

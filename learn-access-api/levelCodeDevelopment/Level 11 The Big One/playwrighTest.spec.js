@@ -101,10 +101,10 @@ button {
 </html>
 `
 
-test("Ensures there are no accessibility issues on the page", async ({ page }) => {
+test("Ensures there are no accessibility issues on the page", async ({page}) => {
     await page.setContent(getPlaywrightRender());
 
-    const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+    const accessibilityScanResults = await new AxeBuilder({page}).analyze();
 
     const results = [];
 

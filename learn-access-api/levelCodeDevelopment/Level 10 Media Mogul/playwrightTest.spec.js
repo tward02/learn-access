@@ -85,7 +85,7 @@ function App() {
 </html>
 `
 
-test("Video has captions displayed", async ({ page }) => {
+test("Video has captions displayed", async ({page}) => {
     await page.setContent(getPlaywrightRender());
 
     await page.waitForTimeout(1000);

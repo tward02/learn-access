@@ -33,7 +33,7 @@ export default function App() {
             <header>
                 <h1>Sales Dashboard</h1>
                 <button className="settings" aria-label="Open Settings">
-                    <img src="/public/settings.svg" alt="Settings" />
+                    <img src="/public/settings.svg" alt="Settings"/>
                 </button>
             </header>
 
@@ -47,7 +47,8 @@ export default function App() {
             <main id="main-content">
                 <h2>Sales Statistics</h2>
                 <p>This is a dashboard about sales stats</p>
-                <canvas data-testid="canvas" ref={chartRef} id="chart" aria-label="Sales data over the past year"></canvas>
+                <canvas data-testid="canvas" ref={chartRef} id="chart"
+                        aria-label="Sales data over the past year"></canvas>
                 <button aria-label="Refresh Data">Refresh</button>
             </main>
 

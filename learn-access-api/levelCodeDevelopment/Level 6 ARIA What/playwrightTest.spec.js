@@ -1,9 +1,9 @@
-import { test, expect } from "@playwright/test";
-import { injectAxe, checkA11y } from "axe-playwright";
+import {test, expect} from "@playwright/test";
+import {injectAxe, checkA11y} from "axe-playwright";
 import React from "react";
 import fs from "fs-extra";
 import pixelmatch from "pixelmatch";
-import { PNG } from "pngjs";
+import {PNG} from "pngjs";
 import path from "path";
 
 //IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
@@ -86,22 +86,22 @@ const getPlaywrightRender = () => `
 </html>
 `
 
-test("Page has no accessibility issues due to roles", async ({ page }) => {
+test("Page has no accessibility issues due to roles", async ({page}) => {
     await page.setContent(getPlaywrightRender());
 
     await injectAxe(page);
-    await checkA11y(page, null, { runOnly: ["wcag2a", "wcag2aa"] });
+    await checkA11y(page, null, {runOnly: ["wcag2a", "wcag2aa"]});
 });
 
 
-test("Ensure page layout does not change visually", async ({ page }) => {
+test("Ensure page layout does not change visually", async ({page}) => {
     //Adapted from https://shiv-jirwankar.medium.com/visual-ui-testing-using-pixelmatch-library-and-playwright-1ead6d615a43
     await page.setContent(getPlaywrightRender());
 
     const screenshotPath = "screenshots/Level6Page.png";
-    const tempScreenshotPath = path.join(__dirname , "temp.png");
+    const tempScreenshotPath = path.join(__dirname, "temp.png");
 
-    await page.screenshot({ path: tempScreenshotPath });
+    await page.screenshot({path: tempScreenshotPath});
 
     if (!fs.existsSync(screenshotPath)) {
         throw new Error(`Baseline screenshot not found: ${screenshotPath}`);
@@ -113,14 +113,14 @@ test("Ensure page layout does not change visually", async ({ page }) => {
     expect(expectedImage.width).toBe(actualImage.width);
     expect(expectedImage.height).toBe(actualImage.height);
 
-    const diff = new PNG({ width: expectedImage.width, height: expectedImage.height });
+    const diff = new PNG({width: expectedImage.width, height: expectedImage.height});
     const pixelDiff = pixelmatch(
         expectedImage.data,
         actualImage.data,
         diff.data,
         expectedImage.width,
         expectedImage.height,
-        { threshold: 0.1 }
+        {threshold: 0.1}
     );
 
     expect(pixelDiff).toBe(0);

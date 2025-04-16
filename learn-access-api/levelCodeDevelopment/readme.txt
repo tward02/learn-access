@@ -5,7 +5,8 @@ To generate the level code and tests some things were adapted from other sources
 2. The official Jest documentation - https://archive.jestjs.io/docs/en/22.x/getting-started.html
 3. The official WCAG documentation - https://www.w3.org/WAI/standards-guidelines/wcag/docs/
 4. The official React accessibility documentation - https://legacy.reactjs.org/docs/accessibility.html
-5. Refer to the code actually being used in the server.js file explaining how and why the render method was chosen and the justification for the libraries used
+5. Any more specific references can be found in the individual files where they are used
+6. Refer to the code actually being used in the server.js file explaining how and why the render method was chosen and the justification for the libraries used
 
 Each Level Folder Contains:
 1. Initial.js - this is the initial React code that will be stored in the database and loaded when a level is started

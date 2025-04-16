@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import {useState, useRef} from "react";
 
 //IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
 //inspired and adapted from https://legacy.reactjs.org/docs/accessibility.html

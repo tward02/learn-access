@@ -33,7 +33,7 @@ export default function App() {
         <div className="dashboard">
             <header>
                 <h2>Sales Dashboard</h2>
-                <button className="settings"><img src="/public/settings.svg" /></button>
+                <button className="settings"><img src="/public/settings.svg"/></button>
             </header>
 
             <div>

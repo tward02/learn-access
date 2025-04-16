@@ -18,24 +18,24 @@ beforeAll(() => {
 });
 
 it("Renders the main dashboard elements correctly", () => {
-    render(<App />);
+    render(<App/>);
 
-    expect(screen.getByRole("heading", {name: "Sales Dashboard" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", {name: "Sales Dashboard"})).toBeInTheDocument();
     const buttons = screen.getAllByRole("button");
     expect(buttons.length).toBe(2);
     const images = screen.getAllByRole("img");
     expect(images.length).toBe(1);
 
-    expect(screen.getByRole("link", { name: "View More Graphs" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "View Sales Reports Data" })).toBeInTheDocument();
+    expect(screen.getByRole("link", {name: "View More Graphs"})).toBeInTheDocument();
+    expect(screen.getByRole("link", {name: "View Sales Reports Data"})).toBeInTheDocument();
 
-    expect(screen.getByRole("heading", {name: "Sales Statistics" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", {name: "Sales Statistics"})).toBeInTheDocument();
     expect(screen.getByText("This is a dashboard about sales stats")).toBeInTheDocument();
     expect(screen.getByText("Refresh")).toBeInTheDocument();
 
     expect(screen.getByTestId("canvas")).toBeInTheDocument();
 
-    expect(screen.getByRole("heading", {name: "Types:" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", {name: "Types:"})).toBeInTheDocument();
     expect(screen.getByText(": Projected sales")).toBeInTheDocument();
     expect(screen.getByText(": Actual sales")).toBeInTheDocument();
 

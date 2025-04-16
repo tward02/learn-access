@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef, useEffect } from "react";
+import {useState, useRef, useEffect} from "react";
 import "./styles.css";
 
 //IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself
@@ -50,7 +50,8 @@ export default function App() {
                 <div className="modal">
                     <h2>Accessible Modal</h2>
                     <p>Press Escape to close or use Tab to navigate.</p>
-                    <button ref={closeButtonRef} className={"modalButton"} onClick={handleModalClose}>Close Modal</button>
+                    <button ref={closeButtonRef} className={"modalButton"} onClick={handleModalClose}>Close Modal
+                    </button>
                 </div>
             </div>}
         </div>

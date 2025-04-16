@@ -6,7 +6,7 @@ import React from 'react';
 //IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
 
 it("UI render with all correct components", () => {
-    render(<App />);
+    render(<App/>);
     expect(screen.getByText("Media Gallery")).toBeInTheDocument();
     const images = screen.getAllByRole("img");
     expect(images.length).toBe(3);
@@ -22,7 +22,7 @@ it("UI render with all correct components", () => {
 });
 
 it("All images have non-empty alt attributes and they are appropriate to the image", () => {
-    render(<App />);
+    render(<App/>);
     const images = screen.getAllByRole("img");
     expect(images.length).toBe(3);
 
@@ -45,7 +45,7 @@ it("All images have non-empty alt attributes and they are appropriate to the ima
 });
 
 it("Video description exists and is linked to video element", () => {
-    render(<App />);
+    render(<App/>);
 
     const description = screen.getByText("This video is of some ducks eating");
     expect(description).toBeInTheDocument();
@@ -57,7 +57,7 @@ it("Video description exists and is linked to video element", () => {
 });
 
 it("Video has correct captions added onto it", () => {
-    render(<App />);
+    render(<App/>);
     const track = screen.getByTestId("video").querySelector("track");
     expect(track).toHaveAttribute("src", "/public/captions.vtt");
     expect(track).toHaveAttribute("kind", "captions");
@@ -66,6 +66,6 @@ it("Video has correct captions added onto it", () => {
 });
 
 it("Video has correct transcript for it", () => {
-    render(<App />);
+    render(<App/>);
     expect(screen.getByText("[Narrator] Here are some ducks. They appear to be looking for food and eating. [Ducks] Quack Quack Quack.")).toBeInTheDocument();
 });
