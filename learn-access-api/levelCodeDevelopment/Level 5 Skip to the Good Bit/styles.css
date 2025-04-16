@@ -1,24 +1,4 @@
 /*IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself*/
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 10px;
-    background: black;
-    color: white;
-    padding: 8px;
-    z-index: 100;
-    text-decoration: none;
-}
-
-.skip-link:focus {
-    top: 10px;
-}
 
 .navbar {
     background-color: #333;
@@ -37,11 +17,16 @@ body {
     text-decoration: none;
 }
 
-main {
+.title {
+    border-bottom: 1px solid grey;
+}
+
+
+.container {
     padding: 20px;
 }
 
-label {
+.inputLabel {
     display: block;
     margin-bottom: 5px;
 }

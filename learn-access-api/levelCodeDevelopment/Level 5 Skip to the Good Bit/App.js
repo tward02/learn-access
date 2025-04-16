@@ -26,9 +26,10 @@ function App() {
                 </ul>
             </nav>
             <main>
-                <h1>Welcome to Our Site</h1>
-                <label htmlFor="main-input">Here is some content you can skip to.</label>
-                <input ref={mainHeadingRef} title="main-input" id="main-input" name="main-input"></input>
+                <h1 className={"title"}>Welcome to a Website</h1>
+                <p>Here is some not very relevant information</p>
+                <label className={"inputLabel"} htmlFor="mainInput">Input Data Here:</label>
+                <input ref={mainHeadingRef} id="mainInput" placeholder="skip to this input"></input>
             </main>
         </div>
     )

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import React from "react";
+import React, {useRef} from "react";
 
 //IMPORTANT - Actual tests are stored and retrieved from database - this is just here for testing and development purposes
 
@@ -8,27 +8,6 @@ const getPlaywrightRender = () => `
         <head>
             <title>test</title>
             <style>
-                body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 10px;
-    background: black;
-    color: white;
-    padding: 8px;
-    z-index: 100;
-    text-decoration: none;
-}
-
-.skip-link:focus {
-    top: 10px;
-}
-
 .navbar {
     background-color: #333;
     padding: 10px;
@@ -46,49 +25,55 @@ const getPlaywrightRender = () => `
     text-decoration: none;
 }
 
-main {
+.title {
+    border-bottom: 1px solid grey;
+}
+
+
+.container {
     padding: 20px;
 }
 
-label {
+.inputLabel {
     display: block;
     margin-bottom: 5px;
 }
 
             </style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
         </head>
         <body>
             <div id="root"></div>
             <script type="text/babel">
             const {useRef} = React;
                 function App() {
-                    
-                    const mainHeadingRef = useRef(null);
-                    
-                    function handleSkipClick(event) {
-    event.preventDefault(); // Prevent default anchor behavior
-    mainHeadingRef.current?.focus();
-  }
-                    
+
+    const mainHeadingRef = useRef(null);
+
+    function handleSkipClick(event) {
+        event.preventDefault();
+        mainHeadingRef.current?.focus();
+    }
+
     return (
         <div>
             <nav className="navbar">
                 <ul>
                     <li><button onClick={handleSkipClick}>
-                Skip to Content
-            </button></li>
+                        Skip to Content
+                    </button></li>
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
             <main>
-                <h1>Welcome to Our Site</h1>
-                <label htmlFor="main-input">Here is some content you can skip to.</label>
-                <input ref={mainHeadingRef} title="main-input" id="main-input" name="main-input"></input>
+                <h1 className={"title"}>Welcome to Our Site</h1>
+                <p>Here is some not very relevant information</p>
+                <label className={"inputLabel"} htmlFor="mainInput">Input Data Here:</label>
+                <input ref={mainHeadingRef} id="mainInput" placeholder="skip to this input"></input>
             </main>
         </div>
     )
@@ -104,23 +89,23 @@ test("Skip link should be first item tabbed to on page and keyboard navigable", 
 
     await page.keyboard.press("Tab");
 
-    const skipLink = page.getByText("Skip to Content");
-    await expect(skipLink).toBeFocused();
-    await expect(skipLink).toBeVisible();
+    const skipButton = page.getByText("Skip to Content");
+    await expect(skipButton).toBeFocused();
+    await expect(skipButton).toBeVisible();
 
     await page.keyboard.press("Enter");
 
-    const mainContent = page.getByTitle("main-input")
-    await expect(mainContent).toBeFocused();
+    const mainInput = page.getByPlaceholder("skip to this input")
+    await expect(mainInput).toBeFocused();
 });
 
 test("Pressing the skip link should focus on the input field", async ({ page }) => {
     await page.setContent(getPlaywrightRender());
 
-    const skipLink = page.getByText("Skip to Content");
+    const skipButton = page.getByText("Skip to Content");
 
-    await skipLink.click();
+    await skipButton.click();
 
-    const mainContent = page.getByTitle("main-input")
-    await expect(mainContent).toBeFocused();
+    const mainInput = page.getByPlaceholder("skip to this input")
+    await expect(mainInput).toBeFocused();
 });
