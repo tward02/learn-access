@@ -9,12 +9,6 @@ const getPlaywrightRender = () => `
         <head>
             <title>test</title>
             <style>
-                body {
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    color: #222;
-}
-
 .header {
     background-color: #0055aa;
     color: white;
@@ -35,7 +29,7 @@ nav a {
     font-weight: bold;
 }
 
-.main-content {
+.mainContent {
     padding: 20px;
 }
 
@@ -55,9 +49,9 @@ button {
 }
 
             </style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
         </head>
         <body>
             <div id="root"></div>
@@ -66,7 +60,7 @@ button {
     return (
         <div>
             <header className="header">
-                <h1>Welcome to the Site</h1>
+                <h1>Website Name</h1>
             </header>
 
             <nav aria-label="Main Navigation">
@@ -77,33 +71,30 @@ button {
                 </ul>
             </nav>
 
-            <main className="main-content">
-                <h1>Main Heading</h1>
-                <p>Here is some important text.</p>
-                <img src="/public/cat.svg" alt="A cute rabbit yawning" />
+            <main className="mainContent">
+                <h1>Welcome</h1>
+                <p>This is some main content the webpage displays...</p>
+                <img src="/public/cat.svg" alt="A cat meow"/>
 
-                <button onClick={() => alert("Clicked!")}>Click Me</button>
-            
+                <button onClick={() => alert("Clicked!")}>Cat Button</button>
 
-            <form>
-                <label htmlFor="name">Name:</label>
-                <input type="text" id="name" name="name" />
 
-                <label htmlFor="email">Email:</label>
-                <input type="email" id="email" name="email" />
+                <form>
+                    <label htmlFor="name">Name:</label>
+                    <input type="text" id="name" name="name"/>
 
-                <button type="submit">Submit</button>
-            </form>
+                    <label htmlFor="email">Email:</label>
+                    <input type="email" id="email" name="email"/>
+
+                    <button type="submit">Submit</button>
+                </form>
             </main>
-            
-
             <footer className="footer">
-                <p>© 2025 My Website</p>
+                <p className={"footer"}>Made by someone in React</p>
             </footer>
         </div>
     );
 }
-
                      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
             </script>
         </body>

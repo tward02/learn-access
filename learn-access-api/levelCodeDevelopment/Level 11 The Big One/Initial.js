@@ -6,19 +6,19 @@ import "./styles.css";
 export default function App() {
     return (
         <div>
-            <div className="header">Welcome to the Site</div>
-            <nav>
+            <div className="header">Website Name</div>
+            <div className={"navbar"}>
                 <ul>
                     <li><span>Home</span></li>
                     <li><span>About</span></li>
                     <li><span>Contact</span></li>
                 </ul>
-            </nav>
-            <div className="main-content">
-                <h3>Main Heading</h3>
-                <p>Here is some important text.</p>
+            </div>
+            <div className="mainContent">
+                <h3>Welcome</h3>
+                <p>This is some main content the webpage displays...</p>
                 <img src="/public/cat.svg"/>
-                <button onClick="alert('Clicked!')">Click Me</button>
+                <button onClick="alert('Clicked!')">Cat Button</button>
             </div>
             <form>
                 <div>
@@ -29,7 +29,7 @@ export default function App() {
                     <button>Submit</button>
                 </div>
             </form>
-            <div className="footer">© 2025 My Website</div>
+            <p className={"footer"}>Made by someone in React</p>
         </div>
     );
 }

@@ -7,10 +7,10 @@ export default function App() {
     return (
         <div>
             <header className="header">
-                <h1>Welcome to the Site</h1>
+                <h1>Website Name</h1>
             </header>
 
-            <nav aria-label="Main Navigation">
+            <nav className={"navbar"} aria-label="Main Navigation">
                 <ul>
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
@@ -18,12 +18,12 @@ export default function App() {
                 </ul>
             </nav>
 
-            <main className="main-content">
-                <h1>Main Heading</h1>
-                <p>Here is some important text.</p>
-                <img src="/public/cat.svg" alt="A cute rabbit yawning"/>
+            <main className="mainContent">
+                <h1>Welcome</h1>
+                <p>This is some main content the webpage displays...</p>
+                <img src="/public/cat.svg" alt="A cat meow"/>
 
-                <button onClick={() => alert("Clicked!")}>Click Me</button>
+                <button onClick={() => alert("Clicked!")}>Cat Button</button>
 
 
                 <form>
@@ -37,7 +37,7 @@ export default function App() {
                 </form>
             </main>
             <footer className="footer">
-                <p>© 2025 My Website</p>
+                <p className={"footer"}>Made by someone in React</p>
             </footer>
         </div>
     );

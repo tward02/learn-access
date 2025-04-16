@@ -1,0 +1,34 @@
+/*IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes*/
+.header {
+    font-size: 30px;
+    color: #888;
+}
+
+.mainContent {
+    background: red;
+}
+
+.footer {
+    font-size: 10px;
+}
+
+img {
+    width: 50px;
+}
+
+.navbar {
+    background-color: lightgrey;
+    padding: 10px;
+}
+
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+}
