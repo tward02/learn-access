@@ -1,28 +1,17 @@
 /*IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself*/
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-}
 
-.app {
+.container {
     max-width: 400px;
-    margin: 0 auto;
+    margin: auto;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
+.formGroup {
+    margin-bottom: 20px;
 }
 
 input {
     width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
+    padding: 10px;
 }
 
 .error {

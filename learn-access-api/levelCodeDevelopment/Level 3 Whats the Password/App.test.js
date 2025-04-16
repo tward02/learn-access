@@ -7,7 +7,7 @@ import App from "./App";
 
 it("Form renders correctly with all required components", () => {
     const result = render(<App/>);
-    expect(screen.getByText("Accessible Login Form")).toBeInTheDocument();
+    expect(screen.getByText("Login Form")).toBeInTheDocument();
     expect(screen.getByText("Email:")).toBeInTheDocument();
     expect(screen.getByText("Password:")).toBeInTheDocument();
     expect(screen.getByText("Login")).toBeInTheDocument();
