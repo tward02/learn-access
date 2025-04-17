@@ -6,7 +6,7 @@ import {createUser, getUser} from "@/app/lib/DAO/userDAO";
 import {redirect} from "next/navigation";
 import {createSession, deleteSession} from "@/app/lib/session";
 
-//adapted from https://nextjs.org/docs/app/building-your-application/authentication
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication, Title: Authentication, Organisation: Vercel, Accessed 11/02/2025
 //server side function to validate and create a new user and session
 export async function signup(state, formData) {
     const validatedFields = SignupFormSchema.safeParse({

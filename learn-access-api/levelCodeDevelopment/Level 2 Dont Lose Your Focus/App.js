@@ -3,7 +3,7 @@ import {useState, useRef, useEffect} from "react";
 import "./styles.css";
 
 //IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself
-//inspired and adapted from https://legacy.reactjs.org/docs/accessibility.html
+//inspired and adapted from https://legacy.reactjs.org/docs/accessibility.html, Title: Accessibility, Organisation: React, Accessed 05/03/2025
 
 export default function App() {
     const [modalOpen, setModalOpen] = useState(false);

@@ -1,6 +1,6 @@
 import {z} from 'zod'
 
-//adapted from https://nextjs.org/docs/app/building-your-application/authentication
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication, Title: Authentication, Organisation: Vercel, Accessed 11/02/2025
 //validates login and register forms
 export const SignupFormSchema = z.object({
     name: z

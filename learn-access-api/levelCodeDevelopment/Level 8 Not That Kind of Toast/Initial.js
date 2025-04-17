@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./styles.css";
 
 //IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
-//adapted from https://blog.logrocket.com/how-to-create-custom-toast-component-react/
+//adapted from https://blog.logrocket.com/how-to-create-custom-toast-component-react/, Title: How to create a custom toast component with React, Author: Uzochukwu Eddie Odozi, Accessed 10/03/2025
 
 const ToastMessage = ({ message, type, onClose }) => {
     useEffect(() => {

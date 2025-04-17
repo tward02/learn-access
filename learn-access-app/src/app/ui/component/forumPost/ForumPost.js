@@ -25,7 +25,7 @@ import {useRouter} from "next/navigation";
 //representa a post in a forum
 const ForumPost = ({currentUser, post, updateLikes}) => {
 
-    //the drop down part was adapted from https://mui.com/material-ui/react-card/?srsltid=AfmBOoobtfeCJGpWXMCiBmQldTGBlUy-SyPSKk8Rx6hkH6FAsXnmBmZz
+    //the drop down part was adapted from https://mui.com/material-ui/react-card/?srsltid=AfmBOoobtfeCJGpWXMCiBmQldTGBlUy-SyPSKk8Rx6hkH6FAsXnmBmZz, Title: Card, Organisation: MUI, Accessed 05/03/2025
     const ExpandMore = styled((props) => {
         const {expand, ...other} = props;
         return <IconButton {...other} />;

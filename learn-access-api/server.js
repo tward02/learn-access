@@ -26,9 +26,9 @@ app.get("/hello", (req, res) => {
 });
 
 //HTML code used to render the React component sent from the frontend in order for playwright tests to be executed on it, CDN used to fetch libraries for efficiency
-//adapted from https://www.w3schools.com/react/react_render.asp
-//A CDN was used to avoid having to use a Web Bundler, the specific library versions match thos eused on the frontend
-//https://legacy.reactjs.org/docs/cdn-links.html - details cdn access and versions
+//adapted from https://www.w3schools.com/react/react_render.asp, Title: React Render HTML, Organisation: W3Schools, Accessed 19/02/2025
+//A CDN was used to avoid having to use a Web Bundler, the specific library versions match those used on the frontend
+//https://legacy.reactjs.org/docs/cdn-links.html - details cdn access and versions, Title: CDN Links, Organisation: React, Accessed 19/02/2025
 const getPlaywrightRender = (reactCode, css) => `
 <html lang="en">
         <head>

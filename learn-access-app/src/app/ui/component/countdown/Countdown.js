@@ -3,7 +3,7 @@ import modules from "./countdown.module.css"
 
 const Countdown = ({targetDate}) => {
 
-    //adapted from https://www.w3schools.com/howto/howto_js_countdown.asp
+    //adapted from https://www.w3schools.com/howto/howto_js_countdown.asp, Title: Creating a Countdown Timer, Organisation: W3Schools, Accessed 08/02/2025
     const calculateTimeLeft = () => {
         const difference = Date.parse(targetDate) - new Date();
 

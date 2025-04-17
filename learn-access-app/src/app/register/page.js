@@ -8,7 +8,7 @@ import Person2Icon from '@mui/icons-material/Person2';
 import {ArrowBack} from "@mui/icons-material";
 import {useRouter} from 'next/navigation'
 
-//adapted from https://nextjs.org/docs/app/building-your-application/authentication
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication, Title: Authentication, Organisation: Vercel, Accessed 11/02/2025
 export default function Register() {
 
     const router = useRouter();

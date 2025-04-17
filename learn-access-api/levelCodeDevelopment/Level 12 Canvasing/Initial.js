@@ -2,7 +2,7 @@ import "./styles.css";
 import React, {useRef, useEffect} from 'react';
 
 //IMPORTANT - Actual initial level code is stored in the database, this is just here for testing and development purposes
-//canvas from https://www.w3schools.com/graphics/canvas_rectangles.asp
+//canvas from https://www.w3schools.com/graphics/canvas_rectangles.asp, Title: HTML Canvas Rectangles, Organisation: W3Schools, Accessed 12/03/2025
 
 export default function App() {
 

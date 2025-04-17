@@ -8,7 +8,7 @@ export const formatFiles = (files) => {
     }, {});
 }
 
-//adapted from https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
+//adapted from https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript, Title: Create a hexadecimal colour based on a string with JavaScript, Organisation: StackOverflow, Author: Joe Freeman, Accessed 05/02/2025
 //hashes username into readable background co,lour for avatar
 export const getAvatarColour = (username) => {
     const hash = [...username].reduce((acc, char) => acc + char.charCodeAt(0), 0);
