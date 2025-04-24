@@ -1,0 +1,32 @@
+/*IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself*/
+
+.container {
+    text-align: center;
+    padding: 50px;
+}
+
+.modalButton {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.modalBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+}

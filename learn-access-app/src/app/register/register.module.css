@@ -24,7 +24,7 @@
     padding: 2rem;
     max-width: 400px;
     width: 100%;
-    background-color: #ffffff;
+    background-color: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -47,7 +47,7 @@
 }
 
 .icon {
-    color: #666666;
+    color: grey;
 }
 
 .inputGroup {
@@ -75,13 +75,13 @@
 }
 
 .error {
-    color: #d32f2f;
-    font-size: 0.875rem;
+    color: red;
+    font-size: 1rem;
 }
 
 .errorList {
-    font-size: 0.875rem;
-    color: #d32f2f;
+    font-size: 1rem;
+    color: red;
 }
 
 .errorItems {

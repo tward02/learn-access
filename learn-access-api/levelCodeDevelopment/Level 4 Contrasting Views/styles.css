@@ -1,0 +1,26 @@
+/*IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself*/
+
+.container {
+    text-align: center;
+    padding: 50px;
+}
+
+.appContrast {
+    background-color: green;
+    padding: 50px;
+    text-align: center;
+}
+
+.highContrast {
+    background-color: black;
+    color: yellow;
+}
+
+.toggleButton {
+    margin-top: 20px;
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}

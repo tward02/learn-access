@@ -1,0 +1,79 @@
+This file details all the hints added to each level, they are accessed and retrieved form the database when loading a level
+
+Level 1:
+
+Hint - Not sure you really need a hint for this one, but if you insist... Try changing the color attribute in the styles.css file.
+
+Level 2:
+
+Focus Switching - Consider using a references (useRef) to track and switch the focus from and to different elements being displayed. If you add a ref attribute to an input with a reference as the value, then whenever you call inputRef.current.focus(), the focus will switch to that input.
+
+Keyboard Navigation - Try adding keyboard listeners when the modal is open which will effect the status of the modal. Look into using document.addEventListener. This can be used to capture events, then you can check what key was being pressed and carry out an action from there.
+
+Level 3:
+
+HTML For - Make sure each label has an htmlFor attribute and the attribute value corresponds to the input it is for.
+
+Validation - You could try to create a validation function that runs whenever the form is submitted, checking passwords are not empty and that emails are of the form test@test.test (you could use regex).
+
+Errors - Try creating a new state variable which is set to true when the form is not valid - using this you can then display potential error messaged only when that variable is true. Make sure these messages are equal to what is specified in the objectives and have the correct roles on them.
+
+Level 4:
+
+Contrast - Have a go at messing around with the styles and seeing what contrasts they produce by running the tests. You could also use a contrast checker website.
+
+Toggle - Try creating a state variable that is toggled true or false whenever the toggle button is clicked, use this state variable to then control what styles are applied to each element.
+
+Level 5:
+
+Focus Order - Best place for the button to go is at the front of the navbar elements list, this ensures that it will always be first in the focus order and can be easily found and used by keyboard users.
+
+Switching Focus - Try using the same technique used in order to switch the focus on the Keeping Focus level (Try using a reference again).
+
+Level 6:
+
+Semantic HTML - These elements behave structurally the same as using a <div> or <section? element but allow assistive technologies to interpret the structure of the page better. The elements needed for this level are very self explanatory and the page is laid out nicely to accommodate this.
+
+Roles - The required roles also add more information for the assistive technologies to use, think about which one would suite each semantic element the best.
+
+Level 7:
+
+Keyboard Navigation - It might be worth looking back at the Keeping Focus level in order to remind yourself how to handle keyboard events in React as well as focus switching. Try using references in a list, each corresponding to an item in the drop down, whenever a key is pressed choose which refence in the list to switch the focus to.
+
+Roles - Remember to add attributes to the correct elements, aria-haspopup should indicate whether the specified element has a popup, aria-expanded should also go on any popup elements, indicating whether the popup is open or not. Any items in menus should be indicated by using the menuitem role.
+
+ARIA Labels - Ensure that focusable list elements have ARIA label son them so that screen readers can interpret them and read out their contents.
+
+Level 8:
+
+Roles - Ensure the aria-live attribute is on the main body of the toast message and it has the correct value for the toast type. assertive for errors and polite for anything else. The message itself should also a role of status.
+
+Closing - To close the toast message it needs to be removed from the list of toast messages stored in the "toasts" state variable. Try adding a function that filters out the ones that match the id that has been closed. Also make sure that the close button has an aria label on it as there is no text describing what the button does.
+
+Keyboard Navigation - As the toast message now has a focusable close button on it should be within the focus order, however if not you can try adding a tabindex attribute which will effect the tab order of the toast message.
+
+Level 9:
+
+Caption - Ensure that the caption text is correct and linked to the table using the aria-describedby attribute on the table with the attribute value being the id of the caption. This ensures assistive technologies know what the caption is for.
+
+Scopes - Each table heading must have a particular scope: "row" if the heading is for a table row and "col" if the heading is for a column. Make sure that every <th> element has a scope attribute and that its value is correct.
+
+Level 10:
+
+Alt Text - Make sure an alt attribute is added to every image. Ensure that this is appropriate and specific to what the image is displaying. You won't pass the tests if the alt text is not specific enough.
+
+Captions - Adding video captions is fairly easy, you just need to add an HTML <track> element within the <video> element and pass it an src attribute (the captions.vtt file), a mind attribute with the value "captions", a label describing what the captions are and a default attribute set to true ensuring that they are on by default.
+
+Description - Make sure that you add the description specified and link it to the video with an id and aria-described by attribute like you did in the previous level. Also make sure that the transcript is displayed with all the captions from the VTT file separated with a full stop and space. E.g. [Narrator] Here is a line from the VTT file. Here is another line. etc...
+
+Level 11:
+
+Hint - Look back at previous levels to see how you solved the accessibility issues in them. Also try running the test suite to see what accessibility issues exist on the page.
+
+Level 12:
+
+Canvas - A canvas should treated like any other image or media object. It needs an appropriate alt attribute.
+
+ARIA Labels - On this page there are some buttons/elements without any ARIA labels, ensure that these are added and are appropriate for the element.
+
+Other Issues - Look back at previous levels to see how you solved the accessibility issues in them. Also try running the test suite to see what accessibility issues exist on the page.

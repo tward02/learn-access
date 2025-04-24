@@ -1,0 +1,14 @@
+/*IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid lightgrey;
+    padding: 10px;
+}
+
+th {
+    background-color: lightgrey;
+}

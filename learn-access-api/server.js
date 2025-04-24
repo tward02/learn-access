@@ -26,15 +26,17 @@ app.get("/hello", (req, res) => {
 });
 
 //HTML code used to render the React component sent from the frontend in order for playwright tests to be executed on it, CDN used to fetch libraries for efficiency
-//adapted from https://www.w3schools.com/react/react_render.asp
+//adapted from https://www.w3schools.com/react/react_render.asp, Title: React Render HTML, Organisation: W3Schools, Accessed 19/02/2025
+//A CDN was used to avoid having to use a Web Bundler, the specific library versions match those used on the frontend
+//https://legacy.reactjs.org/docs/cdn-links.html - details cdn access and versions, Title: CDN Links, Organisation: React, Accessed 19/02/2025
 const getPlaywrightRender = (reactCode, css) => `
 <html lang="en">
         <head>
             <title>test</title>
             <style>${css}</style>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+            <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
         </head>
         <body>
             <div id="root"></div>
@@ -46,9 +48,11 @@ const getPlaywrightRender = (reactCode, css) => `
 </html>
 `
 
-//rejects any code that is attempting to do harm to the testing endpoints
+//rejects any code that is attempting to do harm to the testing endpoints. This list was gathered through research from various sources on the Web:
+//https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS, these libraries are also ones that I have had experience with and know about already
+//To help offset the potential lack of exhaustive security it is also important to heavily limit file permissions within the "testing" folder - this has be done on deployed versions and execute within a sandbox
 function isSafeReactCode(code) {
-    const forbiddenPatterns = [
+    const badCodeRegex = [
         /\bfs\b/,
         /\bpath\b/,
         /\bchild_process\b/,
@@ -73,10 +77,10 @@ function isSafeReactCode(code) {
 
     const codeWithoutStringsOrHtml = code.replace(stringAndHtmlRegex, '');
 
-    return !forbiddenPatterns.some(pattern => pattern.test(codeWithoutStringsOrHtml));
+    return !badCodeRegex.some(pattern => pattern.test(codeWithoutStringsOrHtml));
 }
 
-//accesses the database in order to authenticate user
+//accesses the database in order to authenticate user (similar function exists in Next.js project)
 const getUserById = async (id) => {
     const {rows} = (await sql`
         SELECT id, username, password
@@ -86,7 +90,7 @@ const getUserById = async (id) => {
     return rows[0];
 }
 
-//fetches tests from database to be executed on the sent code
+//fetches tests from database to be executed on the sent code (similar function exists in Next.js project)
 const getTests = async (levelId) => {
     const {rows} = (await sql`
         SELECT *
@@ -99,7 +103,7 @@ const getTests = async (levelId) => {
     return rows;
 }
 
-//gets level from database as well as whther it is availible to the user so that we can authenticate them
+//gets level from database as well as whether it is available to the user so that we can authenticate them (similar function exists in Next.js project)
 const getLevel = async (userId, levelId) => {
     const result = await sql`
         WITH user_completed_levels AS (SELECT levelID
@@ -141,7 +145,7 @@ const authenticate = async (user) => {
 //searches for things defined as template literals (``) and converts them to regular strings so that code can be rendered correctly for playwright tests helped by https://regex101.com/
 const convertTemplateLiteralsToStrings = (code) => {
     return code.replace(/`([^`]*?)`/g, (match, content) => {
-        const transformedContent = content.replace(/\$\{([^}]+)\}/g, '" + $1 + "');
+        const transformedContent = content.replace(/\$\{([^}]+)}/g, '" + $1 + "');
         return `"${transformedContent}"`;
     });
 }
@@ -228,7 +232,7 @@ const runPlaywrightTest = async (testDir, test, code, css, index) => {
     try {
         //runs playwright tests using console command and return results as JSON
         const {stdout} = await execPromise(`npx playwright test ${testPath.replace(/\\/g, "/")} --reporter=json`);
-        //if pass then parse json results and process al tests into repsosne object
+        //if pass then parse json results and process al tests into response object
         const results = JSON.parse(stdout);
         results.suites.forEach((suite) => {
             suite.specs.forEach(spec => {
@@ -308,9 +312,7 @@ const runTests = async (levelId, code, css) => {
     return results.flatMap(subArray => subArray);
 }
 
-//TODO when deploying run npx playwright install
-
-//handles running tests and passing the level when suer presses the "submit" button
+//handles running tests for the level parameter passed to the endpoint - it then parses results and returns is all the tests passed
 app.post('/submit/:levelId', async (req, res) => {
 
     //validates request body
@@ -363,7 +365,7 @@ app.post('/submit/:levelId', async (req, res) => {
     res.status(200).json({success: passed});
 });
 
-//handles running tests when user presses the "test" button
+//handles running tests for the level parameter passed to the endpoint - it then parses results and returns to frontend
 app.post('/test/:levelId', async (req, res) => {
 
     //validates request

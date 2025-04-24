@@ -5,7 +5,7 @@ import {cookies} from 'next/headers'
 const secretKey = process.env.SESSION_SECRET
 const encodedKey = new TextEncoder().encode(secretKey)
 
-//adapted from https://nextjs.org/docs/app/building-your-application/authentication
+//adapted from https://nextjs.org/docs/app/building-your-application/authentication, Title: Authentication, Organisation: Vercel, Accessed 11/02/2025
 //encrypts session cookie
 export async function encrypt(payload) {
     return new SignJWT(payload)
@@ -42,7 +42,7 @@ export async function createSession(userId) {
     })
 }
 
-//deleets a session cookie
+//deletes a session cookie
 export async function deleteSession() {
     const cookieStore = await cookies()
     cookieStore.delete('session')

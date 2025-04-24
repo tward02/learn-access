@@ -1,0 +1,21 @@
+/*IMPORTANT - this is just a model solution for testing purposes, this code doesn't actually run and isn't used the application itself*/
+.container {
+    text-align: center;
+}
+
+.images {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.images img {
+    width: 200px;
+    border: 2px solid #ddd;
+}
+
+.videoPlayer {
+    height: 250px;
+    margin-top: 20px;
+}
