@@ -23,7 +23,7 @@ export default function App() {
                 <p>This is some main content the webpage displays...</p>
                 <img src="/public/cat.svg" alt="A cat meow"/>
 
-                <button onClick={() => alert("Clicked!")}>Cat Button</button>
+                <button onClick={() => console.log("Meow")}>Cat Button</button>
 
 
                 <form>

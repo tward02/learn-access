@@ -18,7 +18,7 @@ export default function App() {
                 <h3>Welcome</h3>
                 <p>This is some main content the webpage displays...</p>
                 <img src="/public/cat.svg"/>
-                <button onClick="alert('Clicked!')">Cat Button</button>
+                <button onClick={() => console.log("Meow")}>Cat Button</button>
             </div>
             <form>
                 <div>

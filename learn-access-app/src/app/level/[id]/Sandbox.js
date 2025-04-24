@@ -31,21 +31,6 @@ import {useDeleteSavedFiles} from "@/app/ui/api/useDeleteSavedFiles";
 import {useSaveFiles} from "@/app/ui/api/useSaveFiles";
 import TopBar from "@/app/ui/component/topBar/TopBar";
 
-const testHints = [
-    {
-        name: "Hint 1",
-        content: "This is a hint for the current level that is really useful to the users"
-    },
-    {
-        name: "Hint 2",
-        content: "This is a hint for the current level that is really useful to the users, This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users"
-    },
-    {
-        name: "Hint 3",
-        content: "This is a hint for the current level that is really useful to the users, This is a hint for the current level that is really useful to the users. This is a hint for the current level that is really useful to the users"
-    }
-]
-
 const Sandbox = ({level, user, id, session}) => {
 
     const router = useRouter();
@@ -207,14 +192,14 @@ const Sandbox = ({level, user, id, session}) => {
 
     const handleHint = () => {
         setHintsOpen(true);
-        if (hintsViewed < testHints.length) {
+        if (hintsViewed < level?.hints?.length) {
             setHintsViewed(hintsViewed + 1);
         }
     }
 
     const handleHintClose = () => {
         setHintsOpen(false);
-        if (hintsViewed < testHints.length) {
+        if (hintsViewed < level?.hints?.length) {
             const timer = setTimeout(() => {
                 setSelectedHint(hintsViewed);
             }, 500);
@@ -224,7 +209,7 @@ const Sandbox = ({level, user, id, session}) => {
     }
 
     const handleHintMoveRight = () => {
-        if (selectedHint < testHints.length - 1 && selectedHint + 1 < hintsViewed) {
+        if (selectedHint < level?.hints?.length - 1 && selectedHint + 1 < hintsViewed) {
             setSelectedHint(selectedHint + 1);
         }
     }
@@ -361,7 +346,8 @@ const Sandbox = ({level, user, id, session}) => {
                                     <div className={modules.testingDisplay}>
                                         {/*test console*/}
                                         {testSolutionLoading || testsLoading ?
-                                            <div data-testid="test-loading" className={modules.testsLoading}><CircularProgress/>
+                                            <div data-testid="test-loading" className={modules.testsLoading}>
+                                                <CircularProgress/>
                                             </div> : formatTestResults(testResults)}
                                     </div>
                                 </div>
@@ -370,9 +356,10 @@ const Sandbox = ({level, user, id, session}) => {
                                 <div className={modules.actionButtons}>
                                     {/*action buttons*/}
                                     <Stack spacing={3}>
-                                        <Button disabled={testSolutionLoading || testsLoading}
-                                                variant={"contained"}
-                                                onClick={handleHint}>{"Hints " + hintsViewed + "/" + testHints.length}</Button>
+                                        <Button
+                                            disabled={testSolutionLoading || testsLoading || level?.hints?.length === 0}
+                                            variant={"contained"}
+                                            onClick={handleHint}>{"Hints " + hintsViewed + "/" + level?.hints?.length}</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
                                                 color={"error"} onClick={() => setResetOpen(true)}>Reset</Button>
                                         <Button disabled={testSolutionLoading || testsLoading} variant={"contained"}
@@ -476,23 +463,25 @@ const Sandbox = ({level, user, id, session}) => {
                 </DialogActions>
             </Dialog>
             <Dialog aria-labelledby="hint-dialog-title" open={hintsOpen} onClose={handleHintClose}>
-                <DialogTitle aria-label={testHints[selectedHint].name + " Use up and down arrow keys to navigate"}
-                             id="hint-dialog-title">{testHints[selectedHint].name}</DialogTitle>
+                <DialogTitle aria-label={level?.hints[selectedHint]?.name + " Use up and down arrow keys to navigate"}
+                             id="hint-dialog-title">{level?.hints[selectedHint]?.name}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="hint-dialog-description">
                         <Grid2 container sx={{width: "100%", height: "100%", margin: 0}}>
                             <Grid2 direction="column" size={1}>
-                                <IconButton data-testid="hint-left" aria-label={"See Previous Hint"} size="medium" onClick={handleHintMoveLeft}
+                                <IconButton data-testid="hint-left" aria-label={"See Previous Hint"} size="medium"
+                                            onClick={handleHintMoveLeft}
                                             disabled={selectedHint === 0}>
                                     <ArrowBackIosNewIcon fontSize="inherit"/>
                                 </IconButton>
                             </Grid2>
                             <Grid2 direction="column" size={10}>
-                                {testHints[selectedHint].content}
+                                {level?.hints[selectedHint]?.content}
                             </Grid2>
                             <Grid2 direction="column" size={1}>
-                                <IconButton data-testid="hint-right" aria-label={"See Next Hint"} size="medium" onClick={handleHintMoveRight}
-                                            disabled={selectedHint === testHints.length - 1 || selectedHint + 1 >= hintsViewed}>
+                                <IconButton data-testid="hint-right" aria-label={"See Next Hint"} size="medium"
+                                            onClick={handleHintMoveRight}
+                                            disabled={selectedHint === level?.hints?.length - 1 || selectedHint + 1 >= hintsViewed}>
                                     <ArrowForwardIosIcon fontSize="inherit"/>
                                 </IconButton>
                             </Grid2>

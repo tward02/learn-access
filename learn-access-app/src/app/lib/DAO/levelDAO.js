@@ -9,18 +9,18 @@ export const getLevels = async (userId) => {
                                        FROM user_levels
                                        WHERE userID = ${userId})
         SELECT DISTINCT
-            ON (l.id) l.id                                                                   AS id,
-                      l.name,
-                      l.description,
-                      l.objectives,
-                      l.expiration,
-                      l.enhancedDescription,
-                      COALESCE(ul.levelID IS NOT NULL, FALSE)                                AS completed,
-                      COALESCE(l.previousLevelId IS NOT NULL AND upl.levelID IS NULL, FALSE) AS locked
+        ON (l.id) l.id AS id,
+            l.name,
+            l.description,
+            l.objectives,
+            l.expiration,
+            l.enhancedDescription,
+            COALESCE (ul.levelID IS NOT NULL, FALSE) AS completed,
+            COALESCE (l.previousLevelId IS NOT NULL AND upl.levelID IS NULL, FALSE) AS locked
         FROM levels l
-                 LEFT JOIN user_completed_levels ul
-                           ON l.id = ul.levelID
-                 LEFT JOIN user_completed_levels upl ON l.previousLevelId = upl.levelID
+            LEFT JOIN user_completed_levels ul
+        ON l.id = ul.levelID
+            LEFT JOIN user_completed_levels upl ON l.previousLevelId = upl.levelID
         ORDER BY l.id;`
 
     return result.rows;
@@ -45,12 +45,6 @@ export const getLevel = async (userId, levelId) => {
                  LEFT JOIN user_completed_levels upl ON l.previousLevelId = upl.levelID
         WHERE l.id = ${levelId};`
 
-    //removes any database encoding so that it dispays on the UI correctly
-    result.rows.map((level) => {
-        level.enhanceddescription = level?.enhanceddescription?.replace(/\\n/g, '\n');
-        level.objectives = level?.objectives?.replace(/\\n/g, '\n');
-    })
-
     return result.rows;
 }
 
@@ -61,9 +55,6 @@ export const getLevelFiles = async (levelId) => {
         WHERE levelId = ${levelId};
     `
 
-    result.rows.map((file) => {
-        file.content = file.content.replace(/\\n/g, '\n');
-    })
     return result.rows;
 }
 
