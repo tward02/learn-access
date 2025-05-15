@@ -30,7 +30,7 @@ const LevelContent = ({session, user, id}) => {
 
     useEffect(() => {
         if (levelData && levelSuccess) {
-            if ((Date.parse(levelData?.expiration) - new Date()) > 0) {
+            if ((Date.parse(levelData?.expiration) - new Date()) < 0) {
                 setExpired(true);
             } else {
                 if (levelData?.savedFiles?.length > 0) {
