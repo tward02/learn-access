@@ -35,6 +35,7 @@ export default function Register() {
                         <Person2Icon fontSize={"large"} className={modules.icon}/>
                     </div>
                     <h1 className={modules.title}>Register</h1>
+                    <h1 className={modules.error}>Currently Disabled Please email tw2g21@soton.ac.uk for an account</h1>
                     <Stack spacing={3}>
                         <div className={modules.inputGroup}>
                             <label htmlFor="name" className={modules.label}>Username</label>
@@ -74,7 +75,7 @@ export default function Register() {
                         <Link href={"/login"} className={modules.link} onClick={() => router.push('/login')}>Already
                             have an account?
                             Go here to login</Link>
-                        <button disabled={pending || passwordValue !== rePasswordValue || !completed} type="submit"
+                        <button disabled={pending || passwordValue !== rePasswordValue || !completed || true} type="submit"
                                 className={`${modules.button} ${
                                     pending || passwordValue !== rePasswordValue || !completed
                                         ? modules.buttonDisabled

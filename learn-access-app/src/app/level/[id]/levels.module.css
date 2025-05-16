@@ -206,11 +206,11 @@
 }
 
 .noteTitle {
-    font-size: 1.2em !important;
+    font-size: clamp(12px, 1.2em, 24px) !important;
     font-weight: bold;
 }
 
 .note {
     margin-top: 5px;
-    font-size: 1.1em !important;
+    font-size: clamp(12px, 1.1em, 24px) !important;
 }
