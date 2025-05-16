@@ -18,6 +18,7 @@ export async function signup(state, formData) {
         return {errors: validatedFields.error.flatten().fieldErrors,};
     }
 
+    return {errors: validatedFields.error.flatten().fieldErrors,};
     const users = await getUser(formData.get('name'));
 
     if (users.length > 0) {
