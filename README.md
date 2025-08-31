@@ -8,7 +8,7 @@ COMP3200 3rd Year Project: Learn Access
 # Prerequisites:
 1. Node js version 22.+
 2. Web browser such as Chrome or Firefox
-3. If not using the existing database, create a PostgreSQL database through the Neon Cloud platform and copy the connection details into both .env files, if not keep the existing information. Then run the provided SQL script in the learn-access-db project
+3. If not using the existing database, create a PostgreSQL database through the Neon Cloud platform and copy the connection details into .env files in both the API and App projects. Then run the provided SQL script in the learn-access-db project to set up the database. for example .env files please sned me an email or message.
 
 ---
 
